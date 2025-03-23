@@ -8,6 +8,8 @@ const StyledInput = styled.TextInput`
   border: 1px solid #ccc;
   padding: 10px;
   margin: 5px;
+  color: #000; /* Ensure text is visible */
+  placeholder-text-color: #888; /* Ensure placeholder is visible */
 `;
 
 const StyledButton = styled.TouchableOpacity`
@@ -43,11 +45,13 @@ const Login = () => {
         <>
           <StyledInput
             placeholder="Email"
+            placeholderTextColor="#888"
             value={email}
             onChangeText={setEmail}
           />
           <StyledInput
             placeholder="Password"
+            placeholderTextColor="#888"
             value={password}
             onChangeText={setPassword}
             secureTextEntry
