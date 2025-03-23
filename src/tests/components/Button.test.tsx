@@ -6,21 +6,14 @@ describe('Button', () => {
   it('renders with the provided text and styled background', () => {
     try {
       const { getByText, getByTestId } = render(<Button text="Click Me" />);
-      const buttonText = getByText('Click Me'); // StyledText
-      const button = getByTestId('styled-button'); // StyledButton
+      const buttonText = getByText('Click Me');
+      const button = getByTestId('styled-button'); // Target StyledButton directly
+
       expect(buttonText).toBeTruthy();
-
-      // Debug styles
-      //console.log('Text style:', buttonText.props.style);
-      //console.log('Button style:', button.props.style);
-
-      // Test StyledText styles
       expect(buttonText.props.style).toMatchObject({
         color: '#FFFFFF',
         textAlign: 'center'
       });
-
-      // Test StyledButton styles
       expect(button.props.style).toMatchObject({
         backgroundColor: '#007AFF',
         paddingTop: 10,
