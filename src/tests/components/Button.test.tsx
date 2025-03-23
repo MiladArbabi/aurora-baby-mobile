@@ -1,6 +1,6 @@
 import React from 'react';
 import { render } from '@testing-library/react-native';
-import Button from '../../../components/common/Button';
+import Button from '../../components/common/Button';
 
 describe('Button', () => {
   it('renders with the provided text and styled background', () => {
