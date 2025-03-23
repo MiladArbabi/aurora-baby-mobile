@@ -11,8 +11,8 @@ describe('Button', () => {
       expect(buttonText).toBeTruthy();
 
       // Debug styles
-      console.log('Text style:', buttonText.props.style);
-      console.log('Button style:', button.props.style);
+      //console.log('Text style:', buttonText.props.style);
+      //console.log('Button style:', button.props.style);
 
       // Test StyledText styles
       expect(buttonText.props.style).toMatchObject({

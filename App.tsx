@@ -1,24 +1,8 @@
-// App.tsx
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
-import Button from './src/components/common/Button';
+import AppNavigator from './src/navigation/AppNavigator';
 
-/**
- * Main app entry point.
- */
-export default function App() {
-  return (
-    <View style={styles.container}>
-      <Button text="Click Me" />
-    </View>
-  );
-}
+const App = () => {
+  return <AppNavigator />;
+};
 
-// App-wide styles
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-});
+export default App;
