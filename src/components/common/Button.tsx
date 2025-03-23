@@ -21,7 +21,7 @@ const Button: React.FC<ButtonProps> = ({ text }) => {
     throw new Error('Button requires a valid text prop');
   }
   return (
-    <StyledButton>
+    <StyledButton testID="styled-button">
       <StyledText>{text}</StyledText>
     </StyledButton>
   );
