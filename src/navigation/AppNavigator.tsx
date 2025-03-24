@@ -1,18 +1,36 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+import { User } from 'firebase/auth';
+import { auth, onAuthStateChanged } from '../services/firebase';
 import HomeScreen from '../screens/HomeScreen';
 import Login from '../screens/Login';
 import HarmonyScreen from '../screens/HarmonyScreen';
 import CareScreen from '../screens/CareScreen';
 import WonderScreen from '../screens/WonderScreen';
+import LoadingSpinner from '../components/common/LoadingSpinner';
 
 const Stack = createStackNavigator();
 
 const AppNavigator = () => {
+  const [isLoading, setIsLoading] = useState(true);
+  const [user, setUser] = useState<User | null>(null); // Fix typing
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+      setIsLoading(false);
+    });
+    return unsubscribe;
+  }, []);
+
+  if (isLoading) {
+    return <LoadingSpinner />;
+  }
+
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Home">
+      <Stack.Navigator initialRouteName={user ? 'Home' : 'Login'}>
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="Home" component={HomeScreen} />
         <Stack.Screen name="Harmony" component={HarmonyScreen} />

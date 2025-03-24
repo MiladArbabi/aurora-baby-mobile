@@ -3,7 +3,7 @@ import { View, Text } from 'react-native';
 import styled from 'styled-components/native';
 
 const Container = styled.View`
-  flex: 1;
+  flex: 10;
   justify-content: center;
   align-items: center;
 `;

@@ -1,15 +1,14 @@
 import React, { useState } from 'react';
 import { View, Text } from 'react-native';
 import styled from 'styled-components/native';
-import { auth } from '../services/firebase';
-import { signInWithEmailAndPassword } from 'firebase/auth';
+import { auth, signInWithEmailAndPassword } from '../services/firebase';
 
 const StyledInput = styled.TextInput`
   border: 1px solid #ccc;
   padding: 10px;
   margin: 5px;
-  color: #000; /* Ensure text is visible */
-  placeholder-text-color: #888; /* Ensure placeholder is visible */
+  color: #000;
+  placeholder-text-color: #888;
 `;
 
 const StyledButton = styled.TouchableOpacity`
