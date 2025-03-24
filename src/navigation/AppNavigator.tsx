@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { User } from 'firebase/auth';
 import { auth, onAuthStateChanged } from '../services/firebase';
@@ -14,7 +13,7 @@ const Stack = createStackNavigator();
 
 const AppNavigator = () => {
   const [isLoading, setIsLoading] = useState(true);
-  const [user, setUser] = useState<User | null>(null); // Fix typing
+  const [user, setUser] = useState<User | null>(null); 
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
@@ -29,15 +28,13 @@ const AppNavigator = () => {
   }
 
   return (
-    <NavigationContainer>
-      <Stack.Navigator initialRouteName={user ? 'Home' : 'Login'}>
-        <Stack.Screen name="Login" component={Login} />
-        <Stack.Screen name="Home" component={HomeScreen} />
-        <Stack.Screen name="Harmony" component={HarmonyScreen} />
-        <Stack.Screen name="Care" component={CareScreen} />
-        <Stack.Screen name="Wonder" component={WonderScreen} />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <Stack.Navigator initialRouteName={user ? 'Home' : 'Login'}>
+      <Stack.Screen name="Login" component={Login} />
+      <Stack.Screen name="Home" component={HomeScreen} />
+      <Stack.Screen name="Harmony" component={HarmonyScreen} />
+      <Stack.Screen name="Care" component={CareScreen} />
+      <Stack.Screen name="Wonder" component={WonderScreen} />
+    </Stack.Navigator>
   );
 };
 
