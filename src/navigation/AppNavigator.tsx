@@ -3,7 +3,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { User } from 'firebase/auth';
 import { auth, onAuthStateChanged } from '../services/firebase';
 import HomeScreen from '../screens/HomeScreen';
-import Login from '../screens/Login';
+import AuthScreen from '../screens/AuthScreen';
 import HarmonyScreen from '../screens/HarmonyScreen';
 import CareScreen from '../screens/CareScreen';
 import WonderScreen from '../screens/WonderScreen';
@@ -13,7 +13,7 @@ const Stack = createStackNavigator();
 
 const AppNavigator = () => {
   const [isLoading, setIsLoading] = useState(true);
-  const [user, setUser] = useState<User | null>(null); 
+  const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
@@ -28,13 +28,13 @@ const AppNavigator = () => {
   }
 
   return (
-    <Stack.Navigator initialRouteName={user ? 'Home' : 'Login'}>
-      <Stack.Screen name="Login" component={Login} />
-      <Stack.Screen name="Home" component={HomeScreen} />
-      <Stack.Screen name="Harmony" component={HarmonyScreen} />
-      <Stack.Screen name="Care" component={CareScreen} />
-      <Stack.Screen name="Wonder" component={WonderScreen} />
-    </Stack.Navigator>
+      <Stack.Navigator initialRouteName={user ? 'Home' : 'Auth'}>
+        <Stack.Screen name="Auth" component={AuthScreen} />
+        <Stack.Screen name="Home" component={HomeScreen} />
+        <Stack.Screen name="Harmony" component={HarmonyScreen} />
+        <Stack.Screen name="Care" component={CareScreen} />
+        <Stack.Screen name="Wonder" component={WonderScreen} />
+      </Stack.Navigator>
   );
 };
 
