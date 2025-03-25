@@ -3,6 +3,13 @@ module.exports = () => {
   return {
     name: 'aurora-baby-mobile',
     version: '1.0.0',
+    slug: 'aurora-baby-mobile',
+    android: {
+      package: 'com.miladarbabi.aurorababymobile'
+    },
+    ios: {
+      bundleIdentifier: 'com.miladarbabi.aurorababymobile'
+    },
     extra: {
       firebaseApiKey: 'AIzaSyC5xeeWjT3XpPMPamhSc748D9Bbif0RhzM',
       firebaseAuthDomain: 'aurora-baby-mobile.firebaseapp.com',
@@ -13,6 +20,7 @@ module.exports = () => {
       firebaseMeasurementId: 'G-DF2KM62PL6',
       googleWebClientId: '450824864919-2f0636shfkbv7ivr4nhjloiljs5r6tc9.apps.googleusercontent.com',
       isDev: isDev
-    }
+    },
+    newArchEnabled: true 
   };
 };

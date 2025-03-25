@@ -17,6 +17,9 @@
       "**/*"
     ],
     "ios": {
+      "podfileProperties": {
+        "use_modular_headers!": "true"
+      },
       "supportsTablet": true,
       "bundleIdentifier": "com.anonymous.aurora-baby-mobile"
     },
