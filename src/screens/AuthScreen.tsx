@@ -1,7 +1,6 @@
-import React, { useEffect } from 'react';
-import { View } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text } from 'react-native';
 import styled from 'styled-components/native';
-import Animated, { Easing, useSharedValue, useAnimatedStyle, withTiming } from 'react-native-reanimated';
 import Button from '../components/common/Button';
 
 const Container = styled.View`
@@ -12,14 +11,14 @@ const Container = styled.View`
   background-color: #fff;
 `;
 
-const LogoText = styled(Animated.Text)`
+const LogoText = styled.Text`
   font-size: 48px;
   font-family: 'YourCustomFont'; /* Replace with Aurora Baby’s font */
   color: #007AFF;
   text-align: center;
 `;
 
-const Subtext = styled(Animated.Text)`
+const Subtext = styled.Text`
   font-size: 18px;
   color: #666;
   text-align: center;
@@ -43,35 +42,31 @@ const OtherOptionsText = styled.Text`
   text-decoration-line: underline;
 `;
 
+const FooterText = styled.Text`
+  font-size: 12px;
+  color: #888;
+  text-align: center;
+`;
+
 const AuthScreen: React.FC = () => {
-  const logoPosition = useSharedValue(0);
-  const subtextOpacity = useSharedValue(0);
-
-  useEffect(() => {
-    logoPosition.value = withTiming(10, { duration: 1000, easing: Easing.inOut(Easing.ease) });
-    subtextOpacity.value = withTiming(1, { duration: 2000 });
-  }, []);
-
-  const logoStyle = useAnimatedStyle(() => ({
-    transform: [{ translateY: logoPosition.value }],
-  }), [logoPosition]);
-
-  const subtextStyle = useAnimatedStyle(() => ({
-    opacity: subtextOpacity.value,
-  }), [subtextOpacity]);
+  const [showEmail, setShowEmail] = useState(false);
 
   return (
     <Container>
       <View>
-        <LogoText style={logoStyle}>Aurora Baby</LogoText>
-        <Subtext style={subtextStyle}>Harmony, care and wonder</Subtext>
+        <LogoText>Aurora Baby</LogoText>
+        <Subtext>Harmony, care and wonder</Subtext>
       </View>
       <ButtonContainer>
         <SocialButton text="Continue with Facebook" onPress={() => {}} />
         <SocialButton text="Continue with Google" onPress={() => {}} />
         <SocialButton text="Continue with Apple" onPress={() => {}} />
-        <OtherOptionsText>Other options</OtherOptionsText>
+        {showEmail && <SocialButton text="Continue with Email" onPress={() => {}} />}
+        <OtherOptionsText onPress={() => setShowEmail(true)}>Other options</OtherOptionsText>
       </ButtonContainer>
+      <FooterText>
+        By continuing, you agree to the <Text style={{ fontWeight: 'bold' }}>Terms of Service</Text> and <Text style={{ fontWeight: 'bold' }}>Privacy Policy</Text>
+      </FooterText>
     </Container>
   );
 };
