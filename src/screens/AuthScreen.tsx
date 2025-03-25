@@ -62,7 +62,7 @@ const AuthScreen: React.FC = () => {
         <SocialButton text="Continue with Google" onPress={() => {}} />
         <SocialButton text="Continue with Apple" onPress={() => {}} />
         {showEmail && <SocialButton text="Continue with Email" onPress={() => {}} />}
-        <OtherOptionsText onPress={() => setShowEmail(true)}>Other options</OtherOptionsText>
+        {!showEmail && <OtherOptionsText onPress={() => setShowEmail(true)}>Other options</OtherOptionsText>}
       </ButtonContainer>
       <FooterText>
         By continuing, you agree to the <Text style={{ fontWeight: 'bold' }}>Terms of Service</Text> and <Text style={{ fontWeight: 'bold' }}>Privacy Policy</Text>
