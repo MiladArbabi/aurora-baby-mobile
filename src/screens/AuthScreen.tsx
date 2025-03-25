@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, Alert } from 'react-native';
 import styled from 'styled-components/native';
+import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import Button from '../components/common/Button';
+import { signInWithGoogle } from '../services/firebase';
+import Constants from 'expo-constants';
 
 const Container = styled.View`
   flex: 1;
@@ -48,8 +51,31 @@ const FooterText = styled.Text`
   text-align: center;
 `;
 
-const AuthScreen: React.FC = () => {
+interface AuthScreenProps {
+  onGoogleSignIn?: () => void;
+}
+
+const AuthScreen: React.FC<AuthScreenProps> = ({ onGoogleSignIn }) => {
   const [showEmail, setShowEmail] = useState(false);
+
+  GoogleSignin.configure({
+    webClientId: Constants.expoConfig?.extra?.googleWebClientId || '450824864919-2f0636shfkbv7ivr4nhjloiljs5r6tc9.apps.googleusercontent.com',
+  });
+
+  const handleGoogleSignIn = async () => {
+    try {
+      await GoogleSignin.hasPlayServices();
+      const userInfo = await GoogleSignin.signIn();
+      const idToken = userInfo.data?.idToken;
+      if (!idToken) throw new Error('No idToken in Google response');
+      await signInWithGoogle(idToken);
+      if (onGoogleSignIn) onGoogleSignIn();
+    } catch (error: any) {
+      console.error('Google Sign-In Error:', error);
+      Alert.alert('Error', 'Failed to sign in with Google: ' + (error.message || 'Unknown error'));
+      throw error; // Re-throw to ensure test catches it
+    }
+  };
 
   return (
     <Container>
@@ -59,7 +85,7 @@ const AuthScreen: React.FC = () => {
       </View>
       <ButtonContainer>
         <SocialButton text="Continue with Facebook" onPress={() => {}} />
-        <SocialButton text="Continue with Google" onPress={() => {}} />
+        <SocialButton text="Continue with Google" onPress={handleGoogleSignIn} />
         <SocialButton text="Continue with Apple" onPress={() => {}} />
         {showEmail && <SocialButton text="Continue with Email" onPress={() => {}} />}
         {!showEmail && <OtherOptionsText onPress={() => setShowEmail(true)}>Other options</OtherOptionsText>}

@@ -4,12 +4,13 @@ import AppNavigator from '../../navigation/AppNavigator';
 import { NavigationContainer } from '@react-navigation/native';
 
 describe('AppNavigator', () => {
-  it('starts at Home screen in dev mode', () => {
-    const { getByText } = render(
+  it('starts at Home screen in dev mode', async () => {
+    const { findByText } = render(
       <NavigationContainer>
         <AppNavigator />
       </NavigationContainer>
     );
-    expect(getByText('Harmony')).toBeTruthy();
+    const harmonyText = await findByText('Harmony', {}, { timeout: 2000 }); 
+    expect(harmonyText).toBeTruthy();
   });
 });

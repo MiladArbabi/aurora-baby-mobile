@@ -28,4 +28,11 @@ describe('AuthScreen', () => {
     const { getByText } = render(<AuthScreen />);
     expect(getByText(/By continuing, you agree to the Terms of Service and Privacy Policy/)).toBeTruthy();
   });
+
+  it('triggers Google sign-in/signup on button press', async () => {
+    const mockGoogleSignIn = jest.fn();
+    const { getByText } = render(<AuthScreen onGoogleSignIn={mockGoogleSignIn} />);
+    await fireEvent.press(getByText('Continue with Google')); // Use await for async
+    expect(mockGoogleSignIn).toHaveBeenCalled();
+  });
 });

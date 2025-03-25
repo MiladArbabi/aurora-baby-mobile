@@ -1,9 +1,7 @@
 import { initializeApp } from 'firebase/app';
-import { getAuth, onAuthStateChanged, signInWithEmailAndPassword } from 'firebase/auth';
+import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, GoogleAuthProvider, signInWithCredential } from 'firebase/auth';
 import Constants from 'expo-constants';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
-//console.log('Constants.expoConfig:', Constants.expoConfig)
 
 const firebaseConfig = {
   apiKey: Constants.expoConfig?.extra?.firebaseApiKey || 'AIzaSyC5xeeWjT3XpPMPamhSc748D9Bbif0RhzM',
@@ -17,4 +15,19 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
-export { onAuthStateChanged, signInWithEmailAndPassword }; // Export for use elsewhere
+export const googleProvider = GoogleAuthProvider; // Export as object, not instance
+
+export const signInWithGoogle = async (idToken: string) => {
+  try {
+    const credential = googleProvider.credential(idToken); // Use exported object
+    const result = await signInWithCredential(auth, credential);
+    const token = await result.user.getIdToken();
+    await AsyncStorage.setItem('userToken', token);
+    return result.user;
+  } catch (error) {
+    console.error('Google Auth Error:', error);
+    throw error;
+  }
+};
+
+export { onAuthStateChanged, signInWithEmailAndPassword };

@@ -1,5 +1,13 @@
-import * as React from 'react';
-global.React = React;
+import mockAsyncStorage from '@react-native-async-storage/async-storage/jest/async-storage-mock';
 
-global.setImmediate = (cb) => setTimeout(cb, 0);
-global.clearImmediate = (id) => clearTimeout(id);
+// Polyfill setImmediate for jsdom
+global.setImmediate = setTimeout;
+
+jest.mock('@react-native-async-storage/async-storage', () => mockAsyncStorage);
+jest.mock('@react-native-google-signin/google-signin', () => ({
+  GoogleSignin: {
+    configure: jest.fn(),
+    hasPlayServices: jest.fn().mockResolvedValue(true),
+    signIn: jest.fn().mockResolvedValue({ data: { idToken: 'mock-token' } }),
+  },
+}));
