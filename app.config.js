@@ -14,7 +14,7 @@ module.exports = () => {
       firebaseApiKey: 'AIzaSyC5xeeWjT3XpPMPamhSc748D9Bbif0RhzM',
       firebaseAuthDomain: 'aurora-baby-mobile.firebaseapp.com',
       firebaseProjectId: 'aurora-baby-mobile',
-      firebaseStorageBucket: 'aurora-baby-mobile.firebasestorage.app',
+      firebaseStorageBucket: 'aurora-baby-mobile.appspot.com', // Fixed typo: firebasestorage.app -> appspot.com
       firebaseMessagingSenderId: '450824864919',
       firebaseAppId: '1:450824864919:web:39dc697565b309cb4ed5d2',
       firebaseMeasurementId: 'G-DF2KM62PL6',
