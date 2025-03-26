@@ -1,40 +1,42 @@
 import React, { useState, useEffect } from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
+import { onAuthStateChanged, auth } from '../services/firebase';
 import { User } from 'firebase/auth';
-import { auth, onAuthStateChanged } from '../services/firebase';
 import HomeScreen from '../screens/HomeScreen';
 import AuthScreen from '../screens/AuthScreen';
-import HarmonyScreen from '../screens/HarmonyScreen';
-import CareScreen from '../screens/CareScreen';
-import WonderScreen from '../screens/WonderScreen';
 import LoadingSpinner from '../components/common/LoadingSpinner';
 
 const Stack = createStackNavigator();
 
-const AppNavigator = () => {
-  const [isLoading, setIsLoading] = useState(true);
+const AppNavigator: React.FC = () => {
   const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
-      setIsLoading(false);
+      setLoading(false);
     });
     return unsubscribe;
   }, []);
 
-  if (isLoading) {
-    return <LoadingSpinner />;
-  }
+  if (loading) return <LoadingSpinner />;
 
   return (
-      <Stack.Navigator initialRouteName={user ? 'Home' : 'Auth'}>
-        <Stack.Screen name="Auth" component={AuthScreen} />
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
+      {user ? (
         <Stack.Screen name="Home" component={HomeScreen} />
-        <Stack.Screen name="Harmony" component={HarmonyScreen} />
-        <Stack.Screen name="Care" component={CareScreen} />
-        <Stack.Screen name="Wonder" component={WonderScreen} />
-      </Stack.Navigator>
+      ) : (
+        <Stack.Screen
+          name="Auth"
+          component={AuthScreen}
+          initialParams={{
+            onGoogleSignIn: () => setUser({ email: 'mock@example.com', uid: 'mock-uid' } as User),
+            onEmailSignIn: () => setUser({ email: 'mock@example.com', uid: 'mock-uid' } as User),
+          }}
+        />
+      )}
+    </Stack.Navigator>
   );
 };
 

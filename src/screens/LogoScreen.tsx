@@ -23,7 +23,7 @@ const LogoScreen: React.FC<LogoScreenProps> = ({ navigation }) => {
   useEffect(() => {
     const timer = setTimeout(() => {
       navigation.replace('AppNavigator');
-    }, 3500);
+    }, 1500);
     return () => clearTimeout(timer);
   }, [navigation]);
 

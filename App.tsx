@@ -1,5 +1,5 @@
 import React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer } from '@react-navigation/native'; // Re-add
 import { createStackNavigator } from '@react-navigation/stack';
 import LogoScreen from './src/screens/LogoScreen';
 import AppNavigator from './src/navigation/AppNavigator';

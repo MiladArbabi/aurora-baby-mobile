@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { View, Text, Alert } from 'react-native';
+import { View, Text, Alert, TextInput } from 'react-native';
 import styled from 'styled-components/native';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import Button from '../components/common/Button';
-import { signInWithGoogle } from '../services/firebase';
+import { signInWithGoogle, signInWithEmail, signUpWithEmail } from '../services/firebase';
 import Constants from 'expo-constants';
 
 const Container = styled.View`
@@ -16,7 +16,7 @@ const Container = styled.View`
 
 const LogoText = styled.Text`
   font-size: 48px;
-  font-family: 'YourCustomFont'; /* Replace with Aurora Baby’s font */
+  font-family: 'YourCustomFont';
   color: #007AFF;
   text-align: center;
 `;
@@ -39,6 +39,14 @@ const SocialButton = styled(Button)`
   background-color: #007AFF;
 `;
 
+const Input = styled.TextInput`
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+`;
+
 const OtherOptionsText = styled.Text`
   font-size: 14px;
   color: #888;
@@ -53,10 +61,13 @@ const FooterText = styled.Text`
 
 interface AuthScreenProps {
   onGoogleSignIn?: () => void;
+  onEmailSignIn?: (email: string, password: string) => void;
 }
 
-const AuthScreen: React.FC<AuthScreenProps> = ({ onGoogleSignIn }) => {
+const AuthScreen: React.FC<AuthScreenProps> = ({ onGoogleSignIn, onEmailSignIn }) => {
   const [showEmail, setShowEmail] = useState(false);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
   GoogleSignin.configure({
     webClientId: Constants.expoConfig?.extra?.googleWebClientId || '450824864919-2f0636shfkbv7ivr4nhjloiljs5r6tc9.apps.googleusercontent.com',
@@ -67,13 +78,25 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onGoogleSignIn }) => {
       await GoogleSignin.hasPlayServices();
       const userInfo = await GoogleSignin.signIn();
       const idToken = userInfo.data?.idToken;
-      if (!idToken) throw new Error('No idToken in Google response');
+      if (!idToken) throw new Error('No idToken');
       await signInWithGoogle(idToken);
       if (onGoogleSignIn) onGoogleSignIn();
     } catch (error: any) {
-      console.error('Google Sign-In Error:', error);
-      Alert.alert('Error', 'Failed to sign in with Google: ' + (error.message || 'Unknown error'));
-      throw error; // Re-throw to ensure test catches it
+      Alert.alert('Error', 'Google Sign-In Failed: ' + (error.message || 'Unknown error'));
+    }
+  };
+
+  const handleEmailAuth = async () => {
+    try {
+      await signInWithEmail(email, password); // Try sign-in first
+      if (onEmailSignIn) onEmailSignIn(email, password);
+    } catch (error: any) {
+      if (error.code === 'auth/user-not-found') {
+        await signUpWithEmail(email, password); // Sign up if user doesn’t exist
+        if (onEmailSignIn) onEmailSignIn(email, password);
+      } else {
+        Alert.alert('Error', 'Email Auth Failed: ' + (error.message || 'Unknown error'));
+      }
     }
   };
 
@@ -87,7 +110,23 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onGoogleSignIn }) => {
         <SocialButton text="Continue with Facebook" onPress={() => {}} />
         <SocialButton text="Continue with Google" onPress={handleGoogleSignIn} />
         <SocialButton text="Continue with Apple" onPress={() => {}} />
-        {showEmail && <SocialButton text="Continue with Email" onPress={() => {}} />}
+        {showEmail && (
+          <>
+            <Input
+              placeholder="Email"
+              value={email}
+              onChangeText={setEmail}
+              autoCapitalize="none"
+            />
+            <Input
+              placeholder="Password"
+              value={password}
+              onChangeText={setPassword}
+              secureTextEntry
+            />
+            <SocialButton text="Login" onPress={handleEmailAuth} />
+          </>
+        )}
         {!showEmail && <OtherOptionsText onPress={() => setShowEmail(true)}>Other options</OtherOptionsText>}
       </ButtonContainer>
       <FooterText>

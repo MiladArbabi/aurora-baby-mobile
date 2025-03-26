@@ -1,5 +1,5 @@
 import { initializeApp } from 'firebase/app';
-import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, GoogleAuthProvider, signInWithCredential } from 'firebase/auth';
+import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, GoogleAuthProvider, signInWithCredential } from 'firebase/auth';
 import Constants from 'expo-constants';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -15,17 +15,41 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
-export const googleProvider = GoogleAuthProvider; // Export as object, not instance
+export const googleProvider = GoogleAuthProvider;
 
 export const signInWithGoogle = async (idToken: string) => {
   try {
-    const credential = googleProvider.credential(idToken); // Use exported object
+    const credential = googleProvider.credential(idToken);
     const result = await signInWithCredential(auth, credential);
     const token = await result.user.getIdToken();
     await AsyncStorage.setItem('userToken', token);
     return result.user;
   } catch (error) {
     console.error('Google Auth Error:', error);
+    throw error;
+  }
+};
+
+export const signInWithEmail = async (email: string, password: string) => {
+  try {
+    const result = await signInWithEmailAndPassword(auth, email, password);
+    const token = await result.user.getIdToken();
+    await AsyncStorage.setItem('userToken', token);
+    return result.user;
+  } catch (error) {
+    console.error('Email Sign-In Error:', error);
+    throw error;
+  }
+};
+
+export const signUpWithEmail = async (email: string, password: string) => {
+  try {
+    const result = await createUserWithEmailAndPassword(auth, email, password);
+    const token = await result.user.getIdToken();
+    await AsyncStorage.setItem('userToken', token);
+    return result.user;
+  } catch (error) {
+    console.error('Email Sign-Up Error:', error);
     throw error;
   }
 };
