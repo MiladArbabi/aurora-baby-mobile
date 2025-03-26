@@ -11,6 +11,9 @@ export type RootStackParamList = {
   Home: undefined;
   Auth: undefined;
   ProfileSettings: undefined;
+  Harmony: undefined;
+  Care: undefined;
+  Wonder: undefined;
 };
 
 const Stack = createStackNavigator<RootStackParamList>();
@@ -22,7 +25,7 @@ const AppNavigator: React.FC = () => {
   useEffect(() => {
     const initAuth = async () => {
       const persistedUser = await checkAuthState();
-      if (persistedUser) setUser(persistedUser as User);
+      setUser(persistedUser as User | null);
       const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
         setUser(currentUser);
         setLoading(false);
@@ -40,6 +43,9 @@ const AppNavigator: React.FC = () => {
         <>
           <Stack.Screen name="Home" component={HomeScreen} />
           <Stack.Screen name="ProfileSettings" component={ProfileSettingScreen} />
+          <Stack.Screen name="Harmony" component={() => <Text>Harmony Screen</Text>} />
+          <Stack.Screen name="Care" component={() => <Text>Care Screen</Text>} />
+          <Stack.Screen name="Wonder" component={() => <Text>Wonder Screen</Text>} />
         </>
       ) : (
         <Stack.Screen name="Auth" component={AuthScreen} />

@@ -6,25 +6,56 @@ import { signOut } from 'firebase/auth';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Button from '../components/common/Button';
 import { StackScreenProps } from '@react-navigation/stack';
+import { RootStackParamList } from '../navigation/AppNavigator';
 
 const Container = styled.View`
   flex: 1;
+  background-color: #fff;
+`;
+
+const TopBar = styled.View`
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
+  background-color: rgba(255, 255, 255, 0.8);
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding-horizontal: 20px;
+`;
+
+const LogoText = styled.Text`
+  font-size: 24px;
+  color: #007AFF;
+`;
+
+const ProfileIcon = styled.TouchableOpacity`
+  width: 40px;
+  height: 40px;
+  border-radius: 20px;
+  background-color: #007AFF;
   justify-content: center;
   align-items: center;
-  padding: 20px;
-  background-color: #fff;
+`;
+
+const IconText = styled.Text`
+  color: #fff;
+  font-size: 18px;
+`;
+
+const Content = styled.View`
+  flex: 1;
+  justify-content: center;
+  align-items: center;
+  padding-top: 80px;
 `;
 
 const Title = styled.Text`
   font-size: 24px;
   margin-bottom: 20px;
 `;
-
-type RootStackParamList = {
-  Home: undefined;
-  Auth: undefined;
-  ProfileSettings: undefined;
-};
 
 type ProfileSettingsProps = StackScreenProps<RootStackParamList, 'ProfileSettings'>;
 
@@ -42,8 +73,16 @@ const ProfileSettingScreen: React.FC<ProfileSettingsProps> = ({ navigation }) =>
 
   return (
     <Container>
-      <Title>Profile Settings</Title>
-      <Button text="Sign Out" onPress={handleSignOut} />
+      <TopBar>
+        <LogoText>Aurora Baby</LogoText>
+        <ProfileIcon onPress={() => navigation.navigate('ProfileSettings')}>
+          <IconText>P</IconText>
+        </ProfileIcon>
+      </TopBar>
+      <Content>
+        <Title>Profile Settings</Title>
+        <Button text="Sign Out" onPress={handleSignOut} />
+      </Content>
     </Container>
   );
 };
