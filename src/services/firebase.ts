@@ -17,9 +17,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Platform } from 'react-native';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 
-// Debug config loading
-console.log('Expo Config:', Constants.expoConfig);
-
 const firebaseConfig = {
   apiKey: Constants.expoConfig?.extra?.firebaseApiKey || 'AIzaSyC5xeeWjT3XpPMPamhSc748D9Bbif0RhzM',
   authDomain: Constants.expoConfig?.extra?.firebaseAuthDomain || 'aurora-baby-mobile.firebaseapp.com',
@@ -30,10 +27,11 @@ const firebaseConfig = {
   measurementId: Constants.expoConfig?.extra?.firebaseMeasurementId || 'G-DF2KM62PL6'
 };
 
-console.log('Firebase Config Loaded:', firebaseConfig);
+console.log('Expo Config:', JSON.stringify(Constants.expoConfig));
+console.log('Firebase Config:', JSON.stringify(firebaseConfig));
 
 if (!firebaseConfig.apiKey) {
-  throw new Error('Firebase API key is missing from app.config.js and fallback');
+  throw new Error('Firebase API key is missing from app.config.js');
 }
 
 const app = initializeApp(firebaseConfig);
@@ -71,7 +69,10 @@ export const signInWithEmail = async (email: string, password: string): Promise<
     const result = await signInWithEmailAndPassword(auth, email, password);
     const token = await result.user.getIdToken();
     await AsyncStorage.setItem('userToken', token);
+    await AsyncStorage.setItem('userEmail', email);
+    await AsyncStorage.setItem('userPassword', password); // Store credentials separately
     console.log('Email Sign-In Token:', token);
+    console.log('Stored credentials:', { email, password });
     return result.user;
   } catch (error) {
     console.error('Email Sign-In Error:', error);
@@ -84,7 +85,10 @@ export const signUpWithEmail = async (email: string, password: string): Promise<
     const result = await createUserWithEmailAndPassword(auth, email, password);
     const token = await result.user.getIdToken();
     await AsyncStorage.setItem('userToken', token);
+    await AsyncStorage.setItem('userEmail', email);
+    await AsyncStorage.setItem('userPassword', password); // Store credentials separately
     console.log('Email Sign-Up Token:', token);
+    console.log('Stored credentials:', { email, password });
     return result.user;
   } catch (error) {
     console.error('Email Sign-Up Error:', error);
@@ -93,25 +97,45 @@ export const signUpWithEmail = async (email: string, password: string): Promise<
 };
 
 export const checkAuthState = async (): Promise<User | null> => {
-  const token = await AsyncStorage.getItem('userToken');
+  const tokenEntry = await AsyncStorage.getItem('userToken');
+  const emailEntry = await AsyncStorage.getItem('userEmail');
+  const passwordEntry = await AsyncStorage.getItem('userPassword');
+  const token = tokenEntry || null;
+  const email = emailEntry || null;
+  const password = passwordEntry || null;
+
   console.log('Checking auth state, token from storage:', token);
+  console.log('Stored email:', email);
+  console.log('Stored password:', password ? '****' : 'null');
   if (!token) return null;
 
   return new Promise((resolve) => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
       console.log('onAuthStateChanged user:', user ? user.email : 'null');
       if (user) {
-        user.getIdToken(true).then((newToken) => {
-          AsyncStorage.setItem('userToken', newToken);
+        try {
+          const newToken = await user.getIdToken(true);
+          await AsyncStorage.setItem('userToken', newToken);
           console.log('Updated token:', newToken);
           resolve(user);
-        }).catch((error) => {
+        } catch (error) {
           console.error('Token refresh error:', error);
-          AsyncStorage.removeItem('userToken');
+          await AsyncStorage.multiRemove(['userToken', 'userEmail', 'userPassword']);
           resolve(null);
-        });
+        }
+      } else if (email && password) {
+        // Re-authenticate with stored credentials
+        try {
+          const result = await signInWithEmail(email, password);
+          console.log('Restored session with credentials, new token:', await result.getIdToken());
+          resolve(result);
+        } catch (error) {
+          console.error('Re-auth error:', error);
+          await AsyncStorage.multiRemove(['userToken', 'userEmail', 'userPassword']);
+          resolve(null);
+        }
       } else {
-        AsyncStorage.removeItem('userToken');
+        await AsyncStorage.multiRemove(['userToken', 'userEmail', 'userPassword']);
         resolve(null);
       }
       unsubscribe();
@@ -121,6 +145,17 @@ export const checkAuthState = async (): Promise<User | null> => {
 
 export const signInWithCredentialHelper = async (authInstance: Auth, credential: AuthCredential): Promise<UserCredential> => {
   return signInWithCredential(authInstance, credential);
+};
+
+export const signOut = async (): Promise<void> => {
+  try {
+    await auth.signOut();
+    await AsyncStorage.multiRemove(['userToken', 'userEmail', 'userPassword']);
+    console.log('User signed out, token and credentials removed');
+  } catch (error) {
+    console.error('Sign out error:', error);
+    throw error;
+  }
 };
 
 export { onAuthStateChanged, signInWithEmailAndPassword };

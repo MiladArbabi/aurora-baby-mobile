@@ -1,8 +1,7 @@
 import React from 'react';
 import { View, Text, Alert } from 'react-native';
 import styled from 'styled-components/native';
-import { auth } from '../services/firebase';
-import { signOut } from 'firebase/auth';
+import { signOut } from '../services/firebase';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Button from '../components/common/Button';
 import { StackScreenProps } from '@react-navigation/stack';
@@ -62,9 +61,8 @@ type ProfileSettingsProps = StackScreenProps<RootStackParamList, 'ProfileSetting
 const ProfileSettingScreen: React.FC<ProfileSettingsProps> = ({ navigation }) => {
   const handleSignOut = async () => {
     try {
-      await signOut(auth);
-      await AsyncStorage.removeItem('userToken');
-      navigation.navigate('Auth');
+      await signOut();
+      // No manual navigation; AppNavigator handles it
       Alert.alert('Success', 'Signed out successfully!');
     } catch (error: any) {
       Alert.alert('Error', 'Sign-Out Failed: ' + (error.message || 'Unknown error'));
