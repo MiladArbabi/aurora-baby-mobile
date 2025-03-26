@@ -54,4 +54,14 @@ export const signUpWithEmail = async (email: string, password: string) => {
   }
 };
 
+export const checkAuthState = async () => {
+  const token = await AsyncStorage.getItem('userToken');
+  if (token) {
+    return new Promise((resolve) => {
+      onAuthStateChanged(auth, (user) => resolve(user));
+    });
+  }
+  return null;
+};
+
 export { onAuthStateChanged, signInWithEmailAndPassword };

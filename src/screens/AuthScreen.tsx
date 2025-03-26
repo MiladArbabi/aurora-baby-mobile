@@ -5,6 +5,7 @@ import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import Button from '../components/common/Button';
 import { signInWithGoogle, signInWithEmail, signUpWithEmail } from '../services/firebase';
 import Constants from 'expo-constants';
+import { StackScreenProps } from '@react-navigation/stack';
 
 const Container = styled.View`
   flex: 1;
@@ -59,12 +60,14 @@ const FooterText = styled.Text`
   text-align: center;
 `;
 
-interface AuthScreenProps {
-  onGoogleSignIn?: () => void;
-  onEmailSignIn?: (email: string, password: string) => void;
-}
+type RootStackParamList = {
+  Home: undefined;
+  Auth: undefined;
+};
 
-const AuthScreen: React.FC<AuthScreenProps> = ({ onGoogleSignIn, onEmailSignIn }) => {
+type AuthScreenProps = StackScreenProps<RootStackParamList, 'Auth'>;
+
+const AuthScreen: React.FC<AuthScreenProps> = ({ navigation }) => {
   const [showEmail, setShowEmail] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -80,7 +83,7 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onGoogleSignIn, onEmailSignIn }
       const idToken = userInfo.data?.idToken;
       if (!idToken) throw new Error('No idToken');
       await signInWithGoogle(idToken);
-      if (onGoogleSignIn) onGoogleSignIn();
+      navigation.navigate('Home');
     } catch (error: any) {
       Alert.alert('Error', 'Google Sign-In Failed: ' + (error.message || 'Unknown error'));
     }
@@ -89,7 +92,7 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onGoogleSignIn, onEmailSignIn }
   const handleEmailSignIn = async () => {
     try {
       await signInWithEmail(email, password);
-      if (onEmailSignIn) onEmailSignIn(email, password);
+      navigation.navigate('Home');
     } catch (error: any) {
       Alert.alert('Sign-In Error', error.message || 'Unknown error');
     }
@@ -98,7 +101,7 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onGoogleSignIn, onEmailSignIn }
   const handleEmailSignUp = async () => {
     try {
       await signUpWithEmail(email, password);
-      if (onEmailSignIn) onEmailSignIn(email, password); // Treat signup as sign-in for navigation
+      navigation.navigate('Home');
       Alert.alert('Success', 'Account created successfully!');
     } catch (error: any) {
       Alert.alert('Sign-Up Error', error.message || 'Unknown error');
