@@ -18,6 +18,10 @@ export type RootStackParamList = {
 
 const Stack = createStackNavigator<RootStackParamList>();
 
+const HarmonyScreen: React.FC = () => <LoadingSpinner />; // Placeholder
+const CareScreen: React.FC = () => <LoadingSpinner />;
+const WonderScreen: React.FC = () => <LoadingSpinner />;
+
 const AppNavigator: React.FC = () => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
@@ -43,9 +47,9 @@ const AppNavigator: React.FC = () => {
         <>
           <Stack.Screen name="Home" component={HomeScreen} />
           <Stack.Screen name="ProfileSettings" component={ProfileSettingScreen} />
-          <Stack.Screen name="Harmony" component={() => <Text>Harmony Screen</Text>} />
-          <Stack.Screen name="Care" component={() => <Text>Care Screen</Text>} />
-          <Stack.Screen name="Wonder" component={() => <Text>Wonder Screen</Text>} />
+          <Stack.Screen name="Harmony" component={HarmonyScreen} />
+          <Stack.Screen name="Care" component={CareScreen} />
+          <Stack.Screen name="Wonder" component={WonderScreen} />
         </>
       ) : (
         <Stack.Screen name="Auth" component={AuthScreen} />
