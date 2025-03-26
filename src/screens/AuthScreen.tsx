@@ -86,17 +86,22 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onGoogleSignIn, onEmailSignIn }
     }
   };
 
-  const handleEmailAuth = async () => {
+  const handleEmailSignIn = async () => {
     try {
-      await signInWithEmail(email, password); // Try sign-in first
+      await signInWithEmail(email, password);
       if (onEmailSignIn) onEmailSignIn(email, password);
     } catch (error: any) {
-      if (error.code === 'auth/user-not-found') {
-        await signUpWithEmail(email, password); // Sign up if user doesn’t exist
-        if (onEmailSignIn) onEmailSignIn(email, password);
-      } else {
-        Alert.alert('Error', 'Email Auth Failed: ' + (error.message || 'Unknown error'));
-      }
+      Alert.alert('Sign-In Error', error.message || 'Unknown error');
+    }
+  };
+
+  const handleEmailSignUp = async () => {
+    try {
+      await signUpWithEmail(email, password);
+      if (onEmailSignIn) onEmailSignIn(email, password); // Treat signup as sign-in for navigation
+      Alert.alert('Success', 'Account created successfully!');
+    } catch (error: any) {
+      Alert.alert('Sign-Up Error', error.message || 'Unknown error');
     }
   };
 
@@ -124,7 +129,8 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onGoogleSignIn, onEmailSignIn }
               onChangeText={setPassword}
               secureTextEntry
             />
-            <SocialButton text="Login" onPress={handleEmailAuth} />
+            <SocialButton text="Sign In" onPress={handleEmailSignIn} />
+            <SocialButton text="Sign Up" onPress={handleEmailSignUp} />
           </>
         )}
         {!showEmail && <OtherOptionsText onPress={() => setShowEmail(true)}>Other options</OtherOptionsText>}

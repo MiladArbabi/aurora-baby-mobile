@@ -18,11 +18,12 @@ describe('AuthScreen', () => {
 
   it('shows email/password inputs and hides Other options on click', () => {
     const { getByText, getByPlaceholderText, queryByText } = render(<AuthScreen />);
-    expect(queryByText('Login')).toBeNull();
+    expect(queryByText('Sign In')).toBeNull();
     fireEvent.press(getByText('Other options'));
     expect(getByPlaceholderText('Email')).toBeTruthy();
     expect(getByPlaceholderText('Password')).toBeTruthy();
-    expect(getByText('Login')).toBeTruthy();
+    expect(getByText('Sign In')).toBeTruthy();
+    expect(getByText('Sign Up')).toBeTruthy();
     expect(queryByText('Other options')).toBeNull();
   });
 
@@ -38,13 +39,23 @@ describe('AuthScreen', () => {
     expect(mockGoogleSignIn).toHaveBeenCalled();
   });
 
-  it('triggers email sign-in/signup on button press', async () => {
+  it('triggers email sign-in on button press', async () => {
     const mockEmailSignIn = jest.fn();
     const { getByText, getByPlaceholderText } = render(<AuthScreen onEmailSignIn={mockEmailSignIn} />);
     fireEvent.press(getByText('Other options'));
     fireEvent.changeText(getByPlaceholderText('Email'), 'test@example.com');
     fireEvent.changeText(getByPlaceholderText('Password'), 'password123');
-    await fireEvent.press(getByText('Login'));
+    await fireEvent.press(getByText('Sign In'));
+    expect(mockEmailSignIn).toHaveBeenCalledWith('test@example.com', 'password123');
+  });
+
+  it('triggers email sign-up on button press', async () => {
+    const mockEmailSignIn = jest.fn();
+    const { getByText, getByPlaceholderText } = render(<AuthScreen onEmailSignIn={mockEmailSignIn} />);
+    fireEvent.press(getByText('Other options'));
+    fireEvent.changeText(getByPlaceholderText('Email'), 'test@example.com');
+    fireEvent.changeText(getByPlaceholderText('Password'), 'password123');
+    await fireEvent.press(getByText('Sign Up'));
     expect(mockEmailSignIn).toHaveBeenCalledWith('test@example.com', 'password123');
   });
 });
