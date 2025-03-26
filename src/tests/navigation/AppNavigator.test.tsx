@@ -1,6 +1,6 @@
 import React from 'react';
 import { render } from '@testing-library/react-native';
-import App from '../../../App'; 
+import App from '../../../App';
 
 describe('AppNavigator', () => {
   it('starts at Home screen in dev mode', async () => {
