@@ -1,36 +1,60 @@
 import { initializeApp } from 'firebase/app';
-import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, GoogleAuthProvider, signInWithCredential } from 'firebase/auth';
+import { 
+  getAuth, 
+  onAuthStateChanged, 
+  signInWithEmailAndPassword, 
+  createUserWithEmailAndPassword, 
+  GoogleAuthProvider, 
+  signInWithPopup, 
+  Auth, 
+  AuthCredential, 
+  User,
+  UserCredential 
+} from 'firebase/auth';
 import Constants from 'expo-constants';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Platform } from 'react-native';
+import { GoogleSignin } from '@react-native-google-signin/google-signin';
 
 const firebaseConfig = {
-  apiKey: Constants.expoConfig?.extra?.firebaseApiKey || 'AIzaSyC5xeeWjT3XpPMPamhSc748D9Bbif0RhzM',
-  authDomain: Constants.expoConfig?.extra?.firebaseAuthDomain || 'aurora-baby-mobile.firebaseapp.com',
-  projectId: Constants.expoConfig?.extra?.firebaseProjectId || 'aurora-baby-mobile',
-  storageBucket: Constants.expoConfig?.extra?.firebaseStorageBucket || 'aurora-baby-mobile.firebasestorage.app',
-  messagingSenderId: Constants.expoConfig?.extra?.firebaseMessagingSenderId || '450824864919',
-  appId: Constants.expoConfig?.extra?.firebaseAppId || '1:450824864919:web:39dc697565b309cb4ed5d2',
-  measurementId: Constants.expoConfig?.extra?.firebaseMeasurementId || 'G-DF2KM62PL6'
+  apiKey: Constants.expoConfig?.extra?.firebaseApiKey,
+  authDomain: Constants.expoConfig?.extra?.firebaseAuthDomain,
+  projectId: Constants.expoConfig?.extra?.firebaseProjectId,
+  storageBucket: Constants.expoConfig?.extra?.firebaseStorageBucket,
+  messagingSenderId: Constants.expoConfig?.extra?.firebaseMessagingSenderId,
+  appId: Constants.expoConfig?.extra?.firebaseAppId,
+  measurementId: Constants.expoConfig?.extra?.firebaseMeasurementId
 };
 
 const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
-export const googleProvider = GoogleAuthProvider;
+export const googleProvider = new GoogleAuthProvider();
 
-export const signInWithGoogle = async (idToken: string) => {
+export const signInWithGoogle = async (): Promise<User> => {
   try {
-    const credential = googleProvider.credential(idToken);
-    const result = await signInWithCredential(auth, credential);
-    const token = await result.user.getIdToken();
-    await AsyncStorage.setItem('userToken', token);
-    return result.user;
+    if (Platform.OS === 'web') {
+      const result = await signInWithPopup(auth, googleProvider);
+      const token = await result.user.getIdToken();
+      await AsyncStorage.setItem('userToken', token);
+      return result.user;
+    } else {
+      await GoogleSignin.hasPlayServices();
+      const userInfo = await GoogleSignin.signIn();
+      const idToken = userInfo.data?.idToken;
+      if (!idToken) throw new Error('No idToken');
+      const credential = GoogleAuthProvider.credential(idToken);
+      const result = await signInWithCredential(auth, credential);
+      const token = await result.user.getIdToken();
+      await AsyncStorage.setItem('userToken', token);
+      return result.user;
+    }
   } catch (error) {
     console.error('Google Auth Error:', error);
     throw error;
   }
 };
 
-export const signInWithEmail = async (email: string, password: string) => {
+export const signInWithEmail = async (email: string, password: string): Promise<User> => {
   try {
     const result = await signInWithEmailAndPassword(auth, email, password);
     const token = await result.user.getIdToken();
@@ -42,7 +66,7 @@ export const signInWithEmail = async (email: string, password: string) => {
   }
 };
 
-export const signUpWithEmail = async (email: string, password: string) => {
+export const signUpWithEmail = async (email: string, password: string): Promise<User> => {
   try {
     const result = await createUserWithEmailAndPassword(auth, email, password);
     const token = await result.user.getIdToken();
@@ -54,14 +78,26 @@ export const signUpWithEmail = async (email: string, password: string) => {
   }
 };
 
-export const checkAuthState = async () => {
+export const checkAuthState = async (): Promise<User | null> => {
   const token = await AsyncStorage.getItem('userToken');
-  if (token) {
-    return new Promise((resolve) => {
-      onAuthStateChanged(auth, (user) => resolve(user));
+  return new Promise((resolve) => {
+    onAuthStateChanged(auth, (user) => {
+      if (user && token) {
+        user.getIdToken().then((newToken) => {
+          AsyncStorage.setItem('userToken', newToken);
+          resolve(user);
+        }).catch(() => resolve(null));
+      } else {
+        AsyncStorage.removeItem('userToken');
+        resolve(null);
+      }
     });
-  }
-  return null;
+  });
+};
+
+export const signInWithCredential = async (authInstance: Auth, credential: AuthCredential): Promise<UserCredential> => {
+  const { signInWithCredential } = await import('firebase/auth');
+  return signInWithCredential(authInstance, credential);
 };
 
 export { onAuthStateChanged, signInWithEmailAndPassword };

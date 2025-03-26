@@ -18,25 +18,26 @@ export type RootStackParamList = {
 
 const Stack = createStackNavigator<RootStackParamList>();
 
-const HarmonyScreen: React.FC = () => <LoadingSpinner />; // Placeholder
+const HarmonyScreen: React.FC = () => <LoadingSpinner />;
 const CareScreen: React.FC = () => <LoadingSpinner />;
 const WonderScreen: React.FC = () => <LoadingSpinner />;
 
-const AppNavigator: React.FC = () => {
+export const AppNavigator: React.FC = () => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const initAuth = async () => {
       const persistedUser = await checkAuthState();
-      setUser(persistedUser as User | null);
-      const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-        setUser(currentUser);
-        setLoading(false);
-      });
-      return unsubscribe;
+      setUser(persistedUser);
+      setLoading(false);
     };
     initAuth();
+
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+    });
+    return unsubscribe;
   }, []);
 
   if (loading) return <LoadingSpinner />;

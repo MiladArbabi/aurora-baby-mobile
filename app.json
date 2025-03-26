@@ -5,33 +5,34 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./src/assets/icon.png",
+    "userInterfaceStyle": "light",
     "splash": {
       "image": "./src/assets/splash-icon.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "updates": {
-      "fallbackToCacheTimeout": 0
-    },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
-      "podfileProperties": {
-        "use_modular_headers!": "true"
-      },
-      "supportsTablet": true,
-      "bundleIdentifier": "com.anonymous.aurora-baby-mobile"
+      "supportsTablet": true
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./src/assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      },
-      "package": "com.anonymous.aurorababymobile"
+      }
     },
     "web": {
       "favicon": "./src/assets/favicon.png"
+    },
+    "extra": {
+      "firebaseApiKey": "AIzaSyC5xeeWjT3XpPMPamhSc748D9Bbif0RhzM",
+      "firebaseAuthDomain": "aurora-baby-mobile.firebaseapp.com",
+      "firebaseProjectId": "aurora-baby-mobile",
+      "firebaseStorageBucket": "aurora-baby-mobile.appspot.com",
+      "firebaseMessagingSenderId": "450824864919",
+      "firebaseAppId": "1:450824864919:web:39dc697565b309cb4ed5d2",
+      "firebaseMeasurementId": "G-DF2KM62PL6",
+      "googleWebClientId": "450824864919-2f0636shfkbv7ivr4nhjloiljs5r6tc9.apps.googleusercontent.com"
     }
   }
 }

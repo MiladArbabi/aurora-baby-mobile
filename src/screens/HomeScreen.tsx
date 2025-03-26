@@ -20,6 +20,7 @@ const TopBar = styled.View`
   justify-content: space-between;
   align-items: center;
   padding-horizontal: 20px;
+  z-index: 1000;
 `;
 
 const LogoText = styled.Text`
@@ -27,7 +28,7 @@ const LogoText = styled.Text`
   color: #007AFF;
 `;
 
-const ProfileIcon = styled(TouchableOpacity)`
+const ProfileIcon = styled.TouchableOpacity`
   width: 40px;
   height: 40px;
   border-radius: 20px;
@@ -50,7 +51,7 @@ const Content = styled.View`
   padding-bottom: 40px;
 `;
 
-const Button = styled(TouchableOpacity)`
+const Button = styled.TouchableOpacity`
   height: 20%;
   width: 80%;
   justify-content: center;

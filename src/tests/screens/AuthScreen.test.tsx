@@ -2,7 +2,7 @@ import { render, fireEvent } from '@testing-library/react-native';
 import AuthScreen from '../../screens/AuthScreen';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import { RootStackParamList } from '../../navigation/AppNavigator';
+import { RootStackParamList } from '../../navigation/AppNavigator';  // Fixed path
 
 const Stack = createStackNavigator<RootStackParamList>();
 

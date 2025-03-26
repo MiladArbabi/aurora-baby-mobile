@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { View, Text, Alert, TextInput } from 'react-native';
+import { View, Text, Alert, TextInput, Platform } from 'react-native';
 import styled from 'styled-components/native';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import Button from '../components/common/Button';
 import { signInWithGoogle, signInWithEmail, signUpWithEmail } from '../services/firebase';
 import Constants from 'expo-constants';
 import { StackScreenProps } from '@react-navigation/stack';
+import { RootStackParamList } from '../navigation/AppNavigator';
 
 const Container = styled.View`
   flex: 1;
@@ -60,11 +61,6 @@ const FooterText = styled.Text`
   text-align: center;
 `;
 
-type RootStackParamList = {
-  Home: undefined;
-  Auth: undefined;
-};
-
 type AuthScreenProps = StackScreenProps<RootStackParamList, 'Auth'>;
 
 const AuthScreen: React.FC<AuthScreenProps> = ({ navigation }) => {
@@ -72,17 +68,15 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  GoogleSignin.configure({
-    webClientId: Constants.expoConfig?.extra?.googleWebClientId || '450824864919-2f0636shfkbv7ivr4nhjloiljs5r6tc9.apps.googleusercontent.com',
-  });
+  if (Platform.OS !== 'web') {
+    GoogleSignin.configure({
+      webClientId: Constants.expoConfig?.extra?.googleWebClientId || '450824864919-2f0636shfkbv7ivr4nhjloiljs5r6tc9.apps.googleusercontent.com',
+    });
+  }
 
   const handleGoogleSignIn = async () => {
     try {
-      await GoogleSignin.hasPlayServices();
-      const userInfo = await GoogleSignin.signIn();
-      const idToken = userInfo.data?.idToken;
-      if (!idToken) throw new Error('No idToken');
-      await signInWithGoogle(idToken);
+      await signInWithGoogle();
       navigation.navigate('Home');
     } catch (error: any) {
       Alert.alert('Error', 'Google Sign-In Failed: ' + (error.message || 'Unknown error'));
