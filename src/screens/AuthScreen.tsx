@@ -6,7 +6,7 @@ import Button from '../components/common/Button';
 import { signInWithGoogle, signInWithEmail, signUpWithEmail } from '../services/firebase';
 import Constants from 'expo-constants';
 import { StackScreenProps } from '@react-navigation/stack';
-import { RootStackParamList } from '../navigation/AppNavigator';
+import { RootTabParamList } from '../navigation/AppNavigator';
 
 const Container = styled.View`
   flex: 1;
@@ -61,9 +61,9 @@ const FooterText = styled.Text`
   text-align: center;
 `;
 
-type AuthScreenProps = StackScreenProps<RootStackParamList, 'Auth'>;
+type AuthScreenProps = StackScreenProps<RootTabParamList, 'Auth'>;
 
-const AuthScreen: React.FC<AuthScreenProps> = ({ navigation }) => {
+const AuthScreen: React.FC<AuthScreenProps> = () => {
   const [showEmail, setShowEmail] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -77,7 +77,6 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ navigation }) => {
   const handleGoogleSignIn = async () => {
     try {
       await signInWithGoogle();
-      navigation.navigate('Home');
     } catch (error: any) {
       Alert.alert('Error', 'Google Sign-In Failed: ' + (error.message || 'Unknown error'));
     }
@@ -86,7 +85,6 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ navigation }) => {
   const handleEmailSignIn = async () => {
     try {
       await signInWithEmail(email, password);
-      navigation.navigate('Home');
     } catch (error: any) {
       Alert.alert('Sign-In Error', error.message || 'Unknown error');
     }
@@ -95,7 +93,6 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ navigation }) => {
   const handleEmailSignUp = async () => {
     try {
       await signUpWithEmail(email, password);
-      navigation.navigate('Home');
       Alert.alert('Success', 'Account created successfully!');
     } catch (error: any) {
       Alert.alert('Sign-Up Error', error.message || 'Unknown error');

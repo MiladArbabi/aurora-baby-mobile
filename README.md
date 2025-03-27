@@ -1,26 +1,25 @@
 # Aurora Baby Mobile
 
-A mobile app for parents and babies, built with Expo and React Native, focusing on harmony, care, and wonder.
+A cross-platform mobile application designed to bring harmony, care, and wonder to users. Built with modern technologies, it supports Android, iOS (in progress), and Web, featuring seamless authentication and a responsive UI.
+
+## Features
+- **Authentication**: Email/password and Google sign-in with persistence across app restarts.
+- **Navigation**: Top bar with clickable profile settings and sign-out functionality.
+- **Screens**: Home, Profile Settings, Harmony, Care, and Wonder (placeholders for future content).
+- **Cross-Platform**: Works on Android and Web, with iOS support planned.
 
 ## Tech Stack
-
-- **Framework**: React Native with Expo
-- **Navigation**: `@react-navigation/native`, `@react-navigation/stack`
-- **Authentication**: Firebase Auth
-- **Secure Storage**: `expo-secure-store` (for auth token persistence across Web, Android, iOS)
-- **State Management**: React Hooks (`useState`, `useEffect`)
-- **Styling**: `styled-components/native`
-- **Testing**: Jest, `@testing-library/react-native`
-- **Config Management**: `app.config.js` (Expo dynamic config)
-- **Dependencies**:
-  - `firebase`: For authentication and backend services
-  - `@react-native-google-signin/google-signin`: Google Sign-In for mobile
-  - `expo-constants`: Access app config
-  - `expo-secure-store`: Secure token storage
+- **Framework**: React Native with Expo (SDK 52.0.0)
+- **Authentication**: Firebase Authentication
+- **Storage**: AsyncStorage for credential persistence (Note: Plaintext passwords stored temporarily; SecureStore planned for production)
+- **Navigation**: React Navigation (Stack Navigator)
+- **Styling**: Styled Components
+- **Testing**: Jest with React Native Testing Library
+- **Build Tools**: Expo CLI, TypeScript
+- **Platforms**: Android, Web (iOS in progress)
 
 ## Getting Started
-
-1. **Install Dependencies**:
+1. **Clone the Repository**:
    ```bash
-   npm install
-   npx expo install expo-secure-store
+   git clone https://github.com/MiladArbabi/aurora-baby-mobile.git
+   cd aurora-baby-mobile

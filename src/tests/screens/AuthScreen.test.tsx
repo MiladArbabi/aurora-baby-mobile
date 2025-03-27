@@ -1,19 +1,22 @@
-import { render, fireEvent } from '@testing-library/react-native';
+import { render, fireEvent, waitFor } from '@testing-library/react-native';
 import AuthScreen from '../../screens/AuthScreen';
 import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
-import { RootStackParamList } from '../../navigation/AppNavigator';  // Fixed path
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { RootTabParamList } from '../../navigation/AppNavigator';
 
-const Stack = createStackNavigator<RootStackParamList>();
+// Mock firebase module (already mocked in __mocks__/firebase.ts)
+jest.mock('../../services/firebase');
+
+const Tab = createBottomTabNavigator<RootTabParamList>();
 
 const renderWithNavigation = () => {
   return render(
     <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen name="Auth" component={AuthScreen} />
-        <Stack.Screen name="Home" component={() => <></>} />
-        <Stack.Screen name="ProfileSettings" component={() => <></>} />
-      </Stack.Navigator>
+      <Tab.Navigator>
+        <Tab.Screen name="Auth" component={AuthScreen} />
+        <Tab.Screen name="Home" component={() => <></>} />
+        <Tab.Screen name="ProfileSettings" component={() => <></>} />
+      </Tab.Navigator>
     </NavigationContainer>
   );
 };
@@ -51,22 +54,28 @@ describe('AuthScreen', () => {
 
   it('triggers Google sign-in/signup on button press', async () => {
     const { getByText } = renderWithNavigation();
-    await fireEvent.press(getByText('Continue with Google'));
+    const { signInWithGoogle } = require('../../services/firebase'); // Use mocked version
+    await waitFor(() => fireEvent.press(getByText('Continue with Google')), { timeout: 2000 });
+    expect(signInWithGoogle).toHaveBeenCalled();
   });
 
   it('triggers email sign-in on button press', async () => {
     const { getByText, getByPlaceholderText } = renderWithNavigation();
+    const { signInWithEmail } = require('../../services/firebase'); // Use mocked version
     fireEvent.press(getByText('Other options'));
     fireEvent.changeText(getByPlaceholderText('Email'), 'test@example.com');
     fireEvent.changeText(getByPlaceholderText('Password'), 'password123');
-    await fireEvent.press(getByText('Sign In'));
+    await waitFor(() => fireEvent.press(getByText('Sign In')), { timeout: 2000 });
+    expect(signInWithEmail).toHaveBeenCalledWith('test@example.com', 'password123');
   });
 
   it('triggers email sign-up on button press', async () => {
     const { getByText, getByPlaceholderText } = renderWithNavigation();
+    const { signUpWithEmail } = require('../../services/firebase'); // Use mocked version
     fireEvent.press(getByText('Other options'));
     fireEvent.changeText(getByPlaceholderText('Email'), 'test@example.com');
     fireEvent.changeText(getByPlaceholderText('Password'), 'password123');
-    await fireEvent.press(getByText('Sign Up'));
+    await waitFor(() => fireEvent.press(getByText('Sign Up')), { timeout: 2000 });
+    expect(signUpWithEmail).toHaveBeenCalledWith('test@example.com', 'password123');
   });
 });

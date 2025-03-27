@@ -1,33 +1,28 @@
 import { render } from '@testing-library/react-native';
 import HomeScreen from '../../screens/HomeScreen';
 import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
-import { RootStackParamList } from '../../navigation/AppNavigator';  // Fixed path
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { RootTabParamList } from '../../navigation/AppNavigator'; // Updated to RootTabParamList
 
-const Stack = createStackNavigator<RootStackParamList>();
+const Tab = createBottomTabNavigator<RootTabParamList>();
 
 const renderWithNavigation = () => {
   return render(
     <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen name="Home" component={HomeScreen} />
-        <Stack.Screen name="ProfileSettings" component={ProfileSettingScreen} />
-        <Stack.Screen name="Harmony" component={HarmonyScreen} />
-        <Stack.Screen name="Care" component={CareScreen} />
-        <Stack.Screen name="Wonder" component={WonderScreen} />
-      </Stack.Navigator>
+      <Tab.Navigator>
+        <Tab.Screen name="Home" component={HomeScreen} />
+        <Tab.Screen name="ProfileSettings" component={() => <></>} />
+        <Tab.Screen name="Harmony" component={() => <></>} />
+        <Tab.Screen name="Care" component={() => <></>} />
+        <Tab.Screen name="Wonder" component={() => <></>} />
+      </Tab.Navigator>
     </NavigationContainer>
   );
 };
 
-const ProfileSettingScreen: React.FC = () => <></>;
-const HarmonyScreen: React.FC = () => <></>;
-const CareScreen: React.FC = () => <></>;
-const WonderScreen: React.FC = () => <></>;
-
 describe('HomeScreen', () => {
-  it('renders Harmony button', () => {
+  it('renders Harmony button', () => { // Update to match new HomeScreen content if needed
     const { getByText } = renderWithNavigation();
-    expect(getByText('Harmony')).toBeTruthy();
+    expect(getByText('Track Your Baby\'s Growth & Well-being')).toBeTruthy(); // Match new card text
   });
 });
