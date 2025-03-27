@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components/native';
+import { colors, fonts, spacing } from '../../styles/theme';
 
 interface ButtonProps {
   text: string;
@@ -7,13 +8,14 @@ interface ButtonProps {
 }
 
 const StyledButton = styled.TouchableOpacity`
-  padding: 10px;
-  background-color: #007AFF;
-  border-radius: 5px;
+  padding: ${spacing.small}px ${spacing.medium}px; /* 8px vertical, 16px horizontal */
+  background-color: ${colors.primary}; /* #B3A5C4 */
+  border-radius: ${spacing.small}px; /* 8px */
 `;
 
 const StyledText = styled.Text`
-  color: #FFFFFF;
+  color: ${colors.background}; /* #E9DAFA */
+  font-family: ${fonts.regular}; /* Edrosa */
   text-align: center;
 `;
 

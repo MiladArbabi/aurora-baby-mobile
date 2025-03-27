@@ -1,26 +1,26 @@
 import React, { useState, useEffect } from 'react';
-import { createStackNavigator } from '@react-navigation/stack';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { onAuthStateChanged, auth, checkAuthState } from '../services/firebase';
 import { User } from 'firebase/auth';
 import HomeScreen from '../screens/HomeScreen';
 import AuthScreen from '../screens/AuthScreen';
 import ProfileSettingScreen from '../screens/ProfileSettingScreen';
+import HarmonyScreen from '../screens/HarmonyScreen';
+import CareScreen from '../screens/CareScreen';
+import WonderScreen from '../screens/WonderScreen';
 import LoadingSpinner from '../components/common/LoadingSpinner';
+import { BottomTabNavigationOptions } from '@react-navigation/bottom-tabs';
 
-export type RootStackParamList = {
+export type RootTabParamList = {
   Home: undefined;
-  Auth: undefined;
-  ProfileSettings: undefined;
   Harmony: undefined;
   Care: undefined;
   Wonder: undefined;
+  Auth: undefined;
+  ProfileSettings: undefined;
 };
 
-const Stack = createStackNavigator<RootStackParamList>();
-
-const HarmonyScreen: React.FC = () => <LoadingSpinner />;
-const CareScreen: React.FC = () => <LoadingSpinner />;
-const WonderScreen: React.FC = () => <LoadingSpinner />;
+const Tab = createBottomTabNavigator<RootTabParamList>();
 
 export const AppNavigator: React.FC = () => {
   const [user, setUser] = useState<User | null>(null);
@@ -34,28 +34,32 @@ export const AppNavigator: React.FC = () => {
     };
     initAuth();
 
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      setUser(currentUser);
-    });
+    const unsubscribe = onAuthStateChanged(auth, setUser);
     return unsubscribe;
   }, []);
 
   if (loading) return <LoadingSpinner />;
 
+  const screenOptions = ({ route }: { route: { name: keyof RootTabParamList } }): BottomTabNavigationOptions => ({
+    headerShown: false,
+    tabBarActiveTintColor: '#007AFF',
+    tabBarInactiveTintColor: '#666',
+  });
+
   return (
-    <Stack.Navigator screenOptions={{ headerShown: false }}>
+    <Tab.Navigator screenOptions={screenOptions}>
       {user ? (
         <>
-          <Stack.Screen name="Home" component={HomeScreen} />
-          <Stack.Screen name="ProfileSettings" component={ProfileSettingScreen} />
-          <Stack.Screen name="Harmony" component={HarmonyScreen} />
-          <Stack.Screen name="Care" component={CareScreen} />
-          <Stack.Screen name="Wonder" component={WonderScreen} />
+          <Tab.Screen name="Home" component={HomeScreen} />
+          <Tab.Screen name="Harmony" component={HarmonyScreen} />
+          <Tab.Screen name="Care" component={CareScreen} />
+          <Tab.Screen name="Wonder" component={WonderScreen} />
+          <Tab.Screen name="ProfileSettings" component={ProfileSettingScreen} options={{ tabBarButton: () => null }} />
         </>
       ) : (
-        <Stack.Screen name="Auth" component={AuthScreen} />
+        <Tab.Screen name="Auth" component={AuthScreen} options={{ tabBarButton: () => null }} />
       )}
-    </Stack.Navigator>
+    </Tab.Navigator>
   );
 };
 

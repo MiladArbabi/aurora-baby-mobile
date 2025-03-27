@@ -5,7 +5,7 @@ import { signOut } from '../services/firebase';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Button from '../components/common/Button';
 import { StackScreenProps } from '@react-navigation/stack';
-import { RootStackParamList } from '../navigation/AppNavigator';
+import { RootTabParamList } from '../navigation/AppNavigator';
 
 const Container = styled.View`
   flex: 1;
@@ -56,7 +56,7 @@ const Title = styled.Text`
   margin-bottom: 20px;
 `;
 
-type ProfileSettingsProps = StackScreenProps<RootStackParamList, 'ProfileSettings'>;
+type ProfileSettingsProps = StackScreenProps<RootTabParamList, 'ProfileSettings'>;
 
 const ProfileSettingScreen: React.FC<ProfileSettingsProps> = ({ navigation }) => {
   const handleSignOut = async () => {

@@ -1,8 +1,8 @@
 import React from 'react';
-import { View, TouchableOpacity, Text } from 'react-native';
+import { View, Text, FlatList } from 'react-native';
 import styled from 'styled-components/native';
 import { StackScreenProps } from '@react-navigation/stack';
-import { RootStackParamList } from '../navigation/AppNavigator';
+import { RootTabParamList } from '../navigation/AppNavigator';
 
 const Container = styled.View`
   flex: 1;
@@ -10,17 +10,12 @@ const Container = styled.View`
 `;
 
 const TopBar = styled.View`
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
   height: 60px;
-  background-color: rgba(255, 255, 255, 0.8);
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
   padding-horizontal: 20px;
-  z-index: 1000;
+  background-color: rgba(255, 255, 255, 0.8);
 `;
 
 const LogoText = styled.Text`
@@ -42,34 +37,41 @@ const IconText = styled.Text`
   font-size: 18px;
 `;
 
-const Content = styled.View`
-  flex: 1;
-  justify-content: flex-end;
-  align-items: center;
-  padding: 20px;
-  padding-top: 80px;
-  padding-bottom: 40px;
-`;
-
-const Button = styled.TouchableOpacity`
-  height: 20%;
-  width: 80%;
-  justify-content: center;
-  align-items: center;
+const CarouselContainer = styled.View`
+  height: 200px;
   margin-vertical: 10px;
-  border-radius: 25px;
-  margin-bottom: 15px;
 `;
 
-const ButtonText = styled.Text`
-  color: #FFFFFF;
-  text-align: center;
-  font-size: 32px;
+const CarouselItem = styled.TouchableOpacity`
+  width: 300px;
+  margin-horizontal: 10px;
+  background-color: #F0F4F8;
+  border-radius: 10px;
+  padding: 20px;
 `;
 
-type HomeScreenProps = StackScreenProps<RootStackParamList, 'Home'>;
+const Card = styled.TouchableOpacity`
+  width: 90%;
+  margin-vertical: 10px;
+  align-self: center;
+  background-color: #F0F4F8;
+  border-radius: 10px;
+  padding: 20px;
+`;
+
+const CardText = styled.Text`
+  font-size: 16px;
+  color: #333;
+`;
+
+type HomeScreenProps = StackScreenProps<RootTabParamList, 'Home'>;
 
 const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
+  const carouselData = [
+    { id: '1', title: 'Featured Story', action: () => navigation.navigate('Harmony') },
+    { id: '2', title: 'Create Your Story', action: () => navigation.navigate('Harmony') },
+  ];
+
   return (
     <Container>
       <TopBar>
@@ -78,17 +80,25 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
           <IconText>P</IconText>
         </ProfileIcon>
       </TopBar>
-      <Content>
-        <Button style={{ backgroundColor: '#d2b48c' }} onPress={() => navigation.navigate('Harmony')}>
-          <ButtonText>Harmony</ButtonText>
-        </Button>
-        <Button style={{ backgroundColor: '#87ceeb' }} onPress={() => navigation.navigate('Care')}>
-          <ButtonText>Care</ButtonText>
-        </Button>
-        <Button style={{ backgroundColor: '#191970', marginBottom: 75 }} onPress={() => navigation.navigate('Wonder')}>
-          <ButtonText>Wonder</ButtonText>
-        </Button>
-      </Content>
+      <CarouselContainer>
+        <FlatList
+          data={carouselData}
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          renderItem={({ item }) => (
+            <CarouselItem onPress={item.action}>
+              <Text>{item.title}</Text>
+            </CarouselItem>
+          )}
+          keyExtractor={item => item.id}
+        />
+      </CarouselContainer>
+      <Card onPress={() => navigation.navigate('Care')}>
+        <CardText>Track Your Baby's Growth & Well-being</CardText>
+      </Card>
+      <Card onPress={() => navigation.navigate('Wonder')}>
+        <CardText>Explore Interactive AR & VR Experiences</CardText>
+      </Card>
     </Container>
   );
 };
