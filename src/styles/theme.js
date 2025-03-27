@@ -1,22 +1,21 @@
 // src/styles/theme.js
 export const colors = {
-    primary: '#007AFF', // Muted blue from Figma
-    secondary: '#A9B8C9', // Soft gray-blue
-    background: '#FFFFFF', // White
-    accent: '#E8ECEF', // Light gray for cards
-    text: '#333333', // Dark gray for readability
-    // Add more as per Figma
-  };
-  
-  export const fonts = {
-    regular: 'System', // Default system font
-    bold: 'System-Bold', // Bold variant
-    // Add more from Figma if specified
-  };
-  
-  export const spacing = {
-    small: 8,
-    medium: 16,
-    large: 24,
-    // Add more from Figma
-  };
+  primary: '#B3A5C4', // Lavender
+  secondary: '#ACCED7', // Dusty Blue
+  background: '#E9DAFA', // Light Lavender
+  accent: '#F9B9B1', // Peach
+  text: '#453F4E', // Dark Lavender
+  // Add more as per Figma
+};
+
+export const fonts = {
+regular: 'Edrosa',
+bold: 'Edrosa',
+};
+
+export const spacing = {
+  small: 8,
+  medium: 16,
+  large: 24,
+  // Add more from Figma
+};
