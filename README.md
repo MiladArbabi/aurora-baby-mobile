@@ -1,3 +1,5 @@
+- [Error Log](docs/error-log.md) - Recurring issues and resolutions
+
 # Aurora Baby Mobile
 
 A cross-platform mobile application designed to bring harmony, care, and wonder to users. Built with modern technologies, it supports Android, iOS (in progress), and Web, featuring seamless authentication and a responsive UI.
