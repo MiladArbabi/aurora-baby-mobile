@@ -5,26 +5,27 @@ import { colors, fonts, spacing } from '../../styles/theme';
 interface ButtonProps {
   text: string;
   onPress?: () => void;
+  testID?: string;
 }
 
 const StyledButton = styled.TouchableOpacity`
-  padding: ${spacing.small}px ${spacing.medium}px; /* 8px vertical, 16px horizontal */
-  background-color: ${colors.primary}; /* #B3A5C4 */
-  border-radius: ${spacing.small}px; /* 8px */
+  padding: ${spacing.small}px ${spacing.medium}px;
+  background-color: ${colors.primary};
+  border-radius: ${spacing.small}px;
 `;
 
 const StyledText = styled.Text`
-  color: ${colors.background}; /* #E9DAFA */
-  font-family: ${fonts.regular}; /* Edrosa */
+  color: ${colors.background};
+  font-family: ${fonts.regular};
   text-align: center;
 `;
 
-const Button: React.FC<ButtonProps> = ({ text, onPress }) => {
+const Button: React.FC<ButtonProps> = ({ text, onPress, testID }) => {
   if (!text || typeof text !== 'string') {
     throw new Error('Button requires a valid text prop');
   }
   return (
-    <StyledButton testID="styled-button" onPress={onPress}>
+    <StyledButton testID={testID || 'styled-button'} onPress={onPress}>
       <StyledText>{text}</StyledText>
     </StyledButton>
   );

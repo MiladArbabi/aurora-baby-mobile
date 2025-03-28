@@ -7,7 +7,7 @@ describe('Button', () => {
   it('renders with provided text and themed styles', () => {
     const { getByText, getByTestId } = render(<Button text="Click Me" onPress={() => {}} />);
     const buttonText = getByText('Click Me');
-    const button = getByTestId('styled-button'); // Use testID to target StyledButton
+    const button = getByTestId('styled-button');
 
     expect(buttonText).toBeTruthy();
     console.log("buttonText styles:", buttonText.props.style);

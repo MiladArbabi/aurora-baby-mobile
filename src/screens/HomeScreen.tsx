@@ -1,12 +1,14 @@
 import React from 'react';
 import { View, Text, FlatList } from 'react-native';
 import styled from 'styled-components/native';
-import { StackScreenProps } from '@react-navigation/stack';
+import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import { RootTabParamList } from '../navigation/AppNavigator';
+import { colors, fonts, spacing } from '../styles/theme';
+import Button from '../components/common/Button';
 
 const Container = styled.View`
   flex: 1;
-  background-color: #fff;
+  background-color: ${colors.background};
 `;
 
 const TopBar = styled.View`
@@ -14,57 +16,51 @@ const TopBar = styled.View`
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  padding-horizontal: 20px;
-  background-color: rgba(255, 255, 255, 0.8);
+  padding-horizontal: ${spacing.large}px;
+  background-color: ${colors.background};
 `;
 
 const LogoText = styled.Text`
   font-size: 24px;
-  color: #007AFF;
+  color: ${colors.text};
+  font-family: ${fonts.regular};
 `;
 
 const ProfileIcon = styled.TouchableOpacity`
   width: 40px;
   height: 40px;
   border-radius: 20px;
-  background-color: #007AFF;
+  background-color: ${colors.accent};
   justify-content: center;
   align-items: center;
 `;
 
 const IconText = styled.Text`
-  color: #fff;
+  color: ${colors.background};
   font-size: 18px;
+  font-family: ${fonts.regular};
 `;
 
 const CarouselContainer = styled.View`
   height: 200px;
-  margin-vertical: 10px;
+  margin-vertical: ${spacing.medium}px;
 `;
 
 const CarouselItem = styled.TouchableOpacity`
   width: 300px;
-  margin-horizontal: 10px;
-  background-color: #F0F4F8;
-  border-radius: 10px;
-  padding: 20px;
+  margin-horizontal: ${spacing.medium}px;
+  background-color: ${colors.secondary};
+  border-radius: ${spacing.medium}px;
+  padding: ${spacing.large}px;
 `;
 
-const Card = styled.TouchableOpacity`
-  width: 90%;
-  margin-vertical: 10px;
-  align-self: center;
-  background-color: #F0F4F8;
-  border-radius: 10px;
-  padding: 20px;
-`;
-
-const CardText = styled.Text`
+const CarouselText = styled.Text`
   font-size: 16px;
-  color: #333;
+  color: ${colors.text};
+  font-family: ${fonts.regular};
 `;
 
-type HomeScreenProps = StackScreenProps<RootTabParamList, 'Home'>;
+type HomeScreenProps = BottomTabScreenProps<RootTabParamList, 'Home'>;
 
 const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
   const carouselData = [
@@ -74,9 +70,9 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
 
   return (
     <Container>
-      <TopBar>
+      <TopBar testID="top-bar">
         <LogoText>Aurora Baby</LogoText>
-        <ProfileIcon onPress={() => navigation.navigate('ProfileSettings')}>
+        <ProfileIcon testID="profile-icon" onPress={() => navigation.navigate('ProfileSettings')}>
           <IconText>P</IconText>
         </ProfileIcon>
       </TopBar>
@@ -86,19 +82,15 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
           horizontal
           showsHorizontalScrollIndicator={false}
           renderItem={({ item }) => (
-            <CarouselItem onPress={item.action}>
-              <Text>{item.title}</Text>
+            <CarouselItem testID={`carousel-item-${item.id}`} onPress={item.action}>
+              <CarouselText>{item.title}</CarouselText>
             </CarouselItem>
           )}
           keyExtractor={item => item.id}
         />
       </CarouselContainer>
-      <Card onPress={() => navigation.navigate('Care')}>
-        <CardText>Track Your Baby's Growth & Well-being</CardText>
-      </Card>
-      <Card onPress={() => navigation.navigate('Wonder')}>
-        <CardText>Explore Interactive AR & VR Experiences</CardText>
-      </Card>
+      <Button testID="care-button" text="Track Your Baby's Growth & Well-being" onPress={() => navigation.navigate('Care')} />
+      <Button testID="wonder-button" text="Explore Interactive AR & VR Experiences" onPress={() => navigation.navigate('Wonder')} />
     </Container>
   );
 };
