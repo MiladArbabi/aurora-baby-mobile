@@ -7,6 +7,8 @@ This document tracks recurring errors, their causes, and resolutions to streamli
 - [TypeScript Navigation Prop Mismatch](#typescript-navigation-prop-mismatch)
 - [TestID Not Found](#testid-not-found)
 - [React UMD Global Error](#react-umd-global-error)
+- [`act()` Causing Unmounted Test Renderer Issues](#act-causing-unmounted-test-renderer-issues)
+- [Duplicate `NavigationContainer` Rendering Issues](#duplicate-navigationcontainer-rendering-issues)
 
 ## Multiple Elements with Same Text
 - **Error**: `Found multiple elements with text: <text>` (e.g., Jest `getByText` fails).
@@ -35,3 +37,7 @@ This document tracks recurring errors, their causes, and resolutions to streamli
 - **Resolution**: Add `import React from 'react'` to the test file.
 - **Example**: `AuthScreen.test.tsx` fix (commit `fix: add React import to AuthScreen.test.tsx to resolve TS2686 error`).
 - **Date**: March 28, 2025
+
+## `act()` Causing Unmounted Test Renderer Issues
+- **Error**: `Can't access .root on unmounted test renderer` (e.g., in `HomeScreen.test.tsx` and `AppNavigator.test.tsx`).
+- **Cause**: Using `act()` from `@testing-library/react-native` to wrap async operations (e.g., rendering, event firing) led to premature unmounting of the test

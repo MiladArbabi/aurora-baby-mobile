@@ -5,37 +5,43 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import { RouteProp } from '@react-navigation/native';
 import { RootTabParamList } from '../../navigation/AppNavigator';
-import { colors, fonts, spacing } from '../../styles/theme';
+import { ThemeProvider } from '@rneui/themed';
+import { ThemeProvider as StyledThemeProvider } from 'styled-components/native';
+import { rneThemeBase, theme } from '../../styles/theme';
 
 const Tab = createBottomTabNavigator<RootTabParamList>();
 
 const renderWithNavigation = () => {
   return render(
-    <NavigationContainer>
-      <Tab.Navigator>
-        <Tab.Screen name="Care" component={CareScreen} />
-        <Tab.Screen name="Home" component={() => <></>} />
-      </Tab.Navigator>
-    </NavigationContainer>
+    <ThemeProvider theme={rneThemeBase}>
+      <StyledThemeProvider theme={theme}>
+        <NavigationContainer>
+          <Tab.Navigator>
+            <Tab.Screen name="Care" component={CareScreen} />
+            <Tab.Screen name="Home" component={() => <></>} />
+          </Tab.Navigator>
+        </NavigationContainer>
+      </StyledThemeProvider>
+    </ThemeProvider>
   );
 };
 
 describe('CareScreen', () => {
   it('renders title and button with themed styles', async () => {
-    const { getByText, getByTestId } = renderWithNavigation();
+    const { getByTestId } = renderWithNavigation();
     await waitFor(() => {
-      const title = getByTestId('care-title'); // We’ll add this testID
+      const title = getByTestId('care-title');
       const button = getByTestId('back-button');
       expect(title).toBeTruthy();
       expect(title.props.style).toMatchObject({
-        color: colors.text,
-        fontFamily: fonts.regular,
+        color: theme.colors.text,
+        fontFamily: theme.fonts.regular,
         fontSize: 24,
       });
       expect(button.props.style).toMatchObject({
-        backgroundColor: colors.primary,
-        paddingTop: spacing.small,
-        paddingRight: spacing.medium,
+        backgroundColor: theme.colors.primary,
+        paddingTop: theme.spacing.small,
+        paddingRight: theme.spacing.medium,
       });
     }, { timeout: 2000 });
   });
@@ -67,7 +73,11 @@ describe('CareScreen', () => {
       params: undefined,
     };
     const { getByTestId } = render(
-      <CareScreen navigation={navigation} route={route} />
+      <ThemeProvider theme={rneThemeBase}>
+        <StyledThemeProvider theme={theme}>
+          <CareScreen navigation={navigation} route={route} />
+        </StyledThemeProvider>
+      </ThemeProvider>
     );
     fireEvent.press(getByTestId('back-button'));
     expect(mockNavigate).toHaveBeenCalledWith('Home');

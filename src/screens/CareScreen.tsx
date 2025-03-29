@@ -2,20 +2,20 @@ import React from 'react';
 import styled from 'styled-components/native';
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import { RootTabParamList } from '../navigation/AppNavigator';
-import { colors, fonts, spacing } from '../styles/theme';
 import Button from '../components/common/Button';
+import { AppTheme } from '../styles/theme'; // Import theme type
 
 const Container = styled.View`
   flex: 1;
-  background-color: ${colors.background};
-  padding: ${spacing.large}px;
+  background-color: ${(props: { theme: AppTheme }) => props.theme.colors.background};
+  padding: ${(props: { theme: AppTheme }) => props.theme.spacing.large}px;
 `;
 
 const Title = styled.Text`
   font-size: 24px;
-  color: ${colors.text};
-  font-family: ${fonts.regular};
-  margin-bottom: ${spacing.medium}px;
+  color: ${(props: { theme: AppTheme }) => props.theme.colors.text};
+  font-family: ${(props: { theme: AppTheme }) => props.theme.fonts.regular};
+  margin-bottom: ${(props: { theme: AppTheme }) => props.theme.spacing.medium}px;
 `;
 
 type CareScreenProps = BottomTabScreenProps<RootTabParamList, 'Care'>;

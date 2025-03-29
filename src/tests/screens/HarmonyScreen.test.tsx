@@ -1,5 +1,5 @@
 import { render, fireEvent, waitFor } from '@testing-library/react-native';
-import WonderScreen from '../../screens/WonderScreen';
+import HarmonyScreen from '../../screens/HarmonyScreen';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
@@ -17,7 +17,7 @@ const renderWithNavigation = () => {
       <StyledThemeProvider theme={theme}>
         <NavigationContainer>
           <Tab.Navigator>
-            <Tab.Screen name="Wonder" component={WonderScreen} />
+            <Tab.Screen name="Harmony" component={HarmonyScreen} />
             <Tab.Screen name="Home" component={() => <></>} />
           </Tab.Navigator>
         </NavigationContainer>
@@ -26,11 +26,11 @@ const renderWithNavigation = () => {
   );
 };
 
-describe('WonderScreen', () => {
+describe('HarmonyScreen', () => {
   it('renders title and button with themed styles', async () => {
     const { getByTestId } = renderWithNavigation();
     await waitFor(() => {
-      const title = getByTestId('wonder-title');
+      const title = getByTestId('harmony-title');
       const button = getByTestId('back-button');
       expect(title).toBeTruthy();
       expect(title.props.style).toMatchObject({
@@ -48,7 +48,7 @@ describe('WonderScreen', () => {
 
   it('navigates to Home on button press', () => {
     const mockNavigate = jest.fn();
-    const navigation: BottomTabNavigationProp<RootTabParamList, 'Wonder'> = {
+    const navigation: BottomTabNavigationProp<RootTabParamList, 'Harmony'> = {
       navigate: mockNavigate,
       getState: jest.fn(),
       dispatch: jest.fn(),
@@ -67,15 +67,15 @@ describe('WonderScreen', () => {
       preload: jest.fn(),
       setStateForNextRouteNamesChange: jest.fn(),
     };
-    const route: RouteProp<RootTabParamList, 'Wonder'> = {
-      key: 'Wonder-123',
-      name: 'Wonder',
+    const route: RouteProp<RootTabParamList, 'Harmony'> = {
+      key: 'Harmony-123',
+      name: 'Harmony',
       params: undefined,
     };
     const { getByTestId } = render(
       <ThemeProvider theme={rneThemeBase}>
         <StyledThemeProvider theme={theme}>
-          <WonderScreen navigation={navigation} route={route} />
+          <HarmonyScreen navigation={navigation} route={route} />
         </StyledThemeProvider>
       </ThemeProvider>
     );

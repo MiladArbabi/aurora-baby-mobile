@@ -1,10 +1,13 @@
-import React from 'react'; // Add this import
+import React from 'react';
 import { render, fireEvent, waitFor } from '@testing-library/react-native';
 import AuthScreen from '../../screens/AuthScreen';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { RootTabParamList } from '../../navigation/AppNavigator';
 import * as firebase from '../../services/firebase';
+import { ThemeProvider } from '@rneui/themed';
+import { ThemeProvider as StyledThemeProvider } from 'styled-components/native';
+import { rneThemeBase, theme } from '../../styles/theme';
 
 jest.mock('../../services/firebase', () => ({
   ...jest.requireActual('../../services/firebase'),
@@ -19,20 +22,23 @@ const EmptyScreen = () => <></>;
 
 const renderWithNavigation = () => {
   return render(
-    <NavigationContainer>
-      <Tab.Navigator>
-        <Tab.Screen name="Auth" component={AuthScreen} />
-        <Tab.Screen name="Home" component={EmptyScreen} />
-        <Tab.Screen name="ProfileSettings" component={EmptyScreen} />
-      </Tab.Navigator>
-    </NavigationContainer>
+    <ThemeProvider theme={rneThemeBase}>
+      <StyledThemeProvider theme={theme}>
+        <NavigationContainer>
+          <Tab.Navigator>
+            <Tab.Screen name="Auth" component={AuthScreen} />
+            <Tab.Screen name="Home" component={EmptyScreen} />
+            <Tab.Screen name="ProfileSettings" component={EmptyScreen} />
+          </Tab.Navigator>
+        </NavigationContainer>
+      </StyledThemeProvider>
+    </ThemeProvider>
   );
 };
 
 describe('AuthScreen', () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    // Reset useState for showEmail
     jest.spyOn(React, 'useState').mockImplementationOnce(() => [false, jest.fn()]);
   });
 

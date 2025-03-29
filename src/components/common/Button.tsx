@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components/native';
-import { colors, fonts, spacing } from '../../styles/theme';
+import { AppTheme } from '../../styles/theme';
 
 interface ButtonProps {
   text: string;
@@ -8,15 +8,19 @@ interface ButtonProps {
   testID?: string;
 }
 
+interface StyledProps {
+  theme: AppTheme;
+}
+
 const StyledButton = styled.TouchableOpacity`
-  padding: ${spacing.small}px ${spacing.medium}px;
-  background-color: ${colors.primary};
-  border-radius: ${spacing.small}px;
+  padding: ${(props: StyledProps) => props.theme.spacing.small}px ${(props: StyledProps) => props.theme.spacing.medium}px;
+  background-color: ${(props: StyledProps) => props.theme.colors.primary};
+  border-radius: ${(props: StyledProps) => props.theme.spacing.small}px;
 `;
 
 const StyledText = styled.Text`
-  color: ${colors.background};
-  font-family: ${fonts.regular};
+  color: ${(props: StyledProps) => props.theme.colors.background};
+  font-family: ${(props: StyledProps) => props.theme.fonts.regular};
   text-align: center;
 `;
 

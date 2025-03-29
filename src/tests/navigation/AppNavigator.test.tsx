@@ -1,36 +1,61 @@
 import { render, waitFor } from '@testing-library/react-native';
 import { NavigationContainer } from '@react-navigation/native';
-import { AppNavigator } from '../../navigation/AppNavigator';
+import AppNavigator from '../../navigation/AppNavigator';
+import { ThemeProvider } from '@rneui/themed';
+import { ThemeProvider as StyledThemeProvider } from 'styled-components/native';
+import { rneThemeBase, theme } from '../../styles/theme';
+import * as firebase from '../../services/firebase';
+import { useThemeMode } from '@rneui/themed';
 
-// Mock Firebase
 jest.mock('../../services/firebase', () => ({
-  auth: {},
-  checkAuthState: jest.fn(() => Promise.resolve({ email: 'test@example.com' })),
-  onAuthStateChanged: jest.fn((auth, callback) => {
-    callback({ email: 'test@example.com' });
-    return jest.fn();
-  }),
+  checkAuthState: jest.fn(),
 }));
 
-// Mock expo-modules-core to suppress LegacyEventEmitter errors
-jest.mock('expo-modules-core', () => ({
-  EventEmitter: jest.fn(() => ({
-    addListener: jest.fn(() => ({ remove: jest.fn() })),
-    removeAllListeners: jest.fn(),
-  })),
-}));
+jest.mock('@rneui/themed', () => {
+  const original = jest.requireActual('@rneui/themed');
+  return {
+    ...original,
+    useThemeMode: jest.fn(() => ({
+      mode: 'light',
+      setMode: jest.fn(),
+    })),
+  };
+});
 
 describe('AppNavigator', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
   it('starts at Home screen when authenticated', async () => {
-    const { findByText } = render(
-      <NavigationContainer>
-        <AppNavigator />
-      </NavigationContainer>
+    (firebase.checkAuthState as jest.Mock).mockResolvedValue({ uid: 'mock-uid' });
+    const { getByText } = render(
+      <ThemeProvider theme={rneThemeBase}>
+        <StyledThemeProvider theme={theme}>
+          <NavigationContainer>
+            <AppNavigator />
+          </NavigationContainer>
+        </StyledThemeProvider>
+      </ThemeProvider>
     );
-    const homeText = await waitFor(
-      () => findByText("Track Your Baby's Growth & Well-being"),
-      { timeout: 2000 }
+    await waitFor(() => {
+      expect(getByText("Track Your Baby's Growth & Well-being")).toBeTruthy();
+    }, { timeout: 2000 });
+  });
+
+  it('starts at Auth screen when not authenticated', async () => {
+    (firebase.checkAuthState as jest.Mock).mockResolvedValue(null);
+    const { getByText } = render(
+      <ThemeProvider theme={rneThemeBase}>
+        <StyledThemeProvider theme={theme}>
+          <NavigationContainer>
+            <AppNavigator />
+          </NavigationContainer>
+        </StyledThemeProvider>
+      </ThemeProvider>
     );
-    expect(homeText).toBeTruthy();
+    await waitFor(() => {
+      expect(getByText('Aurora Baby')).toBeTruthy();
+    }, { timeout: 2000 });
   });
 });

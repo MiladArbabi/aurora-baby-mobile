@@ -2,20 +2,24 @@ import React from 'react';
 import styled from 'styled-components/native';
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import { RootTabParamList } from '../navigation/AppNavigator';
-import { colors, fonts, spacing } from '../styles/theme';
 import Button from '../components/common/Button';
+import { AppTheme } from '../styles/theme';
+
+interface StyledProps {
+  theme: AppTheme;
+}
 
 const Container = styled.View`
   flex: 1;
-  background-color: ${colors.background};
-  padding: ${spacing.large}px;
+  background-color: ${(props: StyledProps) => props.theme.colors.background};
+  padding: ${(props: StyledProps) => props.theme.spacing.large}px;
 `;
 
 const Title = styled.Text`
   font-size: 24px;
-  color: ${colors.text};
-  font-family: ${fonts.regular};
-  margin-bottom: ${spacing.medium}px;
+  color: ${(props: StyledProps) => props.theme.colors.text};
+  font-family: ${(props: StyledProps) => props.theme.fonts.regular};
+  margin-bottom: ${(props: StyledProps) => props.theme.spacing.medium}px;
 `;
 
 type WonderScreenProps = BottomTabScreenProps<RootTabParamList, 'Wonder'>;
@@ -33,4 +37,4 @@ const WonderScreen: React.FC<WonderScreenProps> = ({ navigation }) => {
   );
 };
 
-export default WonderScreen;
+export default WonderScreen; 

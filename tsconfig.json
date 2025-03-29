@@ -6,8 +6,12 @@
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "lib": ["esnext", "dom"],
-    "skipLibCheck": true 
+    "skipLibCheck": true,
+    "baseUrl": ".", 
+    "paths": {
+      "*": ["src/*"] 
+    }
   },
   "include": ["src/**/*"],
-  "exclude": ["node_modules", "**/node_modules/*"] 
+  "exclude": ["node_modules", "**/node_modules/*"]
 }
