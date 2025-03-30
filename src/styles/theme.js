@@ -1,9 +1,9 @@
 // src/styles/theme.js
 export const colors = {
   primary: '#B3A5C4', // Lavender
-  secondary: '#ACCED7', // Dusty Blue
+  secondary: '#B3A5C4', // Lavender
   background: '#E9DAFA', // Light Lavender
-  accent: '#F9B9B1', // Peach
+  accent: '#B3A5C4', // Lavender
   text: '#453F4E', // Dark Lavender
   // Figma-inspired additions
   border: '#D3C8E5', // Softer Lavender
