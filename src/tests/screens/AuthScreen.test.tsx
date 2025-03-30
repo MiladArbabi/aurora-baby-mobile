@@ -5,6 +5,10 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { RootTabParamList } from '../../navigation/AppNavigator';
 import * as firebase from '../../services/firebase';
+import { ThemeProvider } from '@rneui/themed';
+import { ThemeProvider as StyledThemeProvider } from 'styled-components/native';
+import { rneThemeBase, theme } from '../../styles/theme';
+import { DefaultTheme } from 'styled-components/native';
 
 jest.mock('../../services/firebase', () => ({
   ...jest.requireActual('../../services/firebase'),
@@ -18,21 +22,25 @@ const Tab = createBottomTabNavigator<RootTabParamList>();
 const EmptyScreen = () => <></>;
 
 const renderWithNavigation = () => {
+  const typedTheme: DefaultTheme = theme as DefaultTheme;
   return render(
-    <NavigationContainer>
-      <Tab.Navigator>
-        <Tab.Screen name="Auth" component={AuthScreen} />
-        <Tab.Screen name="Home" component={EmptyScreen} />
-        <Tab.Screen name="ProfileSettings" component={EmptyScreen} />
-      </Tab.Navigator>
-    </NavigationContainer>
+    <ThemeProvider theme={rneThemeBase as any}>
+      <StyledThemeProvider theme={typedTheme}>
+        <NavigationContainer>
+          <Tab.Navigator>
+            <Tab.Screen name="Auth" component={AuthScreen} />
+            <Tab.Screen name="Home" component={EmptyScreen} />
+            <Tab.Screen name="ProfileSettings" component={EmptyScreen} />
+          </Tab.Navigator>
+        </NavigationContainer>
+      </StyledThemeProvider>
+    </ThemeProvider>
   );
 };
 
 describe('AuthScreen', () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    // Reset useState for showEmail
     jest.spyOn(React, 'useState').mockImplementationOnce(() => [false, jest.fn()]);
   });
 
@@ -44,16 +52,16 @@ describe('AuthScreen', () => {
     const { getByText } = renderWithNavigation();
     await waitFor(() => {
       expect(getByText('Aurora Baby')).toBeTruthy();
-      expect(getByText('Harmony, care and wonder')).toBeTruthy();
+      expect(getByText('harmony, care and wonder')).toBeTruthy();
     }, { timeout: 2000 });
   });
 
   it('renders three social buttons and Other options', async () => {
     const { getByText } = renderWithNavigation();
     await waitFor(() => {
-      expect(getByText('Continue with Facebook')).toBeTruthy();
-      expect(getByText('Continue with Google')).toBeTruthy();
-      expect(getByText('Continue with Apple')).toBeTruthy();
+      expect(getByText('CONTINUE WITH FACEBOOK')).toBeTruthy();
+      expect(getByText('CONTINUE WITH GOOGLE')).toBeTruthy();
+      expect(getByText('CONTINUE WITH APPLE')).toBeTruthy();
       expect(getByText('Other options')).toBeTruthy();
     }, { timeout: 2000 });
   });
@@ -72,16 +80,16 @@ describe('AuthScreen', () => {
   });
 
   it('renders footer text', async () => {
-    const { getByText } = renderWithNavigation();
+    const { getByTestId } = renderWithNavigation();
     await waitFor(() => {
-      expect(getByText(/By continuing, you agree to the Terms of Service and Privacy Policy/)).toBeTruthy();
+      expect(getByTestId('footer-text')).toBeTruthy();
     }, { timeout: 2000 });
   });
 
   it('triggers Google sign-in/signup on button press', async () => {
-    const { getByText } = renderWithNavigation();
+    const { getByTestId } = renderWithNavigation();
     await waitFor(() => {
-      fireEvent.press(getByText('Continue with Google'));
+      fireEvent.press(getByTestId('styled-button-google'));
       expect(firebase.signInWithGoogle).toHaveBeenCalled();
     }, { timeout: 2000 });
   });
@@ -105,6 +113,73 @@ describe('AuthScreen', () => {
       fireEvent.changeText(getByPlaceholderText('Password'), 'password123');
       fireEvent.press(getByText('Sign Up'));
       expect(firebase.signUpWithEmail).toHaveBeenCalledWith('test@example.com', 'password123');
+    }, { timeout: 2000 });
+  });
+
+  it('renders Figma-styled AuthScreen with updated design', async () => {
+    const { getByText, getByTestId } = renderWithNavigation();
+    await waitFor(() => {
+      const container = getByTestId('auth-container');
+      const logoImage = getByTestId('logo-image');
+      const logoText = getByText('Aurora Baby');
+      const subtext = getByText('harmony, care and wonder');
+      const googleButton = getByTestId('styled-button-google');
+      const facebookButton = getByTestId('styled-button-facebook');
+      const appleButton = getByTestId('styled-button-apple');
+      const otherOptions = getByText('Other options');
+      const footer = getByTestId('footer-text');
+      const skipButton = getByText('SKIP');
+
+      expect(container.props.style.backgroundColor).toBe(theme.colors.background); // '#E9DAFA'
+      expect(logoImage.props.source).toEqual(require('../../assets/colorlogo.png')); // Correct path for test
+      expect(logoImage.props.style).toMatchObject({ width: 125, height: 125 });
+      expect(logoText.props.style).toMatchObject({
+        fontSize: 36,
+        color: theme.colors.text, // '#E9DAFA'
+        fontFamily: theme.fonts.regular, // 'Edrosa'
+        textAlign: 'center',
+      });
+      expect(subtext.props.style).toMatchObject({
+        fontSize: 16,
+        color: theme.colors.muted, // '#A9A9A9'
+        fontFamily: theme.fonts.regular,
+      });
+      expect(googleButton.props.style).toMatchObject({
+        backgroundColor: theme.colors.primary, // '#B3A5C4'
+        paddingTop: theme.spacing.small,
+        paddingRight: theme.spacing.medium,
+        paddingBottom: theme.spacing.small,
+        paddingLeft: theme.spacing.medium,
+        borderWidth: 1,
+        borderColor: theme.colors.border, // '#D3C8E5'
+        width: 325,
+        height: 55,
+      });
+      expect(facebookButton.props.style).toMatchObject(googleButton.props.style);
+      expect(appleButton.props.style).toMatchObject(googleButton.props.style);
+      expect(otherOptions.props.style).toMatchObject({
+        fontSize: 16,
+        color: theme.colors.primary, // '#B3A5C4'
+        fontFamily: theme.fonts.regular,
+      });
+      expect(footer.props.style).toMatchObject({
+        fontSize: 10,
+        color: theme.colors.text, // '#E9DAFA'
+        fontFamily: theme.fonts.inter, // 'Inter-Regular'
+        textAlign: 'center',
+      });
+      expect(footer).toBeTruthy();
+      expect(getByText('Terms of Service')).toBeTruthy();
+      expect(getByText('Privacy Policy')).toBeTruthy();
+      expect(skipButton.props.style).toMatchObject({
+        fontSize: 16,
+        color: '#453F4E', // Dark Lavender
+        fontFamily: theme.fonts.regular,
+        textAlign: 'center',
+        position: 'absolute',
+        top: theme.spacing.large,
+        right: theme.spacing.large,
+      });
     }, { timeout: 2000 });
   });
 });

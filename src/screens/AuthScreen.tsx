@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, Alert, TextInput, Platform } from 'react-native';
+import { View, Text, Alert, TextInput, Platform, Image } from 'react-native';
 import styled from 'styled-components/native';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import Button from '../components/common/Button';
@@ -7,57 +7,112 @@ import { signInWithGoogle, signInWithEmail, signUpWithEmail } from '../services/
 import Constants from 'expo-constants';
 import { StackScreenProps } from '@react-navigation/stack';
 import { RootTabParamList } from '../navigation/AppNavigator';
+import { DefaultTheme } from 'styled-components/native';
 
 const Container = styled.View`
   flex: 1;
-  justify-content: space-between;
   align-items: center;
-  padding: 20px;
-  background-color: #fff;
+  padding: ${({ theme }: { theme: DefaultTheme }) => theme.spacing.large}px;
+  background-color: ${({ theme }: { theme: DefaultTheme }) => theme.colors.background};
+`;
+
+const LogoImage = styled.Image`
+  width: 125px;
+  height: 125px;
+  margin-top: ${({ theme }: { theme: DefaultTheme }) => theme.spacing.xlarge}px;
 `;
 
 const LogoText = styled.Text`
-  font-size: 48px;
-  font-family: 'YourCustomFont';
-  color: #007AFF;
+  font-size: 36px;
+  color: ${({ theme }: { theme: DefaultTheme }) => theme.colors.text};
+  font-family: ${({ theme }: { theme: DefaultTheme }) => theme.fonts.regular};
   text-align: center;
 `;
 
 const Subtext = styled.Text`
-  font-size: 18px;
-  color: #666;
+  font-size: 16px;
+  color: ${({ theme }: { theme: DefaultTheme }) => theme.colors.muted};
+  font-family: ${({ theme }: { theme: DefaultTheme }) => theme.fonts.regular};
   text-align: center;
-  margin-top: 10px;
+  margin-top: ${({ theme }: { theme: DefaultTheme }) => theme.spacing.small}px;
 `;
 
 const ButtonContainer = styled.View`
   width: 100%;
   align-items: center;
+  flex: 1; /* Allow it to take available space */
+  justify-content: center; /* Center buttons vertically */
 `;
 
 const SocialButton = styled(Button)`
-  width: 100%;
+  width: 325px;
+  height: 55px;
   margin-bottom: 15px;
-  background-color: #007AFF;
+  background-color: ${({ theme }: { theme: DefaultTheme }) => theme.colors.primary};
+  padding-top: ${({ theme }: { theme: DefaultTheme }) => theme.spacing.small}px;
+  padding-right: ${({ theme }: { theme: DefaultTheme }) => theme.spacing.medium}px;
+  padding-bottom: ${({ theme }: { theme: DefaultTheme }) => theme.spacing.small}px;
+  padding-left: ${({ theme }: { theme: DefaultTheme }) => theme.spacing.medium}px;
+  border-width: 1px;
+  border-color: ${({ theme }: { theme: DefaultTheme }) => theme.colors.border};
+`;
+
+const SocialButtonContent = styled.View`
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+`;
+
+const SocialIcon = styled.Image`
+  width: 30px;
+  height: 30px;
+  margin-right: ${({ theme }: { theme: DefaultTheme }) => theme.spacing.small}px;
 `;
 
 const Input = styled.TextInput`
-  width: 100%;
-  padding: 10px;
-  margin: 10px 0;
-  border: 1px solid #ccc;
+  width: 325px;
+  padding: ${({ theme }: { theme: DefaultTheme }) => theme.spacing.small}px;
+  margin: ${({ theme }: { theme: DefaultTheme }) => theme.spacing.small}px 0;
+  border: 1px solid ${({ theme }: { theme: DefaultTheme }) => theme.colors.border};
   border-radius: 5px;
+  color: ${({ theme }: { theme: DefaultTheme }) => theme.colors.text};
 `;
 
 const OtherOptionsText = styled.Text`
-  font-size: 14px;
-  color: #888;
+  font-size: 16px;
+  color: ${({ theme }: { theme: DefaultTheme }) => theme.colors.primary};
+  font-family: ${({ theme }: { theme: DefaultTheme }) => theme.fonts.regular};
   text-decoration-line: underline;
 `;
 
 const FooterText = styled.Text`
-  font-size: 12px;
-  color: #888;
+  font-size: 10px;
+  color: #453F4E; /* Dark Lavender for light mode */
+  font-family: ${({ theme }: { theme: DefaultTheme }) => theme.fonts.inter};
+  text-align: center;
+`;
+
+const TermsText = styled.Text`
+  font-weight: 500;
+`;
+
+const PrivacyText = styled.Text`
+  font-weight: 300;
+`;
+
+const SkipButtonContainer = styled.TouchableOpacity`
+  background-color: #453F4E; /* Dark Lavender */
+  border-radius: 25px;
+  padding: ${({ theme }: { theme: DefaultTheme }) => theme.spacing.small}px ${({ theme }: { theme: DefaultTheme }) => theme.spacing.medium}px;
+  position: absolute;
+  top: ${({ theme }: { theme: DefaultTheme }) => theme.spacing.xlarge}px;
+  right: ${({ theme }: { theme: DefaultTheme }) => theme.spacing.large}px;
+`;
+
+const SkipButtonText = styled.Text`
+  font-size: 16px;
+  color: ${({ theme }: { theme: DefaultTheme }) => theme.colors.background}; /* Light Lavender for contrast */
+  font-family: ${({ theme }: { theme: DefaultTheme }) => theme.fonts.regular};
   text-align: center;
 `;
 
@@ -100,15 +155,34 @@ const AuthScreen: React.FC<AuthScreenProps> = () => {
   };
 
   return (
-    <Container>
+    <Container testID="auth-container">
+      <SkipButtonContainer onPress={() => console.log('Skip pressed')}>
+    <SkipButtonText>SKIP</SkipButtonText>
+      </SkipButtonContainer>
       <View>
+        <LogoImage source={require('../assets/colorlogo.png')} testID="logo-image" />
         <LogoText>Aurora Baby</LogoText>
-        <Subtext>Harmony, care and wonder</Subtext>
+        <Subtext>harmony, care and wonder</Subtext>
       </View>
       <ButtonContainer>
-        <SocialButton text="Continue with Facebook" onPress={() => {}} />
-        <SocialButton text="Continue with Google" onPress={handleGoogleSignIn} />
-        <SocialButton text="Continue with Apple" onPress={() => {}} />
+        <SocialButton testID="styled-button-facebook" onPress={() => {}}>
+          <SocialButtonContent>
+            <SocialIcon source={require('../assets/svg/facebook-lightmode.png')} />
+            <Text style={{ color: '#E9DAFA', fontFamily: 'Edrosa', fontSize: 16 }}>CONTINUE WITH FACEBOOK</Text>
+          </SocialButtonContent>
+        </SocialButton>
+        <SocialButton testID="styled-button-google" onPress={handleGoogleSignIn}>
+          <SocialButtonContent>
+            <SocialIcon source={require('../assets/svg/google-lightmode.png')} />
+            <Text style={{ color: '#E9DAFA', fontFamily: 'Edrosa', fontSize: 16 }}>CONTINUE WITH GOOGLE</Text>
+          </SocialButtonContent>
+        </SocialButton>
+        <SocialButton testID="styled-button-apple" onPress={() => {}}>
+          <SocialButtonContent>
+            <SocialIcon source={require('../assets/svg/appleicon-lightmode.png')} />
+            <Text style={{ color: '#E9DAFA', fontFamily: 'Edrosa', fontSize: 16 }}>CONTINUE WITH APPLE</Text>
+          </SocialButtonContent>
+        </SocialButton>
         {showEmail && (
           <>
             <Input
@@ -129,8 +203,8 @@ const AuthScreen: React.FC<AuthScreenProps> = () => {
         )}
         {!showEmail && <OtherOptionsText onPress={() => setShowEmail(true)}>Other options</OtherOptionsText>}
       </ButtonContainer>
-      <FooterText>
-        By continuing, you agree to the <Text style={{ fontWeight: 'bold' }}>Terms of Service</Text> and <Text style={{ fontWeight: 'bold' }}>Privacy Policy</Text>
+      <FooterText testID="footer-text">
+        By continuing, you agree to the <TermsText>Terms of Service</TermsText> and <PrivacyText>Privacy Policy</PrivacyText>
       </FooterText>
     </Container>
   );
