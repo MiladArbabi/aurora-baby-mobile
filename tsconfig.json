@@ -6,8 +6,14 @@
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "lib": ["esnext", "dom"],
-    "skipLibCheck": true 
+    "skipLibCheck": true,
+    "baseUrl": ".",
+    "types": ["jest", "node", "expo"],
+    "typeRoots": ["./node_modules/@types", "./src/types"],
+    "paths": {
+      "*": ["src/*"]
+    }
   },
-  "include": ["src/**/*"],
-  "exclude": ["node_modules", "**/node_modules/*"] 
+  "include": ["src/**/*", "**/*.ts", "**/*.tsx"],
+  "exclude": ["node_modules", "**/node_modules/*"]
 }

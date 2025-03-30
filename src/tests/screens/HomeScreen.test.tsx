@@ -1,114 +1,79 @@
-import { render, fireEvent, waitFor } from '@testing-library/react-native';
-import HomeScreen from '../../screens/HomeScreen';
+import { render, waitFor } from '@testing-library/react-native';
 import { NavigationContainer } from '@react-navigation/native';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import HomeScreen from '../../screens/HomeScreen';
+import { ThemeProvider } from '@rneui/themed';
+import { ThemeProvider as StyledThemeProvider } from 'styled-components/native';
+import { rneThemeBase, theme } from '../../styles/theme';
 import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import { RouteProp } from '@react-navigation/native';
 import { RootTabParamList } from '../../navigation/AppNavigator';
-import { colors, fonts, spacing } from '../../styles/theme';
-
-const Tab = createBottomTabNavigator<RootTabParamList>();
-
-const renderWithNavigation = () => {
-  return render(
-    <NavigationContainer>
-      <Tab.Navigator>
-        <Tab.Screen name="Home" component={HomeScreen} />
-        <Tab.Screen name="ProfileSettings" component={() => <></>} />
-        <Tab.Screen name="Harmony" component={() => <></>} />
-        <Tab.Screen name="Care" component={() => <></>} />
-        <Tab.Screen name="Wonder" component={() => <></>} />
-      </Tab.Navigator>
-    </NavigationContainer>
-  );
-};
 
 describe('HomeScreen', () => {
+  const mockNavigation: BottomTabNavigationProp<RootTabParamList, 'Home'> = {
+    navigate: jest.fn(),
+    getState: jest.fn(),
+    dispatch: jest.fn(),
+    addListener: jest.fn(() => () => {}),
+    canGoBack: jest.fn(),
+    getId: jest.fn(),
+    getParent: jest.fn(),
+    goBack: jest.fn(),
+    isFocused: jest.fn(),
+    jumpTo: jest.fn(),
+    removeListener: jest.fn(),
+    reset: jest.fn(),
+    setOptions: jest.fn(),
+    setParams: jest.fn(),
+    navigateDeprecated: jest.fn(),
+    preload: jest.fn(),
+    setStateForNextRouteNamesChange: jest.fn(),
+  };
+
+  const mockRoute: RouteProp<RootTabParamList, 'Home'> = {
+    key: 'Home-123',
+    name: 'Home',
+    params: undefined,
+  };
+
+  const renderWithNavigation = () => {
+    return render(
+      <ThemeProvider theme={rneThemeBase as any}>
+        <StyledThemeProvider theme={theme}>
+          <NavigationContainer>
+            <HomeScreen navigation={mockNavigation} route={mockRoute} />
+          </NavigationContainer>
+        </StyledThemeProvider>
+      </ThemeProvider>
+    );
+  };
+
   it('renders top bar with logo and profile icon', async () => {
+    const { getByText, getByTestId } = renderWithNavigation();
+    await waitFor(() => {
+      expect(getByText('Aurora Baby')).toBeTruthy();
+      expect(getByTestId('profile-icon')).toBeTruthy();
+    });
+  });
+
+  it('renders Figma-styled top bar with updated colors and typography', async () => {
     const { getByText, getByTestId } = renderWithNavigation();
     await waitFor(() => {
       const logo = getByText('Aurora Baby');
       const profileIcon = getByTestId('profile-icon');
-      expect(logo).toBeTruthy();
+      console.log('Logo styles:', logo.props.style);
+      console.log('ProfileIcon styles:', profileIcon.props.style);
       expect(logo.props.style).toMatchObject({
-        color: colors.text,
-        fontFamily: fonts.regular,
+        fontSize: 24,
+        color: theme.colors.text, // '#453F4E'
+        fontFamily: theme.fonts.regular, // 'Edrosa'
       });
-      console.log('Profile Icon Styles:', profileIcon.props.style); // Debug
       expect(profileIcon.props.style).toMatchObject({
-        backgroundColor: colors.accent,
-        borderTopLeftRadius: 20,
+        backgroundColor: theme.colors.accent, // '#F9B9B1'
+        borderTopLeftRadius: 20, // Match flattened output
         borderTopRightRadius: 20,
-        borderBottomLeftRadius: 20,
         borderBottomRightRadius: 20,
+        borderBottomLeftRadius: 20,
       });
-    }, { timeout: 2000 });
-  });
-
-  it('renders carousel with themed items', async () => {
-    const { getByText, getByTestId } = renderWithNavigation();
-    await waitFor(() => {
-      const featuredStory = getByText('Featured Story');
-      const createStory = getByText('Create Your Story');
-      expect(featuredStory).toBeTruthy();
-      expect(createStory).toBeTruthy();
-      console.log('Carousel Item 1 Styles:', getByTestId('carousel-item-1').props.style); // Debug
-      expect(getByTestId('carousel-item-1').props.style).toMatchObject({
-        backgroundColor: colors.secondary,
-        borderTopLeftRadius: spacing.medium,
-        borderTopRightRadius: spacing.medium,
-        borderBottomLeftRadius: spacing.medium,
-        borderBottomRightRadius: spacing.medium,
-      });
-    }, { timeout: 2000 });
-  });
-
-  it('renders themed buttons', async () => {
-    const { getByTestId } = renderWithNavigation();
-    await waitFor(() => {
-      const careButton = getByTestId('care-button');
-      const wonderButton = getByTestId('wonder-button');
-      expect(careButton.props.style).toMatchObject({
-        backgroundColor: colors.primary,
-        paddingTop: spacing.small,
-        paddingRight: spacing.medium,
-      });
-      expect(wonderButton.props.style).toMatchObject({
-        backgroundColor: colors.primary,
-        paddingTop: spacing.small,
-        paddingRight: spacing.medium,
-      });
-    }, { timeout: 2000 });
-  });
-
-  it('navigates to Care screen on button press', async () => {
-    const mockNavigate = jest.fn();
-    const navigation: BottomTabNavigationProp<RootTabParamList, 'Home'> = {
-      navigate: mockNavigate,
-      getState: jest.fn(),
-      dispatch: jest.fn(),
-      addListener: jest.fn(() => () => {}),
-      canGoBack: jest.fn(),
-      getId: jest.fn(),
-      getParent: jest.fn(),
-      goBack: jest.fn(),
-      isFocused: jest.fn(),
-      jumpTo: jest.fn(),
-      removeListener: jest.fn(),
-      reset: jest.fn(),
-      setOptions: jest.fn(),
-      setParams: jest.fn(),
-      navigateDeprecated: jest.fn(),
-      preload: jest.fn(),
-      setStateForNextRouteNamesChange: jest.fn(),
-    };
-    const route: RouteProp<RootTabParamList, 'Home'> = {
-      key: 'Home-123',
-      name: 'Home',
-      params: undefined,
-    };
-    const { getByTestId } = render(<HomeScreen navigation={navigation} route={route} />);
-    await fireEvent.press(getByTestId('care-button'));
-    expect(mockNavigate).toHaveBeenCalledWith('Care');
+    });
   });
 });

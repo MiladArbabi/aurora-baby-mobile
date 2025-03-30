@@ -1,6 +1,5 @@
-import React from 'react';
 import { render, fireEvent } from '@testing-library/react-native';
-import Button from '../../components/common/Button'; // Adjusted path
+import Button from '../../components/common/Button';
 import { colors, fonts, spacing } from '../../styles/theme';
 
 describe('Button', () => {

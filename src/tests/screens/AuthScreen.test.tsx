@@ -1,4 +1,4 @@
-import React from 'react'; // Add this import
+import React from 'react';
 import { render, fireEvent, waitFor } from '@testing-library/react-native';
 import AuthScreen from '../../screens/AuthScreen';
 import { NavigationContainer } from '@react-navigation/native';
