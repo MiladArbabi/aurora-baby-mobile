@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, Alert, TextInput, Platform, Image } from 'react-native';
+import { View, Text, Alert, TextInput, Platform, ImageBackground } from 'react-native';
 import styled from 'styled-components/native';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import Button from '../components/common/Button';
@@ -9,11 +9,10 @@ import { StackScreenProps } from '@react-navigation/stack';
 import { RootTabParamList } from '../navigation/AppNavigator';
 import { DefaultTheme } from 'styled-components/native';
 
-const Container = styled.View`
+const Container = styled.ImageBackground`
   flex: 1;
   align-items: center;
   padding: ${({ theme }: { theme: DefaultTheme }) => theme.spacing.large}px;
-  background-color: ${({ theme }: { theme: DefaultTheme }) => theme.colors.background};
 `;
 
 const LogoImage = styled.Image`
@@ -24,7 +23,7 @@ const LogoImage = styled.Image`
 
 const LogoText = styled.Text`
   font-size: 36px;
-  color: ${({ theme }: { theme: DefaultTheme }) => theme.colors.text};
+  color: #453F4E; /* Dark Lavender for contrast */
   font-family: ${({ theme }: { theme: DefaultTheme }) => theme.fonts.regular};
   text-align: center;
 `;
@@ -40,8 +39,8 @@ const Subtext = styled.Text`
 const ButtonContainer = styled.View`
   width: 100%;
   align-items: center;
-  flex: 1; /* Allow it to take available space */
-  justify-content: center; /* Center buttons vertically */
+  flex: 1;
+  justify-content: center;
 `;
 
 const SocialButton = styled(Button)`
@@ -155,9 +154,9 @@ const AuthScreen: React.FC<AuthScreenProps> = () => {
   };
 
   return (
-    <Container testID="auth-container">
-      <SkipButtonContainer onPress={() => console.log('Skip pressed')}>
-    <SkipButtonText>SKIP</SkipButtonText>
+    <Container source={require('../assets/lightbackground.png')} resizeMode="cover" testID="auth-container">
+      <SkipButtonContainer testID="skip-button-container" onPress={() => console.log('Skip pressed')}>
+        <SkipButtonText>SKIP</SkipButtonText>
       </SkipButtonContainer>
       <View>
         <LogoImage source={require('../assets/colorlogo.png')} testID="logo-image" />

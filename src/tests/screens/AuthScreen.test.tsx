@@ -128,14 +128,14 @@ describe('AuthScreen', () => {
       const appleButton = getByTestId('styled-button-apple');
       const otherOptions = getByText('Other options');
       const footer = getByTestId('footer-text');
-      const skipButton = getByText('SKIP');
+      const skipButtonContainer = getByTestId('skip-button-container');
 
-      expect(container.props.style.backgroundColor).toBe(theme.colors.background); // '#E9DAFA'
-      expect(logoImage.props.source).toEqual(require('../../assets/colorlogo.png')); // Correct path for test
+      expect(container.props.source).toEqual(require('../../assets/lightbackground.png'));
+      expect(logoImage.props.source).toEqual(require('../../assets/colorlogo.png'));
       expect(logoImage.props.style).toMatchObject({ width: 125, height: 125 });
       expect(logoText.props.style).toMatchObject({
         fontSize: 36,
-        color: theme.colors.text, // '#E9DAFA'
+        color: '#453F4E', // Updated to Dark Lavender
         fontFamily: theme.fonts.regular, // 'Edrosa'
         textAlign: 'center',
       });
@@ -164,21 +164,32 @@ describe('AuthScreen', () => {
       });
       expect(footer.props.style).toMatchObject({
         fontSize: 10,
-        color: theme.colors.text, // '#E9DAFA'
+        color: '#453F4E', // Dark Lavender
         fontFamily: theme.fonts.inter, // 'Inter-Regular'
         textAlign: 'center',
       });
       expect(footer).toBeTruthy();
       expect(getByText('Terms of Service')).toBeTruthy();
       expect(getByText('Privacy Policy')).toBeTruthy();
-      expect(skipButton.props.style).toMatchObject({
+      expect(skipButtonContainer.props.style).toMatchObject({
+        backgroundColor: '#453F4E',
+        paddingTop: theme.spacing.small,
+        paddingRight: theme.spacing.medium,
+        paddingBottom: theme.spacing.small,
+        paddingLeft: theme.spacing.medium,
+        position: 'absolute',
+        top: theme.spacing.xlarge,
+        right: theme.spacing.large,
+        borderTopLeftRadius: 25,
+        borderTopRightRadius: 25,
+        borderBottomRightRadius: 25,
+        borderBottomLeftRadius: 25,
+      });
+      expect(getByText('SKIP').props.style).toMatchObject({
         fontSize: 16,
-        color: '#453F4E', // Dark Lavender
+        color: theme.colors.background, // '#E9DAFA'
         fontFamily: theme.fonts.regular,
         textAlign: 'center',
-        position: 'absolute',
-        top: theme.spacing.large,
-        right: theme.spacing.large,
       });
     }, { timeout: 2000 });
   });
