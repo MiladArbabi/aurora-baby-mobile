@@ -7,6 +7,7 @@ import { rneThemeBase, theme } from '../../styles/theme';
 import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import { RouteProp } from '@react-navigation/native';
 import { RootTabParamList } from '../../navigation/AppNavigator';
+import { DefaultTheme } from 'styled-components/native';
 
 describe('HomeScreen', () => {
   const mockNavigation: BottomTabNavigationProp<RootTabParamList, 'Home'> = {
@@ -36,9 +37,10 @@ describe('HomeScreen', () => {
   };
 
   const renderWithNavigation = () => {
+    const typedTheme: DefaultTheme = theme as DefaultTheme; // Cast to match DefaultTheme
     return render(
       <ThemeProvider theme={rneThemeBase as any}>
-        <StyledThemeProvider theme={theme}>
+        <StyledThemeProvider theme={typedTheme}>
           <NavigationContainer>
             <HomeScreen navigation={mockNavigation} route={mockRoute} />
           </NavigationContainer>

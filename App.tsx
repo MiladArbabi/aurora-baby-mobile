@@ -1,35 +1,31 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
+import { StatusBar } from 'expo-status-bar';
 import { NavigationContainer } from '@react-navigation/native';
-import { AppNavigator } from './src/navigation/AppNavigator';
-import * as Font from 'expo-font';
-import { View, ActivityIndicator } from 'react-native';
+import { ThemeProvider } from '@rneui/themed';
+import { ThemeProvider as StyledThemeProvider } from 'styled-components/native';
+import { useFonts } from 'expo-font';
+import AppNavigator from './src/navigation/AppNavigator';
+import { rneThemeBase, theme } from './src/styles/theme';
+import LoadingSpinner from './src/components/common/LoadingSpinner';
 
-const App = () => {
-  const [fontsLoaded, setFontsLoaded] = useState(false);
-
-  useEffect(() => {
-    async function loadFonts() {
-      await Font.loadAsync({
-        Edrosa: require('./src/assets/fonts/Edrosa.otf'),
-      });
-      setFontsLoaded(true);
-    }
-    loadFonts();
-  }, []);
+export default function App() {
+  const [fontsLoaded] = useFonts({
+    'Edrosa': require('./src/assets/fonts/Edrosa.otf'),
+  });
+  console.log('Fonts loaded:', fontsLoaded);
 
   if (!fontsLoaded) {
-    return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <ActivityIndicator size="large" />
-      </View>
-    );
+    return <LoadingSpinner />;
   }
 
   return (
-    <NavigationContainer>
-      <AppNavigator />
-    </NavigationContainer>
+    <ThemeProvider theme={rneThemeBase as any}>
+      <StyledThemeProvider theme={theme}>
+        <NavigationContainer>
+          <AppNavigator />
+          <StatusBar style="auto" />
+        </NavigationContainer>
+      </StyledThemeProvider>
+    </ThemeProvider>
   );
-};
-
-export default App;
+}
