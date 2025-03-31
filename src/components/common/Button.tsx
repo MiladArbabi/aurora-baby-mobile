@@ -3,9 +3,11 @@ import styled from 'styled-components/native';
 import { colors, fonts, spacing } from '../../styles/theme';
 
 interface ButtonProps {
-  text: string;
+  text?: string;
+  children?: React.ReactNode;
   onPress?: () => void;
   testID?: string;
+  style?: any; // Allow styled props to override
 }
 
 const StyledButton = styled.TouchableOpacity`
@@ -20,13 +22,10 @@ const StyledText = styled.Text`
   text-align: center;
 `;
 
-const Button: React.FC<ButtonProps> = ({ text, onPress, testID }) => {
-  if (!text || typeof text !== 'string') {
-    throw new Error('Button requires a valid text prop');
-  }
+const Button: React.FC<ButtonProps> = ({ text, children, onPress, testID, style }) => {
   return (
-    <StyledButton testID={testID || 'styled-button'} onPress={onPress}>
-      <StyledText>{text}</StyledText>
+    <StyledButton testID={testID || 'styled-button'} onPress={onPress} style={style}>
+      {text ? <StyledText>{text}</StyledText> : children}
     </StyledButton>
   );
 };

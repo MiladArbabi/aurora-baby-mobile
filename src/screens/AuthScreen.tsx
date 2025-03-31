@@ -23,7 +23,7 @@ const LogoImage = styled.Image`
 
 const LogoText = styled.Text`
   font-size: 36px;
-  color: #453F4E; /* Dark Lavender for contrast */
+  color: ${({ theme }: { theme: DefaultTheme }) => theme.colors.contrastText};
   font-family: ${({ theme }: { theme: DefaultTheme }) => theme.fonts.regular};
   text-align: center;
 `;
@@ -74,7 +74,7 @@ const Input = styled.TextInput`
   margin: ${({ theme }: { theme: DefaultTheme }) => theme.spacing.small}px 0;
   border: 1px solid ${({ theme }: { theme: DefaultTheme }) => theme.colors.border};
   border-radius: 5px;
-  color: ${({ theme }: { theme: DefaultTheme }) => theme.colors.text};
+  color: ${({ theme }: { theme: DefaultTheme }) => theme.colors.contrastText}; /* Changed to contrastText */
 `;
 
 const OtherOptionsText = styled.Text`
@@ -86,7 +86,7 @@ const OtherOptionsText = styled.Text`
 
 const FooterText = styled.Text`
   font-size: 10px;
-  color: #453F4E; /* Dark Lavender for light mode */
+  color: ${({ theme }: { theme: DefaultTheme }) => theme.colors.contrastText};
   font-family: ${({ theme }: { theme: DefaultTheme }) => theme.fonts.inter};
   text-align: center;
 `;
@@ -100,7 +100,7 @@ const PrivacyText = styled.Text`
 `;
 
 const SkipButtonContainer = styled.TouchableOpacity`
-  background-color: #453F4E; /* Dark Lavender */
+  background-color: #453F4E;
   border-radius: 25px;
   padding: ${({ theme }: { theme: DefaultTheme }) => theme.spacing.small}px ${({ theme }: { theme: DefaultTheme }) => theme.spacing.medium}px;
   position: absolute;
@@ -110,7 +110,7 @@ const SkipButtonContainer = styled.TouchableOpacity`
 
 const SkipButtonText = styled.Text`
   font-size: 16px;
-  color: ${({ theme }: { theme: DefaultTheme }) => theme.colors.background}; /* Light Lavender for contrast */
+  color: ${({ theme }: { theme: DefaultTheme }) => theme.colors.background};
   font-family: ${({ theme }: { theme: DefaultTheme }) => theme.fonts.regular};
   text-align: center;
 `;
@@ -154,12 +154,12 @@ const AuthScreen: React.FC<AuthScreenProps> = () => {
   };
 
   return (
-    <Container source={require('../assets/lightbackground.png')} resizeMode="cover" testID="auth-container">
+    <Container source={require('../assets/png/lightbackground.png')} resizeMode="cover" testID="auth-container">
       <SkipButtonContainer testID="skip-button-container" onPress={() => console.log('Skip pressed')}>
         <SkipButtonText>SKIP</SkipButtonText>
       </SkipButtonContainer>
       <View>
-        <LogoImage source={require('../assets/colorlogo.png')} testID="logo-image" />
+        <LogoImage source={require('../assets/png/colorlogo.png')} testID="logo-image" />
         <LogoText>Aurora Baby</LogoText>
         <Subtext>harmony, care and wonder</Subtext>
       </View>

@@ -22,3 +22,8 @@ jest.mock('@react-native-google-signin/google-signin', () => ({
     signIn: jest.fn().mockResolvedValue({ data: { idToken: 'mock-token' } }),
   },
 }));
+
+// Mock expo-font
+jest.mock('expo-font', () => ({
+  useFonts: jest.fn(() => [true]), // Mock fonts as always loaded
+}));

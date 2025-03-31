@@ -1,7 +1,7 @@
 module.exports = {
   preset: 'jest-expo',
   testEnvironment: 'jsdom',
-  setupFiles: ['<rootDir>/jest/setup.js'],
+  setupFiles: ['<rootDir>/jest/setup.js'], // Confirms jest/setup.js is used
   setupFilesAfterEnv: ['@testing-library/react-native/extend-expect'],
   transform: {
     '^.+\\.(ts|tsx)$': ['ts-jest', {

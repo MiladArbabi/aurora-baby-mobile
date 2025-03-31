@@ -57,4 +57,4 @@ describe('LogoScreen', () => {
 });
 
 // Mock the .png file
-jest.mock('../../assets/icon.png', () => 'mock-image-path');
+jest.mock('../../assets/png/colorlogo.png', () => 'mock-image-path');

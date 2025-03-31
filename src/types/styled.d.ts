@@ -8,7 +8,7 @@ declare module 'styled-components/native' {
       background: string;
       accent: string;
       text: string;
-      contrastText: string; // Added for mode-adaptive contrast
+      contrastText: string;
       border: string;
       highlight: string;
       muted: string;
@@ -30,6 +30,27 @@ declare module 'styled-components/native' {
       xlarge: number;
       xsmall: number;
     };
-    mode: 'light' | 'dark';
+    mode: string; // For styled-components
   }
+}
+
+// Override @rneui/themed Theme type
+declare module '@rneui/themed' {
+  export type ThemeMode = 'light' | 'dark' | 'system';
+  export interface ThemeSpacing {
+    xs?: number;
+    sm?: number;
+    md?: number;
+    lg?: number;
+    xl?: number;
+  }
+  export interface Theme {
+    colors: {
+      primary: string;
+      background: string;
+    };
+    spacing: ThemeSpacing;
+    mode: ThemeMode;
+  }
+  export const ThemeProvider: React.FC<{ theme: Theme; children: React.ReactNode }>;
 }
