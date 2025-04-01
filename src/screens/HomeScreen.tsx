@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, Image, FlatList } from 'react-native';
+import { View, Text, Image, FlatList, TouchableOpacity } from 'react-native';
 import styled from 'styled-components/native';
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import { RootTabParamList } from '../navigation/AppNavigator';
@@ -40,15 +40,10 @@ const Avatar = styled.TouchableOpacity`
   height: 50px;
 `;
 
-const MainCarousel = styled.FlatList`
-  height: 475px;
-  margin-vertical: ${({ theme }: { theme: DefaultTheme }) => theme.spacing.medium}px;
-`;
-
 const Card = styled.TouchableOpacity`
   width: 270px;
   height: 475px;
-  margin-horizontal: 12.5px; /* Half of 25px spacing */
+  margin-horizontal: 12.5px;
   border-radius: 25px;
   overflow: hidden;
 `;
@@ -58,13 +53,12 @@ const CardImage = styled.ImageBackground`
   justify-content: space-between;
 `;
 
-const Title = styled.Text`
+const Title = styled.Text<{ color: string }>`
   font-size: 24px;
   color: ${({ color }: { color: string }) => color};
   font-family: ${({ theme }: { theme: DefaultTheme }) => theme.fonts.regular};
   text-align: left;
   margin: ${({ theme }: { theme: DefaultTheme }) => theme.spacing.large}px;
-  text-shadow: 3px 3px 0 ${({ theme }: { theme: DefaultTheme }) => theme.colors.contrastText};
 `;
 
 const HeadlineContainer = styled.View`
@@ -79,23 +73,18 @@ const Headline = styled.Text`
   text-align: center;
 `;
 
-const Subtext = styled.Text`
+const Subtext = styled.Text<{ color: string }>`
   font-size: 18px;
   color: ${({ color }: { color: string }) => color || '#FFFFFF'};
   font-family: ${({ theme }: { theme: DefaultTheme }) => theme.fonts.regular};
   text-align: center;
-  text-shadow: 3px 3px 0 ${({ theme }: { theme: DefaultTheme }) => theme.colors.contrastText};
   margin-bottom: ${({ theme }: { theme: DefaultTheme }) => theme.spacing.small}px;
 `;
 
 const GradientOverlay = styled.View`
   height: 145px;
   border-radius: 0 0 25px 25px;
-`;
-
-const SecondaryCarousel = styled.FlatList`
-  height: 128px;
-  margin-vertical: ${({ theme }: { theme: DefaultTheme }) => theme.spacing.medium}px;
+  background-color: rgba(0, 0, 0, 0.5); /* Placeholder until gradient lib added */
 `;
 
 const SecondaryCard = styled.TouchableOpacity`
@@ -103,8 +92,13 @@ const SecondaryCard = styled.TouchableOpacity`
   height: 128px;
   margin-horizontal: 8px;
   border-radius: 25px;
-  border: 1px solid ${({ theme }: { theme: DefaultTheme }) => theme.colors.primary};
-  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  border-width: 1px;
+  border-color: ${({ theme }: { theme: DefaultTheme }) => theme.colors.primary};
+  elevation: 4; /* Android shadow */
+  shadow-color: #000000; /* iOS shadow */
+  shadow-offset: 0px 4px;
+  shadow-opacity: 0.25;
+  shadow-radius: 4px;
   overflow: hidden;
 `;
 
@@ -135,7 +129,7 @@ const BottomNav = styled.View`
   left: 50%;
 `;
 
-const NavIcon = styled.Image<{ active?: boolean }>`
+const NavIcon = styled.TouchableOpacity<{ active?: boolean }>`
   ${({ active }: { active?: boolean }) => (active ? `
     tint-color: ${({ theme }: { theme: DefaultTheme }) => theme.colors.background};
   ` : `
@@ -174,7 +168,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
       subtext: 'Find calm and connection in gentle stories',
       subtextColor: '#FFFFFF',
       image: require('../assets/png/harmonycardbackground1.png'),
-      gradient: 'linear-gradient(352deg, #000 12.75%, rgba(24, 2, 50, 0.50) 47.68%, rgba(222, 190, 241, 0.05) 86.15%)',
+      gradient: 'rgba(0, 0, 0, 0.5)', // Placeholder
       onPress: () => navigation.navigate('Harmony'),
     },
     {
@@ -185,7 +179,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
       subtext: 'Easy tracking for a confident parenting experience',
       subtextColor: '#B8FFF8',
       image: require('../assets/png/carecardbackground1.png'),
-      gradient: 'linear-gradient(355deg, #000 8.54%, rgba(24, 2, 50, 0.50) 31.32%, rgba(222, 190, 241, 0.05) 88.68%)',
+      gradient: 'rgba(0, 0, 0, 0.5)', // Placeholder
       onPress: () => navigation.navigate('Care'),
     },
     {
@@ -196,7 +190,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
       subtext: 'Magical AR/VR adventures for curious baby minds',
       subtextColor: '#FFFFFF',
       image: require('../assets/png/wondercardbackground1.png'),
-      gradient: 'linear-gradient(358deg, rgba(15, 11, 10, 0.75) 15.57%, rgba(129, 94, 89, 0.50) 76.05%, rgba(249, 185, 177, 0.25) 92.77%)',
+      gradient: 'rgba(0, 0, 0, 0.5)', // Placeholder
       onPress: () => navigation.navigate('Wonder'),
     },
   ];
@@ -236,10 +230,14 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
           <Image source={require('../assets/png/avatar.png')} style={{ width: 40, height: 50 }} />
         </Avatar>
       </TopNav>
-      <MainCarousel
+      <FlatList
         data={carouselData}
         horizontal
         showsHorizontalScrollIndicator={false}
+        style={{
+          height: 475,
+          marginVertical: 16, // theme.spacing.medium
+        }}
         renderItem={({ item }: { item: CarouselItem }) => (
           <Card testID={`main-carousel-${item.id}`} onPress={item.onPress}>
             <CardImage source={item.image}>
@@ -248,22 +246,26 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
                 <Headline>{item.headline}</Headline>
                 <Subtext color={item.subtextColor}>{item.subtext}</Subtext>
               </HeadlineContainer>
-              <GradientOverlay style={{ backgroundColor: item.gradient }} />
+              <GradientOverlay />
             </CardImage>
           </Card>
         )}
         keyExtractor={(item: CarouselItem) => item.id}
         initialScrollIndex={0}
-        getItemLayout={(data: CarouselItem[] | null | undefined, index: number) => ({
+        getItemLayout={(data: ArrayLike<CarouselItem> | null | undefined, index: number) => ({
           length: 270 + 25,
           offset: (270 + 25) * index,
           index,
         })}
       />
-      <SecondaryCarousel
+      <FlatList
         data={secondaryCarouselData}
         horizontal
         showsHorizontalScrollIndicator={false}
+        style={{
+          height: 128,
+          marginVertical: 16, // theme.spacing.medium
+        }}
         renderItem={({ item }: { item: SecondaryCarouselItem }) => (
           <SecondaryCard testID={`secondary-carousel-${item.id}`} onPress={item.onPress}>
             <SecondaryCardImage source={item.image}>
@@ -272,37 +274,37 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
           </SecondaryCard>
         )}
         keyExtractor={(item: SecondaryCarouselItem) => item.id}
-        getItemLayout={(data: SecondaryCarouselItem[] | null | undefined, index: number) => ({
-          length: 338 + 16, // Card width + spacing
+        getItemLayout={(data: ArrayLike<SecondaryCarouselItem> | null | undefined, index: number) => ({
+          length: 338 + 16,
           offset: (338 + 16) * index,
           index,
         })}
       />
       <BottomNav style={{ transform: [{ translateX: -50 }] }}>
         <NavIcon
-          source={require('../assets/png/homeicon.png')}
-          style={{ width: 50, height: 50 }}
           active={true}
           testID="bottom-nav-home"
-        />
+        >
+          <Image source={require('../assets/png/homeicon.png')} style={{ width: 50, height: 50 }} />
+        </NavIcon>
         <NavIcon
-          source={require('../assets/png/harmonyicon.png')}
-          style={{ width: 50, height: 35 }}
           testID="bottom-nav-harmony"
           onPress={() => navigation.navigate('Harmony')}
-        />
+        >
+          <Image source={require('../assets/png/harmonyicon.png')} style={{ width: 50, height: 35 }} />
+        </NavIcon>
         <NavIcon
-          source={require('../assets/png/careicon.png')}
-          style={{ width: 43, height: 35 }}
           testID="bottom-nav-care"
           onPress={() => navigation.navigate('Care')}
-        />
+        >
+          <Image source={require('../assets/png/careicon.png')} style={{ width: 43, height: 35 }} />
+        </NavIcon>
         <NavIcon
-          source={require('../assets/png/wondericon.png')}
-          style={{ width: 40, height: 38 }}
           testID="bottom-nav-wonder"
           onPress={() => navigation.navigate('Wonder')}
-        />
+        >
+          <Image source={require('../assets/png/wondericon.png')} style={{ width: 40, height: 38 }} />
+        </NavIcon>
       </BottomNav>
     </Container>
   );
