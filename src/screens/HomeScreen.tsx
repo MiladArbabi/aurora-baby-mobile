@@ -8,7 +8,7 @@ import { DefaultTheme } from 'styled-components/native';
 import BottomNav from '../components/common/BottomNav';
 
 const screenWidth = Dimensions.get('window').width;
-const secondaryCardWidth = screenWidth * 0.45; // 45% for two larger cards
+const secondaryCardWidth = screenWidth * 0.4; // 45% for two cards
 const cardWidthWithMargin = 270 + 25; // Main card width + margin
 
 const Container = styled.View`
@@ -95,7 +95,7 @@ const SecondaryCard = styled.TouchableOpacity`
   border-width: 1px;
   border-color: ${({ theme }: { theme: DefaultTheme }) => theme.colors.primary};
   elevation: 4;
-  shadow-color: #000000;
+  shadow-color:${({ theme }: { theme: DefaultTheme }) => theme.colors.border};
   shadow-offset: 0px 4px;
   shadow-opacity: 0.25;
   shadow-radius: 4px;
@@ -255,7 +255,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
               paddingHorizontal: theme.spacing.medium, // ~16px padding on sides
             }}
             style={{
-              height: 140, // Matches SecondaryCard height
+              height: 140,
             }}
             renderItem={({ item }: { item: SecondaryCarouselItem }) => (
               <SecondaryCard testID={`secondary-carousel-${item.id}`} onPress={item.onPress}>

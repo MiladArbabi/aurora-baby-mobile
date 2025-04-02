@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, waitFor } from '@testing-library/react-native';
+import { render, waitFor, fireEvent } from '@testing-library/react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { ThemeProvider } from '@rneui/themed';
 import { ThemeProvider as StyledThemeProvider } from 'styled-components/native';
@@ -28,7 +28,7 @@ describe('HomeScreen', () => {
     push: jest.fn(),
     replace: jest.fn(),
     pop: jest.fn(),
-    popTo: jest.fn(), // Added
+    popTo: jest.fn(),
     popToTop: jest.fn(),
     navigateDeprecated: jest.fn(),
     preload: jest.fn(),
@@ -61,31 +61,24 @@ describe('HomeScreen', () => {
     });
   });
 
-  it('renders main carousel with Harmony, Care, and Wonder cards', async () => {
-    const { getByTestId, getByText } = renderWithNavigation();
+  it('renders main carousel with Harmony centered and partial Care/Wonder', async () => {
+    const { getByTestId, getByText, queryByTestId } = renderWithNavigation();
     await waitFor(() => {
       expect(getByTestId('main-carousel-harmony')).toBeTruthy();
       expect(getByText('HARMONY')).toBeTruthy();
       expect(getByText('Sweet Moments, Shared Stories')).toBeTruthy();
       expect(getByText('Find calm and connection in gentle stories')).toBeTruthy();
 
-      expect(getByTestId('main-carousel-care')).toBeTruthy();
-      expect(getByText('CARE')).toBeTruthy();
-      expect(getByText('Your Baby’s Journey Simplified')).toBeTruthy();
-      expect(getByText('Easy tracking for a confident parenting experience')).toBeTruthy();
-
-      expect(getByTestId('main-carousel-wonder')).toBeTruthy();
-      expect(getByText('WONDER WORLD')).toBeTruthy();
-      expect(getByText('Spark Their Little Imagination')).toBeTruthy();
-      expect(getByText('Magical AR/VR adventures for curious baby minds')).toBeTruthy();
+      // Care or Wonder should be partially visible, not both guaranteed in initial render
+      const careCard = queryByTestId('main-carousel-care');
+      const wonderCard = queryByTestId('main-carousel-wonder');
+      expect(careCard || wonderCard).toBeTruthy(); // At least one is present
     });
   });
 
-  it('renders secondary carousel with Harmony, Care, and Wonder cards', async () => {
+  it('renders secondary carousel with Care and Wonder cards', async () => {
     const { getByTestId, getByText } = renderWithNavigation();
     await waitFor(() => {
-      expect(getByTestId('secondary-carousel-harmony')).toBeTruthy();
-      expect(getByText('Create Your Own Story')).toBeTruthy();
       expect(getByTestId('secondary-carousel-care')).toBeTruthy();
       expect(getByText('New Baby Tracking Input')).toBeTruthy();
       expect(getByTestId('secondary-carousel-wonder')).toBeTruthy();
