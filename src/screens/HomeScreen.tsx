@@ -1,8 +1,8 @@
 import React from 'react';
 import { View, Text, Image, FlatList, TouchableOpacity } from 'react-native';
-import styled from 'styled-components/native';
-import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
-import { RootTabParamList } from '../navigation/AppNavigator';
+import styled, { useTheme } from 'styled-components/native';
+import { StackScreenProps } from '@react-navigation/stack';
+import { RootStackParamList } from '../navigation/AppNavigator';
 import { DefaultTheme } from 'styled-components/native';
 
 const Container = styled.View`
@@ -88,14 +88,14 @@ const GradientOverlay = styled.View`
 `;
 
 const SecondaryCard = styled.TouchableOpacity`
-  width: 338px;
-  height: 128px;
+  width: 125px;
+  height: 125px;
   margin-horizontal: 8px;
   border-radius: 25px;
   border-width: 1px;
   border-color: ${({ theme }: { theme: DefaultTheme }) => theme.colors.primary};
-  elevation: 4; /* Android shadow */
-  shadow-color: #000000; /* iOS shadow */
+  elevation: 4;
+  shadow-color: #000000;
   shadow-offset: 0px 4px;
   shadow-opacity: 0.25;
   shadow-radius: 4px;
@@ -126,18 +126,12 @@ const BottomNav = styled.View`
   background-color: ${({ theme }: { theme: DefaultTheme }) => theme.colors.contrastText};
   position: absolute;
   bottom: 10px;
-  left: 50%;
+  left: 25%;
 `;
 
-const NavIcon = styled.TouchableOpacity<{ active?: boolean }>`
-  ${({ active }: { active?: boolean }) => (active ? `
-    tint-color: ${({ theme }: { theme: DefaultTheme }) => theme.colors.background};
-  ` : `
-    tint-color: ${({ theme }: { theme: DefaultTheme }) => theme.colors.primary};
-  `)}
-`;
+const NavIcon = styled.TouchableOpacity``;
 
-type HomeScreenProps = BottomTabScreenProps<RootTabParamList, 'Home'>;
+type HomeScreenProps = StackScreenProps<RootStackParamList, 'Home'>;
 
 interface CarouselItem {
   id: string;
@@ -159,6 +153,8 @@ interface SecondaryCarouselItem {
 }
 
 const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
+  const theme = useTheme();
+
   const carouselData: CarouselItem[] = [
     {
       id: 'harmony',
@@ -168,7 +164,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
       subtext: 'Find calm and connection in gentle stories',
       subtextColor: '#FFFFFF',
       image: require('../assets/png/harmonycardbackground1.png'),
-      gradient: 'rgba(0, 0, 0, 0.5)', // Placeholder
+      gradient: 'rgba(0, 0, 0, 0.5)',
       onPress: () => navigation.navigate('Harmony'),
     },
     {
@@ -179,7 +175,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
       subtext: 'Easy tracking for a confident parenting experience',
       subtextColor: '#B8FFF8',
       image: require('../assets/png/carecardbackground1.png'),
-      gradient: 'rgba(0, 0, 0, 0.5)', // Placeholder
+      gradient: 'rgba(0, 0, 0, 0.5)',
       onPress: () => navigation.navigate('Care'),
     },
     {
@@ -190,7 +186,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
       subtext: 'Magical AR/VR adventures for curious baby minds',
       subtextColor: '#FFFFFF',
       image: require('../assets/png/wondercardbackground1.png'),
-      gradient: 'rgba(0, 0, 0, 0.5)', // Placeholder
+      gradient: 'rgba(0, 0, 0, 0.5)',
       onPress: () => navigation.navigate('Wonder'),
     },
   ];
@@ -236,7 +232,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
         showsHorizontalScrollIndicator={false}
         style={{
           height: 475,
-          marginVertical: 16, // theme.spacing.medium
+          marginVertical: 16,
         }}
         renderItem={({ item }: { item: CarouselItem }) => (
           <Card testID={`main-carousel-${item.id}`} onPress={item.onPress}>
@@ -264,7 +260,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
         showsHorizontalScrollIndicator={false}
         style={{
           height: 128,
-          marginVertical: 16, // theme.spacing.medium
+          marginVertical: 16,
         }}
         renderItem={({ item }: { item: SecondaryCarouselItem }) => (
           <SecondaryCard testID={`secondary-carousel-${item.id}`} onPress={item.onPress}>
@@ -281,29 +277,29 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
         })}
       />
       <BottomNav style={{ transform: [{ translateX: -50 }] }}>
-        <NavIcon
-          active={true}
-          testID="bottom-nav-home"
-        >
-          <Image source={require('../assets/png/homeicon.png')} style={{ width: 50, height: 50 }} />
+        <NavIcon active={true} testID="bottom-nav-home">
+          <Image
+            source={require('../assets/png/homeicon.png')}
+            style={{ width: 50, height: 50, tintColor: theme.colors.background }}
+          />
         </NavIcon>
-        <NavIcon
-          testID="bottom-nav-harmony"
-          onPress={() => navigation.navigate('Harmony')}
-        >
-          <Image source={require('../assets/png/harmonyicon.png')} style={{ width: 50, height: 35 }} />
+        <NavIcon testID="bottom-nav-harmony" onPress={() => navigation.navigate('Harmony')}>
+          <Image
+            source={require('../assets/png/harmonyicon.png')}
+            style={{ width: 50, height: 35, tintColor: theme.colors.primary }}
+          />
         </NavIcon>
-        <NavIcon
-          testID="bottom-nav-care"
-          onPress={() => navigation.navigate('Care')}
-        >
-          <Image source={require('../assets/png/careicon.png')} style={{ width: 43, height: 35 }} />
+        <NavIcon testID="bottom-nav-care" onPress={() => navigation.navigate('Care')}>
+          <Image
+            source={require('../assets/png/careicon.png')}
+            style={{ width: 43, height: 35, tintColor: theme.colors.primary }}
+          />
         </NavIcon>
-        <NavIcon
-          testID="bottom-nav-wonder"
-          onPress={() => navigation.navigate('Wonder')}
-        >
-          <Image source={require('../assets/png/wondericon.png')} style={{ width: 40, height: 38 }} />
+        <NavIcon testID="bottom-nav-wonder" onPress={() => navigation.navigate('Wonder')}>
+          <Image
+            source={require('../assets/png/wondericon.png')}
+            style={{ width: 40, height: 38, tintColor: theme.colors.primary }}
+          />
         </NavIcon>
       </BottomNav>
     </Container>

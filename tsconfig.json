@@ -8,7 +8,7 @@
     "lib": ["esnext", "dom"],
     "skipLibCheck": true,
     "baseUrl": ".",
-    "types": ["jest", "node", "expo"],
+    "types": ["jest", "node", "styled-components-react-native"],
     "typeRoots": ["./node_modules/@types", "./src/types"],
     "paths": {
       "*": ["src/*"]

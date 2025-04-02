@@ -36,7 +36,7 @@ describe('AppNavigator', () => {
       </ThemeProvider>
     );
     const homeText = await waitFor(
-      () => findByText('Aurora Baby'), // Updated to match HomeScreen content
+      () => findByText('Aurora Baby'),
       { timeout: 2000 }
     );
     expect(homeText).toBeTruthy();

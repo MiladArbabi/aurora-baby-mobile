@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createStackNavigator } from '@react-navigation/stack';
 import { onAuthStateChanged, auth, checkAuthState } from '../services/firebase';
 import { User } from 'firebase/auth';
 import HomeScreen from '../screens/HomeScreen';
@@ -9,9 +9,8 @@ import HarmonyScreen from '../screens/HarmonyScreen';
 import CareScreen from '../screens/CareScreen';
 import WonderScreen from '../screens/WonderScreen';
 import LoadingSpinner from '../components/common/LoadingSpinner';
-import { BottomTabNavigationOptions } from '@react-navigation/bottom-tabs';
 
-export type RootTabParamList = {
+export type RootStackParamList = {
   Home: undefined;
   Harmony: undefined;
   Care: undefined;
@@ -20,7 +19,7 @@ export type RootTabParamList = {
   ProfileSettings: undefined;
 };
 
-const Tab = createBottomTabNavigator<RootTabParamList>();
+const Stack = createStackNavigator<RootStackParamList>();
 
 export const AppNavigator: React.FC = () => {
   const [user, setUser] = useState<User | null>(null);
@@ -40,26 +39,20 @@ export const AppNavigator: React.FC = () => {
 
   if (loading) return <LoadingSpinner />;
 
-  const screenOptions = ({ route }: { route: { name: keyof RootTabParamList } }): BottomTabNavigationOptions => ({
-    headerShown: false,
-    tabBarActiveTintColor: '#007AFF',
-    tabBarInactiveTintColor: '#666',
-  });
-
   return (
-    <Tab.Navigator screenOptions={screenOptions}>
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
       {user ? (
         <>
-          <Tab.Screen name="Home" component={HomeScreen} />
-          <Tab.Screen name="Harmony" component={HarmonyScreen} />
-          <Tab.Screen name="Care" component={CareScreen} />
-          <Tab.Screen name="Wonder" component={WonderScreen} />
-          <Tab.Screen name="ProfileSettings" component={ProfileSettingScreen} options={{ tabBarButton: () => null }} />
+          <Stack.Screen name="Home" component={HomeScreen} />
+          <Stack.Screen name="Harmony" component={HarmonyScreen} />
+          <Stack.Screen name="Care" component={CareScreen} />
+          <Stack.Screen name="Wonder" component={WonderScreen} />
+          <Stack.Screen name="ProfileSettings" component={ProfileSettingScreen} />
         </>
       ) : (
-        <Tab.Screen name="Auth" component={AuthScreen} options={{ tabBarButton: () => null }} />
+        <Stack.Screen name="Auth" component={AuthScreen} />
       )}
-    </Tab.Navigator>
+    </Stack.Navigator>
   );
 };
 
