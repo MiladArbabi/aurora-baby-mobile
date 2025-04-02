@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, waitFor } from '@testing-library/react-native';
+import { render, waitFor, fireEvent } from '@testing-library/react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { ThemeProvider } from '@rneui/themed';
 import { ThemeProvider as StyledThemeProvider } from 'styled-components/native';
@@ -28,7 +28,7 @@ describe('HomeScreen', () => {
     push: jest.fn(),
     replace: jest.fn(),
     pop: jest.fn(),
-    popTo: jest.fn(), // Added
+    popTo: jest.fn(),
     popToTop: jest.fn(),
     navigateDeprecated: jest.fn(),
     preload: jest.fn(),
@@ -93,13 +93,47 @@ describe('HomeScreen', () => {
     });
   });
 
-  it('renders bottom nav with all icons', async () => {
+  it('renders BottomNav with all icons', async () => {
     const { getByTestId } = renderWithNavigation();
     await waitFor(() => {
       expect(getByTestId('bottom-nav-home')).toBeTruthy();
       expect(getByTestId('bottom-nav-harmony')).toBeTruthy();
       expect(getByTestId('bottom-nav-care')).toBeTruthy();
       expect(getByTestId('bottom-nav-wonder')).toBeTruthy();
+    });
+  });
+
+  it('highlights Home icon as active', async () => {
+    const { getByTestId } = renderWithNavigation();
+    await waitFor(() => {
+      const homeIcon = getByTestId('bottom-nav-home').children[0]; // Image is direct child
+      expect(homeIcon.props.style).toMatchObject({ tintColor: theme.colors.background });
+      const harmonyIcon = getByTestId('bottom-nav-harmony').children[0];
+      expect(harmonyIcon.props.style).toMatchObject({ tintColor: theme.colors.primary });
+    });
+  });
+
+  it('navigates to Harmony when Harmony icon is pressed', async () => {
+    const { getByTestId } = renderWithNavigation();
+    await waitFor(() => {
+      fireEvent.press(getByTestId('bottom-nav-harmony'));
+      expect(mockNavigation.navigate).toHaveBeenCalledWith('Harmony');
+    });
+  });
+
+  it('navigates to Care when Care icon is pressed', async () => {
+    const { getByTestId } = renderWithNavigation();
+    await waitFor(() => {
+      fireEvent.press(getByTestId('bottom-nav-care'));
+      expect(mockNavigation.navigate).toHaveBeenCalledWith('Care');
+    });
+  });
+
+  it('navigates to Wonder when Wonder icon is pressed', async () => {
+    const { getByTestId } = renderWithNavigation();
+    await waitFor(() => {
+      fireEvent.press(getByTestId('bottom-nav-wonder'));
+      expect(mockNavigation.navigate).toHaveBeenCalledWith('Wonder');
     });
   });
 });
