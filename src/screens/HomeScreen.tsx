@@ -1,9 +1,15 @@
 import React from 'react';
-import { View, Text, Image, FlatList, TouchableOpacity } from 'react-native';
+import { View, Text, Image, FlatList, TouchableOpacity, Dimensions } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import styled, { useTheme } from 'styled-components/native';
 import { StackScreenProps } from '@react-navigation/stack';
 import { RootStackParamList } from '../navigation/AppNavigator';
 import { DefaultTheme } from 'styled-components/native';
+import BottomNav from '../components/common/BottomNav';
+
+const screenWidth = Dimensions.get('window').width;
+const secondaryCardWidth = screenWidth * 0.45; // 45% for two larger cards
+const cardWidthWithMargin = 270 + 25; // Main card width + margin
 
 const Container = styled.View`
   flex: 1;
@@ -81,16 +87,10 @@ const Subtext = styled.Text<{ color: string }>`
   margin-bottom: ${({ theme }: { theme: DefaultTheme }) => theme.spacing.small}px;
 `;
 
-const GradientOverlay = styled.View`
-  height: 145px;
-  border-radius: 0 0 25px 25px;
-  background-color: rgba(0, 0, 0, 0.5); /* Placeholder until gradient lib added */
-`;
-
 const SecondaryCard = styled.TouchableOpacity`
-  width: 125px;
-  height: 125px;
-  margin-horizontal: 8px;
+  width: ${secondaryCardWidth}px;
+  height: 140px;
+  margin-horizontal: ${({ theme }: { theme: DefaultTheme }) => theme.spacing.medium}px; /* ~16px */
   border-radius: 25px;
   border-width: 1px;
   border-color: ${({ theme }: { theme: DefaultTheme }) => theme.colors.primary};
@@ -115,21 +115,13 @@ const SecondaryText = styled.Text`
   text-align: left;
 `;
 
-const BottomNav = styled.View`
-  height: 50px;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  padding: 10px 15px;
-  gap: 30px;
-  border-radius: 50px;
-  background-color: ${({ theme }: { theme: DefaultTheme }) => theme.colors.contrastText};
-  position: absolute;
-  bottom: 10px;
-  left: 25%;
+const CarouselWrapper = styled.View`
+  margin-bottom: ${({ theme }: { theme: DefaultTheme }) => theme.spacing.large}px; /* ~24px */
 `;
 
-const NavIcon = styled.TouchableOpacity``;
+const SecondaryCarouselWrapper = styled.View`
+  margin-bottom: ${({ theme }: { theme: DefaultTheme }) => theme.spacing.medium}px; /* ~16px */
+`;
 
 type HomeScreenProps = StackScreenProps<RootStackParamList, 'Home'>;
 
@@ -141,7 +133,6 @@ interface CarouselItem {
   subtext: string;
   subtextColor: string;
   image: any;
-  gradient: string;
   onPress: () => void;
 }
 
@@ -157,17 +148,6 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
 
   const carouselData: CarouselItem[] = [
     {
-      id: 'harmony',
-      title: 'HARMONY',
-      titleColor: '#E9DAFA',
-      headline: 'Sweet Moments, Shared Stories',
-      subtext: 'Find calm and connection in gentle stories',
-      subtextColor: '#FFFFFF',
-      image: require('../assets/png/harmonycardbackground1.png'),
-      gradient: 'rgba(0, 0, 0, 0.5)',
-      onPress: () => navigation.navigate('Harmony'),
-    },
-    {
       id: 'care',
       title: 'CARE',
       titleColor: '#ACCED7',
@@ -175,8 +155,17 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
       subtext: 'Easy tracking for a confident parenting experience',
       subtextColor: '#B8FFF8',
       image: require('../assets/png/carecardbackground1.png'),
-      gradient: 'rgba(0, 0, 0, 0.5)',
       onPress: () => navigation.navigate('Care'),
+    },
+    {
+      id: 'harmony',
+      title: 'HARMONY',
+      titleColor: '#E9DAFA',
+      headline: 'Sweet Moments, Shared Stories',
+      subtext: 'Find calm and connection in gentle stories',
+      subtextColor: '#FFFFFF',
+      image: require('../assets/png/harmonycardbackground1.png'),
+      onPress: () => navigation.navigate('Harmony'),
     },
     {
       id: 'wonder',
@@ -186,18 +175,11 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
       subtext: 'Magical AR/VR adventures for curious baby minds',
       subtextColor: '#FFFFFF',
       image: require('../assets/png/wondercardbackground1.png'),
-      gradient: 'rgba(0, 0, 0, 0.5)',
       onPress: () => navigation.navigate('Wonder'),
     },
   ];
 
   const secondaryCarouselData: SecondaryCarouselItem[] = [
-    {
-      id: 'harmony',
-      text: 'Create Your Own Story',
-      image: require('../assets/png/harmonycardbackground2.png'),
-      onPress: () => navigation.navigate('Harmony'),
-    },
     {
       id: 'care',
       text: 'New Baby Tracking Input',
@@ -212,97 +194,87 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
     },
   ];
 
+  const snapOffsets = carouselData.map((_, index) => {
+    const offset = index * cardWidthWithMargin;
+    const centerOffset = offset - (screenWidth - cardWidthWithMargin) / 2;
+    return centerOffset > 0 ? centerOffset : 0;
+  });
+
   return (
-    <Container>
-      <TopNav>
-        <LogoContainer>
-          <Logo source={require('../assets/png/colorlogo.png')} testID="top-nav-logo" />
-          <LogoText testID="top-nav-text">Aurora Baby</LogoText>
-        </LogoContainer>
-        <Avatar
-          testID="top-nav-avatar"
-          onPress={() => navigation.navigate('ProfileSettings')}
-        >
-          <Image source={require('../assets/png/avatar.png')} style={{ width: 40, height: 50 }} />
-        </Avatar>
-      </TopNav>
-      <FlatList
-        data={carouselData}
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        style={{
-          height: 475,
-          marginVertical: 16,
-        }}
-        renderItem={({ item }: { item: CarouselItem }) => (
-          <Card testID={`main-carousel-${item.id}`} onPress={item.onPress}>
-            <CardImage source={item.image}>
-              <Title color={item.titleColor}>{item.title}</Title>
-              <HeadlineContainer>
-                <Headline>{item.headline}</Headline>
-                <Subtext color={item.subtextColor}>{item.subtext}</Subtext>
-              </HeadlineContainer>
-              <GradientOverlay />
-            </CardImage>
-          </Card>
-        )}
-        keyExtractor={(item: CarouselItem) => item.id}
-        initialScrollIndex={0}
-        getItemLayout={(data: ArrayLike<CarouselItem> | null | undefined, index: number) => ({
-          length: 270 + 25,
-          offset: (270 + 25) * index,
-          index,
-        })}
-      />
-      <FlatList
-        data={secondaryCarouselData}
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        style={{
-          height: 128,
-          marginVertical: 16,
-        }}
-        renderItem={({ item }: { item: SecondaryCarouselItem }) => (
-          <SecondaryCard testID={`secondary-carousel-${item.id}`} onPress={item.onPress}>
-            <SecondaryCardImage source={item.image}>
-              <SecondaryText>{item.text}</SecondaryText>
-            </SecondaryCardImage>
-          </SecondaryCard>
-        )}
-        keyExtractor={(item: SecondaryCarouselItem) => item.id}
-        getItemLayout={(data: ArrayLike<SecondaryCarouselItem> | null | undefined, index: number) => ({
-          length: 338 + 16,
-          offset: (338 + 16) * index,
-          index,
-        })}
-      />
-      <BottomNav style={{ transform: [{ translateX: -50 }] }}>
-        <NavIcon active={true} testID="bottom-nav-home">
-          <Image
-            source={require('../assets/png/homeicon.png')}
-            style={{ width: 50, height: 50, tintColor: theme.colors.background }}
+    <SafeAreaView style={{ flex: 1, backgroundColor: theme.colors.background }}>
+      <Container>
+        <TopNav>
+          <LogoContainer>
+            <Logo source={require('../assets/png/colorlogo.png')} testID="top-nav-logo" />
+            <LogoText testID="top-nav-text">Aurora Baby</LogoText>
+          </LogoContainer>
+          <Avatar
+            testID="top-nav-avatar"
+            onPress={() => navigation.navigate('ProfileSettings')}
+          >
+            <Image source={require('../assets/png/avatar.png')} style={{ width: 40, height: 50 }} />
+          </Avatar>
+        </TopNav>
+        <CarouselWrapper>
+          <FlatList
+            data={carouselData}
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            snapToOffsets={snapOffsets}
+            decelerationRate="fast"
+            initialScrollIndex={1} // Harmony starts centered
+            style={{
+              height: 475,
+              marginVertical: theme.spacing.medium,
+            }}
+            renderItem={({ item }: { item: CarouselItem }) => (
+              <Card testID={`main-carousel-${item.id}`} onPress={item.onPress}>
+                <CardImage source={item.image}>
+                  <Title color={item.titleColor}>{item.title}</Title>
+                  <HeadlineContainer>
+                    <Headline>{item.headline}</Headline>
+                    <Subtext color={item.subtextColor}>{item.subtext}</Subtext>
+                  </HeadlineContainer>
+                </CardImage>
+              </Card>
+            )}
+            keyExtractor={(item: CarouselItem) => item.id}
+            getItemLayout={(data: ArrayLike<CarouselItem> | null | undefined, index: number) => ({
+              length: cardWidthWithMargin,
+              offset: cardWidthWithMargin * index,
+              index,
+            })}
           />
-        </NavIcon>
-        <NavIcon testID="bottom-nav-harmony" onPress={() => navigation.navigate('Harmony')}>
-          <Image
-            source={require('../assets/png/harmonyicon.png')}
-            style={{ width: 50, height: 35, tintColor: theme.colors.primary }}
+        </CarouselWrapper>
+        <SecondaryCarouselWrapper>
+          <FlatList
+            data={secondaryCarouselData}
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={{
+              paddingHorizontal: theme.spacing.medium, // ~16px padding on sides
+            }}
+            style={{
+              height: 140, // Matches SecondaryCard height
+            }}
+            renderItem={({ item }: { item: SecondaryCarouselItem }) => (
+              <SecondaryCard testID={`secondary-carousel-${item.id}`} onPress={item.onPress}>
+                <SecondaryCardImage source={item.image}>
+                  <SecondaryText>{item.text}</SecondaryText>
+                </SecondaryCardImage>
+              </SecondaryCard>
+            )}
+            keyExtractor={(item: SecondaryCarouselItem) => item.id}
+            getItemLayout={(data: ArrayLike<SecondaryCarouselItem> | null | undefined, index: number) => ({
+              length: secondaryCardWidth + 16,
+              offset: (secondaryCardWidth + 16) * index,
+              index,
+            })}
           />
-        </NavIcon>
-        <NavIcon testID="bottom-nav-care" onPress={() => navigation.navigate('Care')}>
-          <Image
-            source={require('../assets/png/careicon.png')}
-            style={{ width: 43, height: 35, tintColor: theme.colors.primary }}
-          />
-        </NavIcon>
-        <NavIcon testID="bottom-nav-wonder" onPress={() => navigation.navigate('Wonder')}>
-          <Image
-            source={require('../assets/png/wondericon.png')}
-            style={{ width: 40, height: 38, tintColor: theme.colors.primary }}
-          />
-        </NavIcon>
-      </BottomNav>
-    </Container>
+        </SecondaryCarouselWrapper>
+        <BottomNav navigation={navigation} activeScreen="Home" />
+      </Container>
+    </SafeAreaView>
   );
 };
 
