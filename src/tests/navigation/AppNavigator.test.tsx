@@ -1,6 +1,10 @@
 import { render, waitFor } from '@testing-library/react-native';
 import { NavigationContainer } from '@react-navigation/native';
+import { ThemeProvider } from '@rneui/themed';
+import { ThemeProvider as StyledThemeProvider } from 'styled-components/native';
 import { AppNavigator } from '../../navigation/AppNavigator';
+import { rneThemeBase, theme } from '../../styles/theme';
+import { DefaultTheme } from 'styled-components/native';
 
 // Mock Firebase
 jest.mock('../../services/firebase', () => ({
@@ -23,12 +27,16 @@ jest.mock('expo-modules-core', () => ({
 describe('AppNavigator', () => {
   it('starts at Home screen when authenticated', async () => {
     const { findByText } = render(
-      <NavigationContainer>
-        <AppNavigator />
-      </NavigationContainer>
+      <ThemeProvider theme={rneThemeBase}>
+        <StyledThemeProvider theme={theme as DefaultTheme}>
+          <NavigationContainer>
+            <AppNavigator />
+          </NavigationContainer>
+        </StyledThemeProvider>
+      </ThemeProvider>
     );
     const homeText = await waitFor(
-      () => findByText("Track Your Baby's Growth & Well-being"),
+      () => findByText('Aurora Baby'),
       { timeout: 2000 }
     );
     expect(homeText).toBeTruthy();

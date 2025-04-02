@@ -2,13 +2,15 @@ import React from 'react';
 import { render, fireEvent, waitFor } from '@testing-library/react-native';
 import AuthScreen from '../../screens/AuthScreen';
 import { NavigationContainer } from '@react-navigation/native';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { RootTabParamList } from '../../navigation/AppNavigator';
+import { createStackNavigator } from '@react-navigation/stack';
+import { RootStackParamList } from '../../navigation/AppNavigator';
 import * as firebase from '../../services/firebase';
 import { ThemeProvider } from '@rneui/themed';
 import { ThemeProvider as StyledThemeProvider } from 'styled-components/native';
 import { rneThemeBase, theme } from '../../styles/theme';
 import { DefaultTheme } from 'styled-components/native';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { RouteProp } from '@react-navigation/native';
 
 jest.mock('../../services/firebase', () => ({
   ...jest.requireActual('../../services/firebase'),
@@ -17,9 +19,39 @@ jest.mock('../../services/firebase', () => ({
   signUpWithEmail: jest.fn(() => Promise.resolve({ email: 'test@example.com', uid: 'mock-uid', getIdToken: jest.fn().mockResolvedValue('mock-token') })),
 }));
 
-const Tab = createBottomTabNavigator<RootTabParamList>();
+const Stack = createStackNavigator<RootStackParamList>();
 
 const EmptyScreen = () => <></>;
+
+const mockNavigation: StackNavigationProp<RootStackParamList, 'Auth'> = {
+  navigate: jest.fn(),
+  goBack: jest.fn(),
+  dispatch: jest.fn(),
+  setParams: jest.fn(),
+  addListener: jest.fn(() => () => {}),
+  removeListener: jest.fn(),
+  reset: jest.fn(),
+  isFocused: jest.fn(),
+  canGoBack: jest.fn(),
+  getParent: jest.fn(),
+  getState: jest.fn(),
+  push: jest.fn(),
+  replace: jest.fn(),
+  pop: jest.fn(),
+  popTo: jest.fn(),
+  popToTop: jest.fn(),
+  navigateDeprecated: jest.fn(),
+  preload: jest.fn(),
+  getId: jest.fn(),
+  setStateForNextRouteNamesChange: jest.fn(),
+  setOptions: jest.fn(), // Added
+};
+
+const mockRoute: RouteProp<RootStackParamList, 'Auth'> = {
+  key: 'Auth-123',
+  name: 'Auth',
+  params: undefined,
+};
 
 const renderWithNavigation = () => {
   const typedTheme: DefaultTheme = theme as DefaultTheme;
@@ -27,11 +59,13 @@ const renderWithNavigation = () => {
     <ThemeProvider theme={rneThemeBase}>
       <StyledThemeProvider theme={typedTheme}>
         <NavigationContainer>
-          <Tab.Navigator>
-            <Tab.Screen name="Auth" component={AuthScreen} />
-            <Tab.Screen name="Home" component={EmptyScreen} />
-            <Tab.Screen name="ProfileSettings" component={EmptyScreen} />
-          </Tab.Navigator>
+          <Stack.Navigator>
+            <Stack.Screen name="Auth">
+              {() => <AuthScreen navigation={mockNavigation} route={mockRoute} />}
+            </Stack.Screen>
+            <Stack.Screen name="Home" component={EmptyScreen} />
+            <Stack.Screen name="ProfileSettings" component={EmptyScreen} />
+          </Stack.Navigator>
         </NavigationContainer>
       </StyledThemeProvider>
     </ThemeProvider>
@@ -86,10 +120,10 @@ describe('AuthScreen', () => {
       const emailInput = getByPlaceholderText('Email');
       const passwordInput = getByPlaceholderText('Password');
       expect(emailInput.props.style).toMatchObject({
-        color: theme.colors.contrastText, // '#453F4E'
+        color: theme.colors.contrastText,
       });
       expect(passwordInput.props.style).toMatchObject({
-        color: theme.colors.contrastText, // '#453F4E'
+        color: theme.colors.contrastText,
       });
     }, { timeout: 2000 });
   });

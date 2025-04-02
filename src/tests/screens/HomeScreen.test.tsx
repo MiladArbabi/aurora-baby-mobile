@@ -1,16 +1,17 @@
+import React from 'react';
 import { render, waitFor } from '@testing-library/react-native';
 import { NavigationContainer } from '@react-navigation/native';
-import HomeScreen from '../../screens/HomeScreen';
 import { ThemeProvider } from '@rneui/themed';
 import { ThemeProvider as StyledThemeProvider } from 'styled-components/native';
+import HomeScreen from '../../screens/HomeScreen';
 import { rneThemeBase, theme } from '../../styles/theme';
-import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
+import { StackNavigationProp } from '@react-navigation/stack';
 import { RouteProp } from '@react-navigation/native';
-import { RootTabParamList } from '../../navigation/AppNavigator';
+import { RootStackParamList } from '../../navigation/AppNavigator';
 import { DefaultTheme } from 'styled-components/native';
 
 describe('HomeScreen', () => {
-  const mockNavigation: BottomTabNavigationProp<RootTabParamList, 'Home'> = {
+  const mockNavigation: StackNavigationProp<RootStackParamList, 'Home'> = {
     navigate: jest.fn(),
     getState: jest.fn(),
     dispatch: jest.fn(),
@@ -20,62 +21,85 @@ describe('HomeScreen', () => {
     getParent: jest.fn(),
     goBack: jest.fn(),
     isFocused: jest.fn(),
-    jumpTo: jest.fn(),
     removeListener: jest.fn(),
     reset: jest.fn(),
     setOptions: jest.fn(),
     setParams: jest.fn(),
+    push: jest.fn(),
+    replace: jest.fn(),
+    pop: jest.fn(),
+    popTo: jest.fn(), // Added
+    popToTop: jest.fn(),
     navigateDeprecated: jest.fn(),
     preload: jest.fn(),
     setStateForNextRouteNamesChange: jest.fn(),
   };
 
-  const mockRoute: RouteProp<RootTabParamList, 'Home'> = {
+  const mockRoute: RouteProp<RootStackParamList, 'Home'> = {
     key: 'Home-123',
     name: 'Home',
     params: undefined,
   };
 
-  const renderWithNavigation = () => {
-    const typedTheme: DefaultTheme = theme as DefaultTheme; // Cast to match DefaultTheme
-    return render(
-      <ThemeProvider theme={rneThemeBase as any}>
-        <StyledThemeProvider theme={typedTheme}>
+  const renderWithNavigation = () =>
+    render(
+      <ThemeProvider theme={rneThemeBase}>
+        <StyledThemeProvider theme={theme as DefaultTheme}>
           <NavigationContainer>
             <HomeScreen navigation={mockNavigation} route={mockRoute} />
           </NavigationContainer>
         </StyledThemeProvider>
       </ThemeProvider>
     );
-  };
 
-  it('renders top bar with logo and profile icon', async () => {
-    const { getByText, getByTestId } = renderWithNavigation();
+  it('renders top nav with logo, text, and avatar', async () => {
+    const { getByTestId, getByText } = renderWithNavigation();
     await waitFor(() => {
+      expect(getByTestId('top-nav-logo')).toBeTruthy();
       expect(getByText('Aurora Baby')).toBeTruthy();
-      expect(getByTestId('profile-icon')).toBeTruthy();
+      expect(getByTestId('top-nav-avatar')).toBeTruthy();
     });
   });
 
-  it('renders Figma-styled top bar with updated colors and typography', async () => {
-    const { getByText, getByTestId } = renderWithNavigation();
+  it('renders main carousel with Harmony, Care, and Wonder cards', async () => {
+    const { getByTestId, getByText } = renderWithNavigation();
     await waitFor(() => {
-      const logo = getByText('Aurora Baby');
-      const profileIcon = getByTestId('profile-icon');
-      console.log('Logo styles:', logo.props.style);
-      console.log('ProfileIcon styles:', profileIcon.props.style);
-      expect(logo.props.style).toMatchObject({
-        fontSize: 24,
-        color: theme.colors.text, // '#453F4E'
-        fontFamily: theme.fonts.regular, // 'Edrosa'
-      });
-      expect(profileIcon.props.style).toMatchObject({
-        backgroundColor: theme.colors.accent, // '#F9B9B1'
-        borderTopLeftRadius: 20, // Match flattened output
-        borderTopRightRadius: 20,
-        borderBottomRightRadius: 20,
-        borderBottomLeftRadius: 20,
-      });
+      expect(getByTestId('main-carousel-harmony')).toBeTruthy();
+      expect(getByText('HARMONY')).toBeTruthy();
+      expect(getByText('Sweet Moments, Shared Stories')).toBeTruthy();
+      expect(getByText('Find calm and connection in gentle stories')).toBeTruthy();
+
+      expect(getByTestId('main-carousel-care')).toBeTruthy();
+      expect(getByText('CARE')).toBeTruthy();
+      expect(getByText('Your Baby’s Journey Simplified')).toBeTruthy();
+      expect(getByText('Easy tracking for a confident parenting experience')).toBeTruthy();
+
+      expect(getByTestId('main-carousel-wonder')).toBeTruthy();
+      expect(getByText('WONDER WORLD')).toBeTruthy();
+      expect(getByText('Spark Their Little Imagination')).toBeTruthy();
+      expect(getByText('Magical AR/VR adventures for curious baby minds')).toBeTruthy();
+    });
+  });
+
+  it('renders secondary carousel with Harmony, Care, and Wonder cards', async () => {
+    const { getByTestId, getByText } = renderWithNavigation();
+    await waitFor(() => {
+      expect(getByTestId('secondary-carousel-harmony')).toBeTruthy();
+      expect(getByText('Create Your Own Story')).toBeTruthy();
+      expect(getByTestId('secondary-carousel-care')).toBeTruthy();
+      expect(getByText('New Baby Tracking Input')).toBeTruthy();
+      expect(getByTestId('secondary-carousel-wonder')).toBeTruthy();
+      expect(getByText('Play AR/VR Game')).toBeTruthy();
+    });
+  });
+
+  it('renders bottom nav with all icons', async () => {
+    const { getByTestId } = renderWithNavigation();
+    await waitFor(() => {
+      expect(getByTestId('bottom-nav-home')).toBeTruthy();
+      expect(getByTestId('bottom-nav-harmony')).toBeTruthy();
+      expect(getByTestId('bottom-nav-care')).toBeTruthy();
+      expect(getByTestId('bottom-nav-wonder')).toBeTruthy();
     });
   });
 });

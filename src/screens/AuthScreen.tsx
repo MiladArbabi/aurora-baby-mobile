@@ -6,8 +6,10 @@ import Button from '../components/common/Button';
 import { signInWithGoogle, signInWithEmail, signUpWithEmail } from '../services/firebase';
 import Constants from 'expo-constants';
 import { StackScreenProps } from '@react-navigation/stack';
-import { RootTabParamList } from '../navigation/AppNavigator';
+import { RootStackParamList } from '../navigation/AppNavigator'; // Updated
 import { DefaultTheme } from 'styled-components/native';
+
+type AuthScreenProps = StackScreenProps<RootStackParamList, 'Auth'>; // Updated
 
 const Container = styled.ImageBackground`
   flex: 1;
@@ -74,7 +76,7 @@ const Input = styled.TextInput`
   margin: ${({ theme }: { theme: DefaultTheme }) => theme.spacing.small}px 0;
   border: 1px solid ${({ theme }: { theme: DefaultTheme }) => theme.colors.border};
   border-radius: 5px;
-  color: ${({ theme }: { theme: DefaultTheme }) => theme.colors.contrastText}; /* Changed to contrastText */
+  color: ${({ theme }: { theme: DefaultTheme }) => theme.colors.contrastText};
 `;
 
 const OtherOptionsText = styled.Text`
@@ -115,9 +117,7 @@ const SkipButtonText = styled.Text`
   text-align: center;
 `;
 
-type AuthScreenProps = StackScreenProps<RootTabParamList, 'Auth'>;
-
-const AuthScreen: React.FC<AuthScreenProps> = () => {
+const AuthScreen: React.FC<AuthScreenProps> = ({ navigation }) => { // Updated
   const [showEmail, setShowEmail] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
