@@ -6,6 +6,7 @@ import { StackScreenProps } from '@react-navigation/stack';
 import { RootStackParamList } from '../navigation/AppNavigator';
 import { DefaultTheme } from 'styled-components/native';
 import BottomNav from '../components/common/BottomNav';
+import { prebuiltStories } from '../data/stories';
 
 const Container = styled.View`
   flex: 1;
@@ -74,77 +75,86 @@ const TextContainer = styled.View`
   margin: ${({ theme }: { theme: DefaultTheme }) => theme.spacing.large}px;
 `;
 
-const Title = styled.Text<{ color: string }>`
+const CardTitle = styled.Text`
   font-size: ${({ theme }: { theme: DefaultTheme }) => theme.fonts.sizes.title}px;
-  color: ${({ color }: { color: string }) => color};
-  font-family: ${({ theme }: { theme: DefaultTheme }) => theme.fonts.regular};
-  text-align: left;
-`;
-
-const HeadlineContainer = styled.View`
-  margin-bottom: ${({ theme }: { theme: DefaultTheme }) => theme.spacing.large}px;
-`;
-
-const Headline = styled.Text`
-  font-size: ${({ theme }: { theme: DefaultTheme }) => theme.fonts.sizes.headline}px;
   color: ${({ theme }: { theme: DefaultTheme }) => theme.colors.contrastText};
   font-family: ${({ theme }: { theme: DefaultTheme }) => theme.fonts.regular};
   text-align: left;
 `;
 
-const Subtext = styled.Text<{ color: string }>`
-  font-size: ${({ theme }: { theme: DefaultTheme }) => theme.fonts.sizes.subtext}px;
-  color: ${({ color }: { color: string }) => color || theme.colors.contrastText};
+const StoryText = styled.Text`
+  font-size: ${({ theme }: { theme: DefaultTheme }) => theme.fonts.sizes.body}px;
+  color: ${({ theme }: { theme: DefaultTheme }) => theme.colors.contrastText};
   font-family: ${({ theme }: { theme: DefaultTheme }) => theme.fonts.regular};
   text-align: left;
 `;
 
-type HomeScreenProps = StackScreenProps<RootStackParamList, 'Home'>;
+const BadgeContainer = styled.View`
+  align-self: flex-end;
+  margin-right: 10px;
+`;
+
+const Badge = styled.Text`
+  font-size: ${({ theme }: { theme: DefaultTheme }) => theme.fonts.sizes.small}px;
+  color: ${({ theme }: { theme: DefaultTheme }) => theme.colors.contrastText};
+  background-color: ${({ theme }: { theme: DefaultTheme }) => theme.colors.muted};
+  padding: ${({ theme }: { theme: DefaultTheme }) => theme.spacing.xsmall}px ${({ theme }: { theme: DefaultTheme }) => theme.spacing.medium}px;
+  border-radius: 12px;
+  margin-top: ${({ theme }: { theme: DefaultTheme }) => theme.spacing.xsmall}px;
+  text-align: center;
+`;
+
+const LanguageToggle = styled.View`
+  align-self: flex-end;
+  margin-right: 10px;
+  margin-top: ${({ theme }: { theme: DefaultTheme }) => theme.spacing.xsmall}px;
+`;
+
+const LanguageText = styled.Text`
+  font-size: ${({ theme }: { theme: DefaultTheme }) => theme.fonts.sizes.small}px;
+  color: ${({ theme }: { theme: DefaultTheme }) => theme.colors.contrastText};
+  background-color: ${({ theme }: { theme: DefaultTheme }) => theme.colors.secondary};
+  padding: ${({ theme }: { theme: DefaultTheme }) => theme.spacing.xsmall}px ${({ theme }: { theme: DefaultTheme }) => theme.spacing.medium}px;
+  border-radius: 12px;
+  text-align: center;
+`;
+
+type HarmonyHomeScreenProps = StackScreenProps<RootStackParamList, 'Harmony'>;
 
 interface CardItem {
   id: string;
   title: string;
-  titleColor: string;
-  headline: string;
-  subtext: string;
-  subtextColor: string;
-  image: any;
   onPress: () => void;
+  image?: any;
+  subtext?: string;
+  badges?: string[];
+  language?: string;
 }
 
-const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
+const HarmonyHomeScreen: React.FC<HarmonyHomeScreenProps> = ({ navigation }) => {
   const theme = useTheme();
 
   const cardData: CardItem[] = [
     {
-      id: 'harmony',
-      title: 'HARMONY',
-      titleColor: '#E9DAFA',
-      headline: 'Sweet Moments, Shared Stories',
-      subtext: 'Find calm and connection in gentle stories',
-      subtextColor: '#FFFFFF',
-      image: require('../assets/png/harmonycardbackground1.png'),
-      onPress: () => navigation.navigate('Harmony'),
+      id: 'play',
+      title: 'Play a Story',
+      onPress: () => navigation.navigate('StoryPlayer', { storyId: prebuiltStories[0].id }),
+      image: require('../assets/png/characters/birkandfreya.png'),
+      subtext: prebuiltStories[0].title,
+      badges: [prebuiltStories[0].stemFocus, prebuiltStories[0].traitFocus],
+      language: prebuiltStories[0].language,
     },
     {
-      id: 'care',
-      title: 'CARE',
-      titleColor: '#ACCED7',
-      headline: 'Your Baby’s Journey Simplified',
-      subtext: 'Easy tracking for a confident parenting experience',
-      subtextColor: '#B8FFF8',
-      image: require('../assets/png/carecardbackground1.png'),
-      onPress: () => navigation.navigate('Care'),
+      id: 'create',
+      title: 'Create Your Own Story',
+      onPress: () => navigation.navigate('StoryPlayer', { storyId: 'mock-custom-story' }),
+      image: require('../assets/png/harmonycardbackground2.png'),
     },
     {
-      id: 'wonder',
-      title: 'WONDER WORLD',
-      titleColor: '#F9B9B1',
-      headline: 'Spark Their Little Imagination',
-      subtext: 'Magical AR/VR adventures for curious baby minds',
-      subtextColor: '#FFFFFF',
-      image: require('../assets/png/wondercardbackground1.png'),
-      onPress: () => navigation.navigate('Wonder'),
+      id: 'explore',
+      title: 'Explore the Forest',
+      onPress: () => navigation.navigate('ForestMap'),
+      image: require('../assets/png/harmonycardbackground2.png'),
     },
   ];
 
@@ -165,26 +175,36 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
         </TopNav>
         <CardsContainer>
           {cardData.map((item) => (
-            <Card key={item.id} testID={`home-card-${item.id}`} onPress={item.onPress}>
+            <Card key={item.id} testID={`harmony-card-${item.id}`} onPress={item.onPress}>
               <CardImage source={item.image} resizeMode="cover">
                 <ContentContainer>
-                  <View />
+                  <View>
+                    {item.badges && (
+                      <BadgeContainer>
+                        {item.badges.map((badge, index) => (
+                          <Badge key={index}>{badge}</Badge>
+                        ))}
+                        {item.language && (
+                          <LanguageToggle testID="language-toggle">
+                            <LanguageText>{item.language}</LanguageText>
+                          </LanguageToggle>
+                        )}
+                      </BadgeContainer>
+                    )}
+                  </View>
                   <TextContainer>
-                    <Title color={item.titleColor}>{item.title}</Title>
-                    <HeadlineContainer>
-                      <Headline>{item.headline}</Headline>
-                      <Subtext color={item.subtextColor}>{item.subtext}</Subtext>
-                    </HeadlineContainer>
+                    <CardTitle>{item.title}</CardTitle>
+                    {item.subtext && <StoryText>{item.subtext}</StoryText>}
                   </TextContainer>
                 </ContentContainer>
               </CardImage>
             </Card>
           ))}
         </CardsContainer>
-        <BottomNav navigation={navigation} activeScreen="Home" />
+        <BottomNav navigation={navigation} activeScreen="Harmony" />
       </Container>
     </SafeAreaView>
   );
 };
 
-export default HomeScreen;
+export default HarmonyHomeScreen;
