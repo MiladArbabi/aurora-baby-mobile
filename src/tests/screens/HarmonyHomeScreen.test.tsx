@@ -61,27 +61,24 @@ describe('HarmonyHomeScreen', () => {
     });
   });
 
-  it('renders three static vertical cards with story data', async () => {
+  it('renders three static vertical cards with consistent layout', async () => {
     const { getByTestId, getByText } = renderWithNavigation();
     await waitFor(() => {
+      // Play a Story card
       expect(getByTestId('harmony-card-play')).toBeTruthy();
       expect(getByText('Play a Story')).toBeTruthy();
       expect(getByText('Birk and Freya’s Treehouse Adventure')).toBeTruthy();
       expect(getByText('Engineering')).toBeTruthy();
       expect(getByText('Empathy')).toBeTruthy();
+      expect(getByTestId('language-toggle')).toBeTruthy();
 
+      // Create Your Own Story card
       expect(getByTestId('harmony-card-create')).toBeTruthy();
       expect(getByText('Create Your Own Story')).toBeTruthy();
 
+      // Explore the Forest card
       expect(getByTestId('harmony-card-explore')).toBeTruthy();
       expect(getByText('Explore the Forest')).toBeTruthy();
-    });
-  });
-
-  it('renders language toggle dropdown', async () => {
-    const { getByTestId } = renderWithNavigation();
-    await waitFor(() => {
-      expect(getByTestId('language-toggle')).toBeTruthy();
     });
   });
 

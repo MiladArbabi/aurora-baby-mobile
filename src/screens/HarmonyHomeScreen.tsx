@@ -56,50 +56,65 @@ const Card = styled.TouchableOpacity`
   height: ${({ theme }: { theme: DefaultTheme }) => theme.sizes.cardHeight}px;
   margin-vertical: ${({ theme }: { theme: DefaultTheme }) => theme.spacing.medium}px;
   border-radius: 25px;
-  background-color: ${({ theme }: { theme: DefaultTheme }) => theme.colors.primary};
-  justify-content: center;
-  align-items: center;
+  overflow: hidden;
+`;
+
+const CardImage = styled.ImageBackground`
+  flex: 1;
+  justify-content: space-between;
+`;
+
+const ContentContainer = styled.View`
+  flex: 1;
+  justify-content: space-between;
+`;
+
+const TextContainer = styled.View`
+  margin: ${({ theme }: { theme: DefaultTheme }) => theme.spacing.large}px;
 `;
 
 const CardTitle = styled.Text`
   font-size: ${({ theme }: { theme: DefaultTheme }) => theme.fonts.sizes.title}px;
   color: ${({ theme }: { theme: DefaultTheme }) => theme.colors.contrastText};
   font-family: ${({ theme }: { theme: DefaultTheme }) => theme.fonts.regular};
-  text-align: center;
-`;
-
-const StoryDetails = styled.View`
-  align-items: center;
+  text-align: left;
 `;
 
 const StoryText = styled.Text`
   font-size: ${({ theme }: { theme: DefaultTheme }) => theme.fonts.sizes.body}px;
   color: ${({ theme }: { theme: DefaultTheme }) => theme.colors.contrastText};
   font-family: ${({ theme }: { theme: DefaultTheme }) => theme.fonts.regular};
-  text-align: center;
+  text-align: left;
 `;
 
 const BadgeContainer = styled.View`
-  flex-direction: row;
-  gap: ${({ theme }: { theme: DefaultTheme }) => theme.spacing.small}px;
-  margin-top: ${({ theme }: { theme: DefaultTheme }) => theme.spacing.small}px;
+  align-self: flex-end;
+  margin-right: 10px;
 `;
 
 const Badge = styled.Text`
   font-size: ${({ theme }: { theme: DefaultTheme }) => theme.fonts.sizes.small}px;
-  color: ${({ theme }: { theme: DefaultTheme }) => theme.colors.background};
+  color: ${({ theme }: { theme: DefaultTheme }) => theme.colors.contrastText};
   background-color: ${({ theme }: { theme: DefaultTheme }) => theme.colors.muted};
-  padding: ${({ theme }: { theme: DefaultTheme }) => theme.spacing.xsmall}px ${({ theme }: { theme: DefaultTheme }) => theme.spacing.small}px;
+  padding: ${({ theme }: { theme: DefaultTheme }) => theme.spacing.xsmall}px ${({ theme }: { theme: DefaultTheme }) => theme.spacing.medium}px;
   border-radius: 12px;
+  margin-top: ${({ theme }: { theme: DefaultTheme }) => theme.spacing.xsmall}px;
+  text-align: center;
 `;
 
 const LanguageToggle = styled.View`
-  margin-top: ${({ theme }: { theme: DefaultTheme }) => theme.spacing.medium}px;
+  align-self: flex-end;
+  margin-right: 10px;
+  margin-top: ${({ theme }: { theme: DefaultTheme }) => theme.spacing.xsmall}px;
 `;
 
 const LanguageText = styled.Text`
-  font-size: ${({ theme }: { theme: DefaultTheme }) => theme.fonts.sizes.body}px;
+  font-size: ${({ theme }: { theme: DefaultTheme }) => theme.fonts.sizes.small}px;
   color: ${({ theme }: { theme: DefaultTheme }) => theme.colors.contrastText};
+  background-color: ${({ theme }: { theme: DefaultTheme }) => theme.colors.secondary};
+  padding: ${({ theme }: { theme: DefaultTheme }) => theme.spacing.xsmall}px ${({ theme }: { theme: DefaultTheme }) => theme.spacing.medium}px;
+  border-radius: 12px;
+  text-align: center;
 `;
 
 type HarmonyHomeScreenProps = StackScreenProps<RootStackParamList, 'Harmony'>;
@@ -108,7 +123,10 @@ interface CardItem {
   id: string;
   title: string;
   onPress: () => void;
-  content?: JSX.Element;
+  image?: any;
+  subtext?: string;
+  badges?: string[];
+  language?: string;
 }
 
 const HarmonyHomeScreen: React.FC<HarmonyHomeScreenProps> = ({ navigation }) => {
@@ -119,28 +137,22 @@ const HarmonyHomeScreen: React.FC<HarmonyHomeScreenProps> = ({ navigation }) => 
       id: 'play',
       title: 'Play a Story',
       onPress: () => navigation.navigate('StoryPlayer', { storyId: prebuiltStories[0].id }),
-      content: (
-        <StoryDetails>
-          <StoryText>{prebuiltStories[0].title}</StoryText>
-          <BadgeContainer>
-            <Badge>{prebuiltStories[0].stemFocus}</Badge>
-            <Badge>{prebuiltStories[0].traitFocus}</Badge>
-          </BadgeContainer>
-          <LanguageToggle testID="language-toggle">
-            <LanguageText>{prebuiltStories[0].language}</LanguageText>
-          </LanguageToggle>
-        </StoryDetails>
-      ),
+      image: require('../assets/png/characters/birkandfreya.png'),
+      subtext: prebuiltStories[0].title,
+      badges: [prebuiltStories[0].stemFocus, prebuiltStories[0].traitFocus],
+      language: prebuiltStories[0].language,
     },
     {
       id: 'create',
       title: 'Create Your Own Story',
       onPress: () => navigation.navigate('StoryPlayer', { storyId: 'mock-custom-story' }),
+      image: require('../assets/png/harmonycardbackground2.png'),
     },
     {
       id: 'explore',
       title: 'Explore the Forest',
       onPress: () => navigation.navigate('ForestMap'),
+      image: require('../assets/png/harmonycardbackground2.png'),
     },
   ];
 
@@ -162,8 +174,28 @@ const HarmonyHomeScreen: React.FC<HarmonyHomeScreenProps> = ({ navigation }) => 
         <CardsContainer>
           {cardData.map((item) => (
             <Card key={item.id} testID={`harmony-card-${item.id}`} onPress={item.onPress}>
-              <CardTitle>{item.title}</CardTitle>
-              {item.content}
+              <CardImage source={item.image}>
+                <ContentContainer>
+                  <View>
+                    {item.badges && (
+                      <BadgeContainer>
+                        {item.badges.map((badge, index) => (
+                          <Badge key={index}>{badge}</Badge>
+                        ))}
+                        {item.language && (
+                      <LanguageToggle testID="language-toggle">
+                        <LanguageText>{item.language}</LanguageText>
+                      </LanguageToggle>
+                    )}
+                      </BadgeContainer>
+                    )}
+                  </View>
+                  <TextContainer>
+                    <CardTitle>{item.title}</CardTitle>
+                    {item.subtext && <StoryText>{item.subtext}</StoryText>}
+                  </TextContainer>
+                </ContentContainer>
+              </CardImage>
             </Card>
           ))}
         </CardsContainer>
