@@ -6,6 +6,7 @@ import { StackScreenProps } from '@react-navigation/stack';
 import { RootStackParamList } from '../navigation/AppNavigator';
 import { DefaultTheme } from 'styled-components/native';
 import BottomNav from '../components/common/BottomNav';
+import { prebuiltStories } from '../data/stories';
 
 const Container = styled.View`
   flex: 1;
@@ -67,12 +68,47 @@ const CardTitle = styled.Text`
   text-align: center;
 `;
 
+const StoryDetails = styled.View`
+  align-items: center;
+`;
+
+const StoryText = styled.Text`
+  font-size: ${({ theme }: { theme: DefaultTheme }) => theme.fonts.sizes.body}px;
+  color: ${({ theme }: { theme: DefaultTheme }) => theme.colors.contrastText};
+  font-family: ${({ theme }: { theme: DefaultTheme }) => theme.fonts.regular};
+  text-align: center;
+`;
+
+const BadgeContainer = styled.View`
+  flex-direction: row;
+  gap: ${({ theme }: { theme: DefaultTheme }) => theme.spacing.small}px;
+  margin-top: ${({ theme }: { theme: DefaultTheme }) => theme.spacing.small}px;
+`;
+
+const Badge = styled.Text`
+  font-size: ${({ theme }: { theme: DefaultTheme }) => theme.fonts.sizes.small}px;
+  color: ${({ theme }: { theme: DefaultTheme }) => theme.colors.background};
+  background-color: ${({ theme }: { theme: DefaultTheme }) => theme.colors.muted};
+  padding: ${({ theme }: { theme: DefaultTheme }) => theme.spacing.xsmall}px ${({ theme }: { theme: DefaultTheme }) => theme.spacing.small}px;
+  border-radius: 12px;
+`;
+
+const LanguageToggle = styled.View`
+  margin-top: ${({ theme }: { theme: DefaultTheme }) => theme.spacing.medium}px;
+`;
+
+const LanguageText = styled.Text`
+  font-size: ${({ theme }: { theme: DefaultTheme }) => theme.fonts.sizes.body}px;
+  color: ${({ theme }: { theme: DefaultTheme }) => theme.colors.contrastText};
+`;
+
 type HarmonyHomeScreenProps = StackScreenProps<RootStackParamList, 'Harmony'>;
 
 interface CardItem {
   id: string;
   title: string;
   onPress: () => void;
+  content?: JSX.Element;
 }
 
 const HarmonyHomeScreen: React.FC<HarmonyHomeScreenProps> = ({ navigation }) => {
@@ -82,7 +118,19 @@ const HarmonyHomeScreen: React.FC<HarmonyHomeScreenProps> = ({ navigation }) => 
     {
       id: 'play',
       title: 'Play a Story',
-      onPress: () => navigation.navigate('StoryPlayer', { storyId: 'birk-freya-treehouse' }),
+      onPress: () => navigation.navigate('StoryPlayer', { storyId: prebuiltStories[0].id }),
+      content: (
+        <StoryDetails>
+          <StoryText>{prebuiltStories[0].title}</StoryText>
+          <BadgeContainer>
+            <Badge>{prebuiltStories[0].stemFocus}</Badge>
+            <Badge>{prebuiltStories[0].traitFocus}</Badge>
+          </BadgeContainer>
+          <LanguageToggle testID="language-toggle">
+            <LanguageText>{prebuiltStories[0].language}</LanguageText>
+          </LanguageToggle>
+        </StoryDetails>
+      ),
     },
     {
       id: 'create',
@@ -115,6 +163,7 @@ const HarmonyHomeScreen: React.FC<HarmonyHomeScreenProps> = ({ navigation }) => 
           {cardData.map((item) => (
             <Card key={item.id} testID={`harmony-card-${item.id}`} onPress={item.onPress}>
               <CardTitle>{item.title}</CardTitle>
+              {item.content}
             </Card>
           ))}
         </CardsContainer>

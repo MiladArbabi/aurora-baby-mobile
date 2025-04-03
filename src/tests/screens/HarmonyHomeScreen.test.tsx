@@ -61,11 +61,14 @@ describe('HarmonyHomeScreen', () => {
     });
   });
 
-  it('renders three static vertical cards for Play, Create, and Explore', async () => {
+  it('renders three static vertical cards with story data', async () => {
     const { getByTestId, getByText } = renderWithNavigation();
     await waitFor(() => {
       expect(getByTestId('harmony-card-play')).toBeTruthy();
       expect(getByText('Play a Story')).toBeTruthy();
+      expect(getByText('Birk and Freya’s Treehouse Adventure')).toBeTruthy();
+      expect(getByText('Engineering')).toBeTruthy();
+      expect(getByText('Empathy')).toBeTruthy();
 
       expect(getByTestId('harmony-card-create')).toBeTruthy();
       expect(getByText('Create Your Own Story')).toBeTruthy();
@@ -75,11 +78,18 @@ describe('HarmonyHomeScreen', () => {
     });
   });
 
+  it('renders language toggle dropdown', async () => {
+    const { getByTestId } = renderWithNavigation();
+    await waitFor(() => {
+      expect(getByTestId('language-toggle')).toBeTruthy();
+    });
+  });
+
   it('navigates to StoryPlayer when Play card is pressed', async () => {
     const { getByTestId } = renderWithNavigation();
     await waitFor(() => {
       fireEvent.press(getByTestId('harmony-card-play'));
-      expect(mockNavigation.navigate).toHaveBeenCalledWith('StoryPlayer', expect.any(Object));
+      expect(mockNavigation.navigate).toHaveBeenCalledWith('StoryPlayer', { storyId: 'birk-freya-treehouse' });
     });
   });
 
