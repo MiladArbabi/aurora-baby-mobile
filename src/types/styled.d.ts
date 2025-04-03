@@ -12,6 +12,7 @@ declare module 'styled-components/native' {
       border: string;
       highlight: string;
       muted: string;
+      aiGenerated: string;
     };
     fonts: {
       regular: string;
@@ -42,7 +43,6 @@ declare module 'styled-components/native' {
   }
 }
 
-// Override @rneui/themed Theme type
 declare module '@rneui/themed' {
   export type ThemeMode = 'light' | 'dark' | 'system';
   export interface ThemeSpacing {
