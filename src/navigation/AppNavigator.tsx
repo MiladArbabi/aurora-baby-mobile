@@ -51,8 +51,8 @@ export const AppNavigator: React.FC = () => {
           <Stack.Screen name="Care" component={CareScreen} />
           <Stack.Screen name="Wonder" component={WonderScreen} />
           <Stack.Screen name="ProfileSettings" component={ProfileSettingScreen} />
-          <Stack.Screen name="StoryPlayer" component={() => <Text>Story Player Coming Soon</Text>} />
-          <Stack.Screen name="ForestMap" component={() => <Text>Forest Map Coming Soon</Text>} />
+          <Stack.Screen name="StoryPlayer">{() => <Text>Story Player Coming Soon</Text>}</Stack.Screen>
+          <Stack.Screen name="ForestMap">{() => <Text>Forest Map Coming Soon</Text>}</Stack.Screen>
         </>
       ) : (
         <Stack.Screen name="Auth" component={AuthScreen} />
