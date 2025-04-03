@@ -62,6 +62,8 @@ const Card = styled.TouchableOpacity`
 const CardImage = styled.ImageBackground`
   flex: 1;
   justify-content: space-between;
+  width: 100%;
+  height: 100%;
 `;
 
 const ContentContainer = styled.View`
@@ -174,7 +176,7 @@ const HarmonyHomeScreen: React.FC<HarmonyHomeScreenProps> = ({ navigation }) => 
         <CardsContainer>
           {cardData.map((item) => (
             <Card key={item.id} testID={`harmony-card-${item.id}`} onPress={item.onPress}>
-              <CardImage source={item.image}>
+              <CardImage source={item.image} resizeMode="cover">
                 <ContentContainer>
                   <View>
                     {item.badges && (
@@ -183,10 +185,10 @@ const HarmonyHomeScreen: React.FC<HarmonyHomeScreenProps> = ({ navigation }) => 
                           <Badge key={index}>{badge}</Badge>
                         ))}
                         {item.language && (
-                      <LanguageToggle testID="language-toggle">
-                        <LanguageText>{item.language}</LanguageText>
-                      </LanguageToggle>
-                    )}
+                          <LanguageToggle testID="language-toggle">
+                            <LanguageText>{item.language}</LanguageText>
+                          </LanguageToggle>
+                        )}
                       </BadgeContainer>
                     )}
                   </View>

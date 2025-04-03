@@ -13,7 +13,7 @@ const Container = styled.View`
 `;
 
 const TopNav = styled.View`
-  height: 60px;
+  height: ${({ theme }: { theme: DefaultTheme }) => theme.sizes.topNavHeight}px;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
@@ -31,7 +31,7 @@ const Logo = styled.Image`
 `;
 
 const LogoText = styled.Text`
-  font-size: 16px;
+  font-size: ${({ theme }: { theme: DefaultTheme }) => theme.fonts.sizes.body}px;
   color: ${({ theme }: { theme: DefaultTheme }) => theme.colors.contrastText};
   font-family: ${({ theme }: { theme: DefaultTheme }) => theme.fonts.regular};
   margin-left: ${({ theme }: { theme: DefaultTheme }) => theme.spacing.small}px;
@@ -42,9 +42,17 @@ const Avatar = styled.TouchableOpacity`
   height: 50px;
 `;
 
+const CardsContainer = styled.View`
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  padding-top: ${({ theme }: { theme: DefaultTheme }) => theme.spacing.large}px;
+  padding-bottom: ${({ theme }: { theme: DefaultTheme }) => theme.sizes.bottomNavHeight + theme.spacing.xlarge}px;
+`;
+
 const Card = styled.TouchableOpacity`
-  width: 300px;
-  height: 200px;
+  width: ${({ theme }: { theme: DefaultTheme }) => theme.sizes.cardWidth}px;
+  height: ${({ theme }: { theme: DefaultTheme }) => theme.sizes.cardHeight}px;
   margin-vertical: ${({ theme }: { theme: DefaultTheme }) => theme.spacing.medium}px;
   border-radius: 25px;
   overflow: hidden;
@@ -53,34 +61,42 @@ const Card = styled.TouchableOpacity`
 const CardImage = styled.ImageBackground`
   flex: 1;
   justify-content: space-between;
+  width: 100%;
+  height: 100%;
 `;
 
-const Title = styled.Text<{ color: string }>`
-  font-size: 24px;
-  color: ${({ color }: { color: string }) => color};
-  font-family: ${({ theme }: { theme: DefaultTheme }) => theme.fonts.regular};
-  text-align: left;
+const ContentContainer = styled.View`
+  flex: 1;
+  justify-content: space-between;
+`;
+
+const TextContainer = styled.View`
   margin: ${({ theme }: { theme: DefaultTheme }) => theme.spacing.large}px;
 `;
 
+const Title = styled.Text<{ color: string }>`
+  font-size: ${({ theme }: { theme: DefaultTheme }) => theme.fonts.sizes.title}px;
+  color: ${({ color }: { color: string }) => color};
+  font-family: ${({ theme }: { theme: DefaultTheme }) => theme.fonts.regular};
+  text-align: left;
+`;
+
 const HeadlineContainer = styled.View`
-  align-items: center;
-  margin-bottom: 20px;
+  margin-bottom: ${({ theme }: { theme: DefaultTheme }) => theme.spacing.large}px;
 `;
 
 const Headline = styled.Text`
-  font-size: 30px;
-  color: #FFFFFF;
+  font-size: ${({ theme }: { theme: DefaultTheme }) => theme.fonts.sizes.headline}px;
+  color: ${({ theme }: { theme: DefaultTheme }) => theme.colors.contrastText};
   font-family: ${({ theme }: { theme: DefaultTheme }) => theme.fonts.regular};
-  text-align: center;
+  text-align: left;
 `;
 
 const Subtext = styled.Text<{ color: string }>`
-  font-size: 18px;
-  color: ${({ color }: { color: string }) => color || '#FFFFFF'};
+  font-size: ${({ theme }: { theme: DefaultTheme }) => theme.fonts.sizes.subtext}px;
+  color: ${({ color }: { color: string }) => color || theme.colors.contrastText};
   font-family: ${({ theme }: { theme: DefaultTheme }) => theme.fonts.regular};
-  text-align: center;
-  margin-bottom: ${({ theme }: { theme: DefaultTheme }) => theme.spacing.small}px;
+  text-align: left;
 `;
 
 type HomeScreenProps = StackScreenProps<RootStackParamList, 'Home'>;
@@ -147,19 +163,24 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
             <Image source={require('../assets/png/avatar.png')} style={{ width: 40, height: 50 }} />
           </Avatar>
         </TopNav>
-        <View style={{ alignItems: 'center', flex: 1, justifyContent: 'center' }}>
+        <CardsContainer>
           {cardData.map((item) => (
             <Card key={item.id} testID={`home-card-${item.id}`} onPress={item.onPress}>
-              <CardImage source={item.image}>
-                <Title color={item.titleColor}>{item.title}</Title>
-                <HeadlineContainer>
-                  <Headline>{item.headline}</Headline>
-                  <Subtext color={item.subtextColor}>{item.subtext}</Subtext>
-                </HeadlineContainer>
+              <CardImage source={item.image} resizeMode="cover">
+                <ContentContainer>
+                  <View />
+                  <TextContainer>
+                    <Title color={item.titleColor}>{item.title}</Title>
+                    <HeadlineContainer>
+                      <Headline>{item.headline}</Headline>
+                      <Subtext color={item.subtextColor}>{item.subtext}</Subtext>
+                    </HeadlineContainer>
+                  </TextContainer>
+                </ContentContainer>
               </CardImage>
             </Card>
           ))}
-        </View>
+        </CardsContainer>
         <BottomNav navigation={navigation} activeScreen="Home" />
       </Container>
     </SafeAreaView>
