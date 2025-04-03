@@ -3,14 +3,14 @@ import { render, waitFor, fireEvent } from '@testing-library/react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { ThemeProvider } from '@rneui/themed';
 import { ThemeProvider as StyledThemeProvider } from 'styled-components/native';
-import HarmonyScreen from '../../screens/HarmonyScreen';
+import HarmonyHomeScreen from '../../screens/HarmonyHomeScreen';
 import { rneThemeBase, theme } from '../../styles/theme';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RouteProp } from '@react-navigation/native';
 import { RootStackParamList } from '../../navigation/AppNavigator';
 import { DefaultTheme } from 'styled-components/native';
 
-describe('HarmonyScreen', () => {
+describe('HarmonyHomeScreen', () => {
   const mockNavigation: StackNavigationProp<RootStackParamList, 'Harmony'> = {
     navigate: jest.fn(),
     getState: jest.fn(),
@@ -46,53 +46,50 @@ describe('HarmonyScreen', () => {
       <ThemeProvider theme={rneThemeBase}>
         <StyledThemeProvider theme={theme as DefaultTheme}>
           <NavigationContainer>
-            <HarmonyScreen navigation={mockNavigation} route={mockRoute} />
+            <HarmonyHomeScreen navigation={mockNavigation} route={mockRoute} />
           </NavigationContainer>
         </StyledThemeProvider>
       </ThemeProvider>
     );
 
-  it('renders BottomNav with all icons', async () => {
+  it('renders top nav with logo, text, and avatar', async () => {
+    const { getByTestId, getByText } = renderWithNavigation();
+    await waitFor(() => {
+      expect(getByTestId('top-nav-logo')).toBeTruthy();
+      expect(getByText('Aurora Baby')).toBeTruthy();
+      expect(getByTestId('top-nav-avatar')).toBeTruthy();
+    });
+  });
+
+  it('renders three static vertical cards for Play, Create, and Explore', async () => {
+    const { getByTestId, getByText } = renderWithNavigation();
+    await waitFor(() => {
+      expect(getByTestId('harmony-card-play')).toBeTruthy();
+      expect(getByText('Play a Story')).toBeTruthy();
+
+      expect(getByTestId('harmony-card-create')).toBeTruthy();
+      expect(getByText('Create Your Own Story')).toBeTruthy();
+
+      expect(getByTestId('harmony-card-explore')).toBeTruthy();
+      expect(getByText('Explore the Forest')).toBeTruthy();
+    });
+  });
+
+  it('navigates to StoryPlayer when Play card is pressed', async () => {
+    const { getByTestId } = renderWithNavigation();
+    await waitFor(() => {
+      fireEvent.press(getByTestId('harmony-card-play'));
+      expect(mockNavigation.navigate).toHaveBeenCalledWith('StoryPlayer', expect.any(Object));
+    });
+  });
+
+  it('renders bottom nav with all icons', async () => {
     const { getByTestId } = renderWithNavigation();
     await waitFor(() => {
       expect(getByTestId('bottom-nav-home')).toBeTruthy();
       expect(getByTestId('bottom-nav-harmony')).toBeTruthy();
       expect(getByTestId('bottom-nav-care')).toBeTruthy();
       expect(getByTestId('bottom-nav-wonder')).toBeTruthy();
-    });
-  });
-
-  it('highlights Harmony icon as active', async () => {
-    const { getByTestId } = renderWithNavigation();
-    await waitFor(() => {
-      const harmonyIcon = getByTestId('bottom-nav-harmony').children[0];
-      expect(harmonyIcon.props.style).toMatchObject({ tintColor: theme.colors.background });
-      const homeIcon = getByTestId('bottom-nav-home').children[0];
-      expect(homeIcon.props.style).toMatchObject({ tintColor: theme.colors.primary });
-    });
-  });
-
-  it('navigates to Home when Home icon is pressed', async () => {
-    const { getByTestId } = renderWithNavigation();
-    await waitFor(() => {
-      fireEvent.press(getByTestId('bottom-nav-home'));
-      expect(mockNavigation.navigate).toHaveBeenCalledWith('Home');
-    });
-  });
-
-  it('navigates to Care when Care icon is pressed', async () => {
-    const { getByTestId } = renderWithNavigation();
-    await waitFor(() => {
-      fireEvent.press(getByTestId('bottom-nav-care'));
-      expect(mockNavigation.navigate).toHaveBeenCalledWith('Care');
-    });
-  });
-
-  it('navigates to Wonder when Wonder icon is pressed', async () => {
-    const { getByTestId } = renderWithNavigation();
-    await waitFor(() => {
-      fireEvent.press(getByTestId('bottom-nav-wonder'));
-      expect(mockNavigation.navigate).toHaveBeenCalledWith('Wonder');
     });
   });
 });

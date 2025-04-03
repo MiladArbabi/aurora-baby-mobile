@@ -19,8 +19,8 @@ declare module 'styled-components/native' {
       inter: string;
       sizes: {
         title: number;
-        headline: number; // Added
-        subtext: number;  // Added
+        headline: number; 
+        subtext: number;  
         body: number;
         small: number;
       };

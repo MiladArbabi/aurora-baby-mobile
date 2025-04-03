@@ -1,4 +1,3 @@
-// src/styles/theme.ts
 import { Theme } from '@rneui/themed';
 
 export const colors = {
@@ -19,6 +18,8 @@ export const fonts = {
   inter: 'Inter-Regular',
   sizes: {
     title: 24,
+    headline: 30,
+    subtext: 18,  
     body: 16,
     small: 12,
   },
@@ -32,10 +33,18 @@ export const spacing = {
   xsmall: 4,
 } as const;
 
+export const sizes = {
+  cardWidth: 300,
+  cardHeight: 200,
+  topNavHeight: 60,
+  bottomNavHeight: 50, 
+} as const;
+
 export const theme = {
   colors,
   fonts,
   spacing,
+  sizes, 
   mode: 'light',
 } as const;
 
@@ -51,5 +60,5 @@ export const rneThemeBase: Theme = {
     lg: spacing.large,
     xl: spacing.xlarge,
   },
-  mode: 'light', // TypeScript recognizes this as ThemeMode via Theme import
+  mode: 'light',
 };
