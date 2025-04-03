@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
+import { Text } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { onAuthStateChanged, auth, checkAuthState } from '../services/firebase';
 import { User } from 'firebase/auth';
 import HomeScreen from '../screens/HomeScreen';
 import AuthScreen from '../screens/AuthScreen';
 import ProfileSettingScreen from '../screens/ProfileSettingScreen';
-import HarmonyScreen from '../screens/HarmonyScreen';
+import HarmonyHomeScreen from '../screens/HarmonyHomeScreen';
 import CareScreen from '../screens/CareScreen';
 import WonderScreen from '../screens/WonderScreen';
 import LoadingSpinner from '../components/common/LoadingSpinner';
@@ -17,6 +18,8 @@ export type RootStackParamList = {
   Wonder: undefined;
   Auth: undefined;
   ProfileSettings: undefined;
+  StoryPlayer: { storyId: string };
+  ForestMap: undefined;
 };
 
 const Stack = createStackNavigator<RootStackParamList>();
@@ -44,10 +47,12 @@ export const AppNavigator: React.FC = () => {
       {user ? (
         <>
           <Stack.Screen name="Home" component={HomeScreen} />
-          <Stack.Screen name="Harmony" component={HarmonyScreen} />
+          <Stack.Screen name="Harmony" component={HarmonyHomeScreen} />
           <Stack.Screen name="Care" component={CareScreen} />
           <Stack.Screen name="Wonder" component={WonderScreen} />
           <Stack.Screen name="ProfileSettings" component={ProfileSettingScreen} />
+          <Stack.Screen name="StoryPlayer" component={() => <Text>Story Player Coming Soon</Text>} />
+          <Stack.Screen name="ForestMap" component={() => <Text>Forest Map Coming Soon</Text>} />
         </>
       ) : (
         <Stack.Screen name="Auth" component={AuthScreen} />
