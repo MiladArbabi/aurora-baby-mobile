@@ -61,28 +61,31 @@ describe('HomeScreen', () => {
     });
   });
 
-  it('renders main carousel with Harmony centered and partial Care/Wonder', async () => {
-    const { getByTestId, getByText, queryByTestId } = renderWithNavigation();
+  it('renders three static vertical cards for Harmony, Care, and Wonder', async () => {
+    const { getByTestId, getByText } = renderWithNavigation();
     await waitFor(() => {
-      expect(getByTestId('main-carousel-harmony')).toBeTruthy();
+      expect(getByTestId('home-card-harmony')).toBeTruthy();
       expect(getByText('HARMONY')).toBeTruthy();
       expect(getByText('Sweet Moments, Shared Stories')).toBeTruthy();
       expect(getByText('Find calm and connection in gentle stories')).toBeTruthy();
 
-      // Care or Wonder should be partially visible, not both guaranteed in initial render
-      const careCard = queryByTestId('main-carousel-care');
-      const wonderCard = queryByTestId('main-carousel-wonder');
-      expect(careCard || wonderCard).toBeTruthy(); // At least one is present
+      expect(getByTestId('home-card-care')).toBeTruthy();
+      expect(getByText('CARE')).toBeTruthy();
+      expect(getByText('Your Baby’s Journey Simplified')).toBeTruthy();
+      expect(getByText('Easy tracking for a confident parenting experience')).toBeTruthy();
+
+      expect(getByTestId('home-card-wonder')).toBeTruthy();
+      expect(getByText('WONDER WORLD')).toBeTruthy();
+      expect(getByText('Spark Their Little Imagination')).toBeTruthy();
+      expect(getByText('Magical AR/VR adventures for curious baby minds')).toBeTruthy();
     });
   });
 
-  it('renders secondary carousel with Care and Wonder cards', async () => {
-    const { getByTestId, getByText } = renderWithNavigation();
+  it('navigates to Harmony when Harmony card is pressed', async () => {
+    const { getByTestId } = renderWithNavigation();
     await waitFor(() => {
-      expect(getByTestId('secondary-carousel-care')).toBeTruthy();
-      expect(getByText('New Baby Tracking Input')).toBeTruthy();
-      expect(getByTestId('secondary-carousel-wonder')).toBeTruthy();
-      expect(getByText('Play AR/VR Game')).toBeTruthy();
+      fireEvent.press(getByTestId('home-card-harmony'));
+      expect(mockNavigation.navigate).toHaveBeenCalledWith('Harmony');
     });
   });
 
