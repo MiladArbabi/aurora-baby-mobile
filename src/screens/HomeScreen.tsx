@@ -92,9 +92,9 @@ const Headline = styled.Text`
   text-align: left;
 `;
 
-const Subtext = styled.Text<{ color: string }>`
+const Subtext = styled.Text<{ color?: string }>`
   font-size: ${({ theme }: { theme: DefaultTheme }) => theme.fonts.sizes.subtext}px;
-  color: ${({ color }: { color: string }) => color || theme.colors.contrastText};
+  color: ${({ color, theme }: { color?: string; theme: DefaultTheme }) => color || theme.colors.contrastText};
   font-family: ${({ theme }: { theme: DefaultTheme }) => theme.fonts.regular};
   text-align: left;
 `;
