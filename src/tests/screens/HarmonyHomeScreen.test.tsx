@@ -67,9 +67,9 @@ describe('HarmonyHomeScreen', () => {
       // Play a Story card
       expect(getByTestId('harmony-card-play')).toBeTruthy();
       expect(getByText('Play a Story')).toBeTruthy();
-      expect(getByText('Birk and Freya’s Treehouse Adventure')).toBeTruthy();
-      expect(getByText('Engineering')).toBeTruthy();
-      expect(getByText('Empathy')).toBeTruthy();
+      expect(getByText('Birk and Freya: The Vanished Star')).toBeTruthy();
+      expect(getByText('Science')).toBeTruthy();
+      expect(getByText('Teamwork')).toBeTruthy();
       expect(getByTestId('language-toggle')).toBeTruthy();
 
       // Create Your Own Story card
@@ -86,7 +86,7 @@ describe('HarmonyHomeScreen', () => {
     const { getByTestId } = renderWithNavigation();
     await waitFor(() => {
       fireEvent.press(getByTestId('harmony-card-play'));
-      expect(mockNavigation.navigate).toHaveBeenCalledWith('StoryPlayer', { storyId: 'birk-freya-treehouse' });
+      expect(mockNavigation.navigate).toHaveBeenCalledWith('StoryPlayer', { storyId: 'birk-freya-vanished-star' });
     });
   });
 
