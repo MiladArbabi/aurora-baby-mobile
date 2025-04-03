@@ -19,6 +19,8 @@ declare module 'styled-components/native' {
       inter: string;
       sizes: {
         title: number;
+        headline: number; // Added
+        subtext: number;  // Added
         body: number;
         small: number;
       };
@@ -30,7 +32,13 @@ declare module 'styled-components/native' {
       xlarge: number;
       xsmall: number;
     };
-    mode: string; // For styled-components
+    sizes: { // Added
+      cardWidth: number;
+      cardHeight: number;
+      topNavHeight: number;
+      bottomNavHeight: number;
+    };
+    mode: string;
   }
 }
 
