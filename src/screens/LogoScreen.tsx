@@ -30,7 +30,7 @@ const LogoScreen: React.FC<LogoScreenProps> = ({ navigation }) => {
   return (
     <Container>
       <Image
-        source={require('../assets/png/colorlogo.png')}
+        source={require('../assets/png/system/colorlogo.png')}
         style={{ width: 300, height: 300 }}
         testID="logo-image"
       />

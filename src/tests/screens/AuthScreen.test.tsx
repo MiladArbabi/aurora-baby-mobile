@@ -179,8 +179,8 @@ describe('AuthScreen', () => {
       const footer = getByTestId('footer-text');
       const skipButtonContainer = getByTestId('skip-button-container');
 
-      expect(container.props.source).toEqual(require('../../assets/png/lightbackground.png'));
-      expect(logoImage.props.source).toEqual(require('../../assets/png/colorlogo.png'));
+      expect(container.props.source).toEqual(require('../../assets/png/system/lightbackground.png'));
+      expect(logoImage.props.source).toEqual(require('../../assets/png/system/colorlogo.png'));
       expect(logoImage.props.style).toMatchObject({ width: 125, height: 125 });
       expect(logoText.props.style).toMatchObject({
         fontSize: 36,

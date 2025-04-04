@@ -123,7 +123,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
       headline: 'Sweet Moments, Shared Stories',
       subtext: 'Find calm and connection in gentle stories',
       subtextColor: '#FFFFFF',
-      image: require('../assets/png/harmonycardbackground1.png'),
+      image: require('../assets/png/harmony/harmonycardbackground1.png'),
       onPress: () => navigation.navigate('Harmony'),
     },
     {
@@ -133,7 +133,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
       headline: 'Your Baby’s Journey Simplified',
       subtext: 'Easy tracking for a confident parenting experience',
       subtextColor: '#B8FFF8',
-      image: require('../assets/png/carecardbackground1.png'),
+      image: require('../assets/png/care/carecardbackground1.png'),
       onPress: () => navigation.navigate('Care'),
     },
     {
@@ -143,7 +143,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
       headline: 'Spark Their Little Imagination',
       subtext: 'Magical AR/VR adventures for curious baby minds',
       subtextColor: '#FFFFFF',
-      image: require('../assets/png/wondercardbackground1.png'),
+      image: require('../assets/png/wonder/wondercardbackground1.png'),
       onPress: () => navigation.navigate('Wonder'),
     },
   ];
@@ -153,14 +153,14 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
       <Container>
         <TopNav>
           <LogoContainer>
-            <Logo source={require('../assets/png/colorlogo.png')} testID="top-nav-logo" />
+            <Logo source={require('../assets/png/system/colorlogo.png')} testID="top-nav-logo" />
             <LogoText testID="top-nav-text">Aurora Baby</LogoText>
           </LogoContainer>
           <Avatar
             testID="top-nav-avatar"
             onPress={() => navigation.navigate('ProfileSettings')}
           >
-            <Image source={require('../assets/png/avatar.png')} style={{ width: 40, height: 50 }} />
+            <Image source={require('../assets/png/icons/avatar.png')} style={{ width: 40, height: 50 }} />
           </Avatar>
         </TopNav>
         <CardsContainer>
