@@ -3,6 +3,7 @@ import { render, waitFor, fireEvent } from '@testing-library/react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { ThemeProvider } from '@rneui/themed';
 import { ThemeProvider as StyledThemeProvider } from 'styled-components/native';
+import { Image } from 'react-native';
 import HarmonyHomeScreen from '../../screens/HarmonyHomeScreen';
 import { rneThemeBase, theme } from '../../styles/theme';
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -64,7 +65,6 @@ describe('HarmonyHomeScreen', () => {
   it('renders three static vertical cards with consistent layout', async () => {
     const { getByTestId, getByText } = renderWithNavigation();
     await waitFor(() => {
-      // Play a Story card
       expect(getByTestId('harmony-card-play')).toBeTruthy();
       expect(getByText('Play a Story')).toBeTruthy();
       expect(getByText('Birk and Freya: The Vanished Star')).toBeTruthy();
@@ -72,13 +72,14 @@ describe('HarmonyHomeScreen', () => {
       expect(getByText('Teamwork')).toBeTruthy();
       expect(getByTestId('language-toggle')).toBeTruthy();
 
-      // Create Your Own Story card
       expect(getByTestId('harmony-card-create')).toBeTruthy();
       expect(getByText('Create Your Own Story')).toBeTruthy();
+      expect(getByTestId('ai-icon')).toBeTruthy();
 
-      // Explore the Forest card
       expect(getByTestId('harmony-card-explore')).toBeTruthy();
       expect(getByText('Explore the Forest')).toBeTruthy();
+      expect(getByText('Discover the Aurora Forest')).toBeTruthy();
+      expect(getByTestId('explore-icon')).toBeTruthy();
     });
   });
 
@@ -100,3 +101,4 @@ describe('HarmonyHomeScreen', () => {
     });
   });
 });
+
