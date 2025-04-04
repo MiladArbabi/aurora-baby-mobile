@@ -71,10 +71,10 @@ const StoryPlayer: React.FC<StoryPlayerProps> = ({ navigation, route }) => {
       onPress: () => navigation.navigate('StoryViewer', { storyId, mode: 'choice' }),
     },
     {
-      testID: 'story-card-character',
-      backgroundImage: require('../assets/png/characters/freya.png'),
-      title: 'Follow a Character',
-      onPress: () => navigation.navigate('StoryViewer', { storyId, mode: 'character' }),
+      testID: 'story-card-daily', // Updated testID
+      backgroundImage: require('../assets/png/harmony/auroraforest.png'), // Example image
+      title: 'Story of the Day', // Updated title
+      onPress: () => navigation.navigate('StoryViewer', { storyId, mode: 'daily' }), // Updated mode
     },
   ];
 

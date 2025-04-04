@@ -70,8 +70,8 @@ describe('StoryPlayer', () => {
       expect(getByTestId('story-card-choice')).toBeTruthy();
       expect(getByText('Make a Choice')).toBeTruthy();
 
-      expect(getByTestId('story-card-character')).toBeTruthy();
-      expect(getByText('Follow a Character')).toBeTruthy();
+      expect(getByTestId('story-card-daily')).toBeTruthy(); // Updated testID
+      expect(getByText('Story of the Day')).toBeTruthy(); // Updated title
     });
   });
 
@@ -97,13 +97,13 @@ describe('StoryPlayer', () => {
     });
   });
 
-  it('navigates to StoryViewer with character mode when Character card is pressed', async () => {
+  it('navigates to StoryViewer with daily mode when Daily card is pressed', async () => { // Updated test
     const { getByTestId } = renderWithNavigation();
     await waitFor(() => {
-      fireEvent.press(getByTestId('story-card-character'));
+      fireEvent.press(getByTestId('story-card-daily'));
       expect(mockNavigation.navigate).toHaveBeenCalledWith('StoryViewer', {
         storyId: 'birk-freya-vanished-star',
-        mode: 'character',
+        mode: 'daily', // Updated mode
       });
     });
   });

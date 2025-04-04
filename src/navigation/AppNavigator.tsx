@@ -17,7 +17,7 @@ export type RootStackParamList = {
   Home: undefined;
   Harmony: undefined;
   StoryPlayer: { storyId: string };
-  StoryViewer: { storyId: string; mode: 'soothing' | 'choice' | 'character' };
+  StoryViewer: { storyId: string; mode: 'soothing' | 'choice' | 'daily' }; // Updated mode
   Care: undefined;
   Wonder: undefined;
   ProfileSettings: undefined;
@@ -52,11 +52,9 @@ const AppNavigator = () => {
             <Stack.Screen name="Home" component={HomeScreen} />
             <Stack.Screen name="Harmony" component={HarmonyHomeScreen} />
             <Stack.Screen name="StoryPlayer" component={StoryPlayer} />
-            {/* Remove StoryViewer placeholder until implemented */}
             <Stack.Screen name="Care" component={CareScreen} />
             <Stack.Screen name="Wonder" component={WonderScreen} />
             <Stack.Screen name="ProfileSettings" component={ProfileSettingScreen} />
-            {/* Remove ForestMap placeholder until implemented */}
           </>
         ) : (
           <Stack.Screen name="Auth" component={AuthScreen} />
