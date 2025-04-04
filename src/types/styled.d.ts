@@ -12,6 +12,7 @@ declare module 'styled-components/native' {
       border: string;
       highlight: string;
       muted: string;
+      aiGenerated: string; // Added for AI-generated text
     };
     fonts: {
       regular: string;
@@ -19,8 +20,8 @@ declare module 'styled-components/native' {
       inter: string;
       sizes: {
         title: number;
-        headline: number; 
-        subtext: number;  
+        headline: number;
+        subtext: number;
         body: number;
         small: number;
       };
@@ -32,7 +33,7 @@ declare module 'styled-components/native' {
       xlarge: number;
       xsmall: number;
     };
-    sizes: { // Added
+    sizes: {
       cardWidth: number;
       cardHeight: number;
       topNavHeight: number;

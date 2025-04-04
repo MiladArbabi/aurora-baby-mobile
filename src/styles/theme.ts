@@ -10,6 +10,7 @@ export const colors = {
   border: '#D3C8E5', // Softer Lavender
   highlight: '#FFB6C1', // Light Pink
   muted: '#A9A9A9', // Gray
+  aiGenerated: '#FFDE33',
 } as const;
 
 export const fonts = {

@@ -42,7 +42,7 @@ const BottomNav: React.FC<BottomNavProps> = ({ navigation, activeScreen }) => {
           onPress={() => navigation.navigate('Home')}
         >
           <Image
-            source={require('../../assets/png/homeicon.png')}
+            source={require('../../assets/png/bottomnav/homeicon.png')}
             style={{
               width: iconSize,
               height: iconSize,
@@ -55,7 +55,7 @@ const BottomNav: React.FC<BottomNavProps> = ({ navigation, activeScreen }) => {
           onPress={() => navigation.navigate('Harmony')}
         >
           <Image
-            source={require('../../assets/png/harmonyicon.png')}
+            source={require('../../assets/png/bottomnav/harmonyicon.png')}
             style={{
               width: iconSize,
               height: iconSize,
@@ -68,7 +68,7 @@ const BottomNav: React.FC<BottomNavProps> = ({ navigation, activeScreen }) => {
           onPress={() => navigation.navigate('Care')}
         >
           <Image
-            source={require('../../assets/png/careicon.png')}
+            source={require('../../assets/png/bottomnav/careicon.png')}
             style={{
               width: iconSize,
               height: iconSize,
@@ -81,7 +81,7 @@ const BottomNav: React.FC<BottomNavProps> = ({ navigation, activeScreen }) => {
           onPress={() => navigation.navigate('Wonder')}
         >
           <Image
-            source={require('../../assets/png/wondericon.png')}
+            source={require('../../assets/png/bottomnav/wondericon.png')}
             style={{
               width: iconSize,
               height: iconSize,

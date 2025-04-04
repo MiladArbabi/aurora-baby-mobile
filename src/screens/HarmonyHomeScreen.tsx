@@ -119,16 +119,28 @@ const LanguageText = styled.Text`
   text-align: center;
 `;
 
+const IconContainer = styled.View`
+  align-self: flex-end;
+  margin-right: ${({ theme }: { theme: DefaultTheme }) => theme.spacing.medium}px;
+  margin-top: ${({ theme }: { theme: DefaultTheme }) => theme.spacing.small}px;
+`;
+
+const Icon = styled.Image`
+  width: 24px;
+  height: 24px;
+`;
+
 type HarmonyHomeScreenProps = StackScreenProps<RootStackParamList, 'Harmony'>;
 
 interface CardItem {
   id: string;
   title: string;
   onPress: () => void;
-  image?: any;
+  image: any;
   subtext?: string;
   badges?: string[];
   language?: string;
+  icon?: any;
 }
 
 const HarmonyHomeScreen: React.FC<HarmonyHomeScreenProps> = ({ navigation }) => {
@@ -148,13 +160,16 @@ const HarmonyHomeScreen: React.FC<HarmonyHomeScreenProps> = ({ navigation }) => 
       id: 'create',
       title: 'Create Your Own Story',
       onPress: () => navigation.navigate('StoryPlayer', { storyId: 'mock-custom-story' }),
-      image: require('../assets/png/harmonycardbackground2.png'),
+      image: require('../assets/png/harmony/auroraforest.png'),
+      icon: require('../assets/png/icons/generative-ai.png'),
     },
     {
       id: 'explore',
       title: 'Explore the Forest',
       onPress: () => navigation.navigate('ForestMap'),
-      image: require('../assets/png/harmonycardbackground2.png'),
+      image: require('../assets/png/harmony/auroraforestmap.png'),
+      subtext: 'Discover the Aurora Forest',
+      icon: require('../assets/png/icons/magnifying-glass.png'),
     },
   ];
 
@@ -163,14 +178,14 @@ const HarmonyHomeScreen: React.FC<HarmonyHomeScreenProps> = ({ navigation }) => 
       <Container>
         <TopNav>
           <LogoContainer>
-            <Logo source={require('../assets/png/colorlogo.png')} testID="top-nav-logo" />
+            <Logo source={require('../assets/png/system/colorlogo.png')} testID="top-nav-logo" />
             <LogoText testID="top-nav-text">Aurora Baby</LogoText>
           </LogoContainer>
           <Avatar
             testID="top-nav-avatar"
             onPress={() => navigation.navigate('ProfileSettings')}
           >
-            <Image source={require('../assets/png/avatar.png')} style={{ width: 40, height: 50 }} />
+            <Image source={require('../assets/png/icons/avatar.png')} style={{ width: 40, height: 50 }} />
           </Avatar>
         </TopNav>
         <CardsContainer>
@@ -190,6 +205,14 @@ const HarmonyHomeScreen: React.FC<HarmonyHomeScreenProps> = ({ navigation }) => 
                           </LanguageToggle>
                         )}
                       </BadgeContainer>
+                    )}
+                    {item.icon && (
+                      <IconContainer>
+                        <Icon
+                          source={item.icon}
+                          testID={item.id === 'create' ? 'ai-icon' : 'explore-icon'}
+                        />
+                      </IconContainer>
                     )}
                   </View>
                   <TextContainer>
