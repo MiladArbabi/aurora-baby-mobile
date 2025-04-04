@@ -11,8 +11,6 @@ import { RouteProp } from '@react-navigation/native';
 import { RootStackParamList } from '../../navigation/AppNavigator';
 import { DefaultTheme } from 'styled-components/native';
 
-console.log('Loading HarmonyHomeScreen.test.tsx from:', __filename);
-
 describe('HarmonyHomeScreen', () => {
   const mockNavigation: StackNavigationProp<RootStackParamList, 'Harmony'> = {
     navigate: jest.fn(),
