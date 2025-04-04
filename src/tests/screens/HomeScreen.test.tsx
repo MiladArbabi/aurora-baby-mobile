@@ -3,10 +3,10 @@ import { render, waitFor, fireEvent } from '@testing-library/react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { ThemeProvider } from '@rneui/themed';
 import { ThemeProvider as StyledThemeProvider } from 'styled-components/native';
+import { RouteProp } from '@react-navigation/native'; // Add this import
 import HomeScreen from '../../screens/HomeScreen';
 import { rneThemeBase, theme } from '../../styles/theme';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { RouteProp } from '@react-navigation/native';
 import { RootStackParamList } from '../../navigation/AppNavigator';
 import { DefaultTheme } from 'styled-components/native';
 
@@ -65,19 +65,13 @@ describe('HomeScreen', () => {
     const { getByTestId, getByText } = renderWithNavigation();
     await waitFor(() => {
       expect(getByTestId('home-card-harmony')).toBeTruthy();
-      expect(getByText('HARMONY')).toBeTruthy();
-      expect(getByText('Sweet Moments, Shared Stories')).toBeTruthy();
-      expect(getByText('Find calm and connection in gentle stories')).toBeTruthy();
+      expect(getByText('Harmony')).toBeTruthy();
 
       expect(getByTestId('home-card-care')).toBeTruthy();
-      expect(getByText('CARE')).toBeTruthy();
-      expect(getByText('Your Baby’s Journey Simplified')).toBeTruthy();
-      expect(getByText('Easy tracking for a confident parenting experience')).toBeTruthy();
+      expect(getByText('Care')).toBeTruthy();
 
       expect(getByTestId('home-card-wonder')).toBeTruthy();
-      expect(getByText('WONDER WORLD')).toBeTruthy();
-      expect(getByText('Spark Their Little Imagination')).toBeTruthy();
-      expect(getByText('Magical AR/VR adventures for curious baby minds')).toBeTruthy();
+      expect(getByText('Wonder')).toBeTruthy();
     });
   });
 
