@@ -10,7 +10,7 @@ export const colors = {
   border: '#D3C8E5', // Softer Lavender
   highlight: '#FFB6C1', // Light Pink
   muted: '#A9A9A9', // Gray
-  aiGenerated: '#FFDE33',
+  aiGenerated: '#FFDE33', // Sunny Gold for AI-generated text
 } as const;
 
 export const fonts = {
@@ -20,7 +20,7 @@ export const fonts = {
   sizes: {
     title: 24,
     headline: 30,
-    subtext: 18,  
+    subtext: 18,
     body: 16,
     small: 12,
   },
@@ -38,14 +38,14 @@ export const sizes = {
   cardWidth: 300,
   cardHeight: 200,
   topNavHeight: 60,
-  bottomNavHeight: 50, 
+  bottomNavHeight: 50,
 } as const;
 
 export const theme = {
   colors,
   fonts,
   spacing,
-  sizes, 
+  sizes,
   mode: 'light',
 } as const;
 
