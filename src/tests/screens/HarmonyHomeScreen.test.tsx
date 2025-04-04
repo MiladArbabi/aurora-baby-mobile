@@ -11,6 +11,7 @@ import { RouteProp } from '@react-navigation/native';
 import { RootStackParamList } from '../../navigation/AppNavigator';
 import { DefaultTheme } from 'styled-components/native';
 
+console.log('Loading HarmonyHomeScreen.test.tsx from:', __filename);
 // Mock react-native-svg
 jest.mock('react-native-svg', () => ({
   SvgUri: jest.fn((props) => <Image {...props} />),
