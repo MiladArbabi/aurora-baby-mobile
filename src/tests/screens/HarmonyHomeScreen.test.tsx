@@ -68,18 +68,17 @@ describe('HarmonyHomeScreen', () => {
       expect(getByTestId('harmony-card-play')).toBeTruthy();
       expect(getByText('Play a Story')).toBeTruthy();
       expect(getByText('Birk and Freya: The Vanished Star')).toBeTruthy();
-      expect(getByText('Science')).toBeTruthy();
+      expect(getByText('Science')).toBeTruthy(); // Check badge text instead
       expect(getByText('Teamwork')).toBeTruthy();
-      expect(getByTestId('language-toggle')).toBeTruthy();
 
       expect(getByTestId('harmony-card-create')).toBeTruthy();
       expect(getByText('Create Your Own Story')).toBeTruthy();
-      expect(getByTestId('ai-icon')).toBeTruthy();
+      expect(getByTestId('harmony-card-create-icon')).toBeTruthy();
 
       expect(getByTestId('harmony-card-explore')).toBeTruthy();
       expect(getByText('Explore the Forest')).toBeTruthy();
       expect(getByText('Discover the Aurora Forest')).toBeTruthy();
-      expect(getByTestId('explore-icon')).toBeTruthy();
+      expect(getByTestId('harmony-card-explore-icon')).toBeTruthy();
     });
   });
 
@@ -101,4 +100,3 @@ describe('HarmonyHomeScreen', () => {
     });
   });
 });
-

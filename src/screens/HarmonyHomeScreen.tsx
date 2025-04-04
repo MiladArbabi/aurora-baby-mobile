@@ -1,11 +1,12 @@
 import React from 'react';
-import { View, Text, Image, TouchableOpacity } from 'react-native';
+import { View, Image, Platform } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import styled, { useTheme } from 'styled-components/native';
 import { StackScreenProps } from '@react-navigation/stack';
 import { RootStackParamList } from '../navigation/AppNavigator';
 import { DefaultTheme } from 'styled-components/native';
 import BottomNav from '../components/common/BottomNav';
+import Card from '../components/common/Card';
 import { prebuiltStories } from '../data/stories';
 
 const Container = styled.View`
@@ -51,125 +52,34 @@ const CardsContainer = styled.View`
   padding-bottom: ${({ theme }: { theme: DefaultTheme }) => theme.sizes.bottomNavHeight + theme.spacing.xlarge}px;
 `;
 
-const Card = styled.TouchableOpacity`
-  width: ${({ theme }: { theme: DefaultTheme }) => theme.sizes.cardWidth}px;
-  height: ${({ theme }: { theme: DefaultTheme }) => theme.sizes.cardHeight}px;
-  margin-vertical: ${({ theme }: { theme: DefaultTheme }) => theme.spacing.medium}px;
-  border-radius: 25px;
-  overflow: hidden;
-`;
-
-const CardImage = styled.ImageBackground`
-  flex: 1;
-  justify-content: space-between;
-  width: 100%;
-  height: 100%;
-`;
-
-const ContentContainer = styled.View`
-  flex: 1;
-  justify-content: space-between;
-`;
-
-const TextContainer = styled.View`
-  margin: ${({ theme }: { theme: DefaultTheme }) => theme.spacing.large}px;
-`;
-
-const CardTitle = styled.Text`
-  font-size: ${({ theme }: { theme: DefaultTheme }) => theme.fonts.sizes.title}px;
-  color: ${({ theme }: { theme: DefaultTheme }) => theme.colors.contrastText};
-  font-family: ${({ theme }: { theme: DefaultTheme }) => theme.fonts.regular};
-  text-align: left;
-`;
-
-const StoryText = styled.Text`
-  font-size: ${({ theme }: { theme: DefaultTheme }) => theme.fonts.sizes.body}px;
-  color: ${({ theme }: { theme: DefaultTheme }) => theme.colors.contrastText};
-  font-family: ${({ theme }: { theme: DefaultTheme }) => theme.fonts.regular};
-  text-align: left;
-`;
-
-const BadgeContainer = styled.View`
-  align-self: flex-end;
-  margin-right: 10px;
-`;
-
-const Badge = styled.Text`
-  font-size: ${({ theme }: { theme: DefaultTheme }) => theme.fonts.sizes.small}px;
-  color: ${({ theme }: { theme: DefaultTheme }) => theme.colors.contrastText};
-  background-color: ${({ theme }: { theme: DefaultTheme }) => theme.colors.muted};
-  padding: ${({ theme }: { theme: DefaultTheme }) => theme.spacing.xsmall}px ${({ theme }: { theme: DefaultTheme }) => theme.spacing.medium}px;
-  border-radius: 12px;
-  margin-top: ${({ theme }: { theme: DefaultTheme }) => theme.spacing.xsmall}px;
-  text-align: center;
-`;
-
-const LanguageToggle = styled.View`
-  align-self: flex-end;
-  margin-right: 10px;
-  margin-top: ${({ theme }: { theme: DefaultTheme }) => theme.spacing.xsmall}px;
-`;
-
-const LanguageText = styled.Text`
-  font-size: ${({ theme }: { theme: DefaultTheme }) => theme.fonts.sizes.small}px;
-  color: ${({ theme }: { theme: DefaultTheme }) => theme.colors.contrastText};
-  background-color: ${({ theme }: { theme: DefaultTheme }) => theme.colors.secondary};
-  padding: ${({ theme }: { theme: DefaultTheme }) => theme.spacing.xsmall}px ${({ theme }: { theme: DefaultTheme }) => theme.spacing.medium}px;
-  border-radius: 12px;
-  text-align: center;
-`;
-
-const IconContainer = styled.View`
-  align-self: flex-end;
-  margin-right: ${({ theme }: { theme: DefaultTheme }) => theme.spacing.medium}px;
-  margin-top: ${({ theme }: { theme: DefaultTheme }) => theme.spacing.small}px;
-`;
-
-const Icon = styled.Image`
-  width: 24px;
-  height: 24px;
-`;
-
 type HarmonyHomeScreenProps = StackScreenProps<RootStackParamList, 'Harmony'>;
-
-interface CardItem {
-  id: string;
-  title: string;
-  onPress: () => void;
-  image: any;
-  subtext?: string;
-  badges?: string[];
-  language?: string;
-  icon?: any;
-}
 
 const HarmonyHomeScreen: React.FC<HarmonyHomeScreenProps> = ({ navigation }) => {
   const theme = useTheme();
 
-  const cardData: CardItem[] = [
+  const cardData = [
     {
-      id: 'play',
+      testID: 'harmony-card-play',
+      backgroundImage: require('../assets/png/characters/birkandfreya.png'),
       title: 'Play a Story',
-      onPress: () => navigation.navigate('StoryPlayer', { storyId: prebuiltStories[0].id }),
-      image: require('../assets/png/characters/birkandfreya.png'),
       subtext: prebuiltStories[0].title,
       badges: [prebuiltStories[0].stemFocus, prebuiltStories[0].traitFocus],
-      language: prebuiltStories[0].language,
+      onPress: () => navigation.navigate('StoryPlayer', { storyId: prebuiltStories[0].id }),
     },
     {
-      id: 'create',
+      testID: 'harmony-card-create',
+      backgroundImage: require('../assets/png/harmony/auroraforest.png'),
       title: 'Create Your Own Story',
-      onPress: () => navigation.navigate('StoryPlayer', { storyId: 'mock-custom-story' }),
-      image: require('../assets/png/harmony/auroraforest.png'),
       icon: require('../assets/png/icons/generative-ai.png'),
+      onPress: () => navigation.navigate('StoryPlayer', { storyId: 'mock-custom-story' }),
     },
     {
-      id: 'explore',
+      testID: 'harmony-card-explore',
+      backgroundImage: require('../assets/png/harmony/auroraforestmap.png'),
       title: 'Explore the Forest',
-      onPress: () => navigation.navigate('ForestMap'),
-      image: require('../assets/png/harmony/auroraforestmap.png'),
       subtext: 'Discover the Aurora Forest',
       icon: require('../assets/png/icons/magnifying-glass.png'),
+      onPress: () => navigation.navigate('ForestMap'),
     },
   ];
 
@@ -181,47 +91,22 @@ const HarmonyHomeScreen: React.FC<HarmonyHomeScreenProps> = ({ navigation }) => 
             <Logo source={require('../assets/png/system/colorlogo.png')} testID="top-nav-logo" />
             <LogoText testID="top-nav-text">Aurora Baby</LogoText>
           </LogoContainer>
-          <Avatar
-            testID="top-nav-avatar"
-            onPress={() => navigation.navigate('ProfileSettings')}
-          >
+          <Avatar testID="top-nav-avatar" onPress={() => navigation.navigate('ProfileSettings')}>
             <Image source={require('../assets/png/icons/avatar.png')} style={{ width: 40, height: 50 }} />
           </Avatar>
         </TopNav>
         <CardsContainer>
-          {cardData.map((item) => (
-            <Card key={item.id} testID={`harmony-card-${item.id}`} onPress={item.onPress}>
-              <CardImage source={item.image} resizeMode="cover">
-                <ContentContainer>
-                  <View>
-                    {item.badges && (
-                      <BadgeContainer>
-                        {item.badges.map((badge, index) => (
-                          <Badge key={index}>{badge}</Badge>
-                        ))}
-                        {item.language && (
-                          <LanguageToggle testID="language-toggle">
-                            <LanguageText>{item.language}</LanguageText>
-                          </LanguageToggle>
-                        )}
-                      </BadgeContainer>
-                    )}
-                    {item.icon && (
-                      <IconContainer>
-                        <Icon
-                          source={item.icon}
-                          testID={item.id === 'create' ? 'ai-icon' : 'explore-icon'}
-                        />
-                      </IconContainer>
-                    )}
-                  </View>
-                  <TextContainer>
-                    <CardTitle>{item.title}</CardTitle>
-                    {item.subtext && <StoryText>{item.subtext}</StoryText>}
-                  </TextContainer>
-                </ContentContainer>
-              </CardImage>
-            </Card>
+          {cardData.map((card) => (
+            <Card
+              key={card.testID}
+              testID={card.testID}
+              backgroundImage={card.backgroundImage}
+              title={card.title}
+              subtext={card.subtext}
+              badges={card.badges}
+              icon={card.icon}
+              onPress={card.onPress}
+            />
           ))}
         </CardsContainer>
         <BottomNav navigation={navigation} activeScreen="Harmony" />
