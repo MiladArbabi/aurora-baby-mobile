@@ -9,14 +9,12 @@ describe('Button', () => {
     const button = getByTestId('styled-button');
 
     expect(buttonText).toBeTruthy();
-    console.log("buttonText styles:", buttonText.props.style);
     expect(buttonText.props.style).toMatchObject({
       color: colors.background, // #E9DAFA
       fontFamily: fonts.regular, // Edrosa
       textAlign: 'center',
     });
 
-    console.log("button styles:", button.props.style);
     expect(button.props.style).toMatchObject({
       backgroundColor: colors.primary, // #B3A5C4
       paddingTop: spacing.small, // 8

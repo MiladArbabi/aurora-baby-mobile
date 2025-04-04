@@ -1,6 +1,5 @@
 import React from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { NavigationContainer } from '@react-navigation/native';
 import { ThemeProvider } from '@rneui/themed';
 import { ThemeProvider as StyledThemeProvider } from 'styled-components/native';
 import { useFonts } from 'expo-font';
@@ -21,10 +20,8 @@ export default function App() {
   return (
     <ThemeProvider theme={rneThemeBase as any}>
       <StyledThemeProvider theme={theme}>
-        <NavigationContainer>
-          <AppNavigator />
-          <StatusBar style="auto" />
-        </NavigationContainer>
+        <AppNavigator />
+        <StatusBar style="auto" />
       </StyledThemeProvider>
     </ThemeProvider>
   );

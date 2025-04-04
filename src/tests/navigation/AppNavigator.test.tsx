@@ -1,8 +1,7 @@
 import { render, waitFor } from '@testing-library/react-native';
-import { NavigationContainer } from '@react-navigation/native';
 import { ThemeProvider } from '@rneui/themed';
 import { ThemeProvider as StyledThemeProvider } from 'styled-components/native';
-import { AppNavigator } from '../../navigation/AppNavigator';
+import AppNavigator from '../../navigation/AppNavigator';
 import { rneThemeBase, theme } from '../../styles/theme';
 import { DefaultTheme } from 'styled-components/native';
 
@@ -29,9 +28,7 @@ describe('AppNavigator', () => {
     const { findByText } = render(
       <ThemeProvider theme={rneThemeBase}>
         <StyledThemeProvider theme={theme as DefaultTheme}>
-          <NavigationContainer>
-            <AppNavigator />
-          </NavigationContainer>
+          <AppNavigator />
         </StyledThemeProvider>
       </ThemeProvider>
     );
