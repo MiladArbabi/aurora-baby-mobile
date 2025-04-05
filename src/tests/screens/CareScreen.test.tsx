@@ -148,4 +148,14 @@ describe('CareScreen', () => {
       expect(getByTestId('sleep-suggestion')).toBeTruthy(); // Expect suggestion
     }, { timeout: 2000 });
   });
+
+  it('renders optimization card below tracker', () => {
+    const { getByTestId } = renderWithNavigation();
+    expect(getByTestId('optimization-card')).toBeTruthy();
+  });
+
+  it('renders self-care card below tracker', () => {
+    const { getByTestId } = renderWithNavigation();
+    expect(getByTestId('self-care-card')).toBeTruthy();
+  });
 });

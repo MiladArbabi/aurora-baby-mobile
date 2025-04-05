@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, TouchableOpacity } from 'react-native';
+import { View, TouchableOpacity, Text, Dimensions } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import styled, { useTheme } from 'styled-components/native';
 import { StackScreenProps } from '@react-navigation/stack';
@@ -8,6 +8,7 @@ import { DefaultTheme } from 'styled-components/native';
 import BottomNav from '../components/common/BottomNav';
 import Svg, { Circle, Line, Path } from 'react-native-svg';
 import * as d3 from 'd3-shape';
+import Carousel from 'react-native-snap-carousel';
 
 const Container = styled.View`
   flex: 1;
@@ -70,6 +71,26 @@ const RadialButtonText = styled.Text`
   font-size: ${({ theme }: { theme: DefaultTheme }) => theme.fonts.sizes.body}px;
 `;
 
+const CardContainer = styled.View`
+  height: 200px;
+  padding: ${({ theme }: { theme: DefaultTheme }) => theme.spacing.medium}px;
+`;
+
+const Card = styled.View`
+  width: 100px;
+  height: 200px;
+  background-color: ${({ theme }: { theme: DefaultTheme }) => theme.colors.tertiaryAccent};
+  border-radius: 8px;
+  justify-content: center;
+  align-items: center;
+`;
+
+const CardText = styled.Text`
+  color: ${({ theme }: { theme: DefaultTheme }) => theme.colors.contrastText};
+  font-size: ${({ theme }: { theme: DefaultTheme }) => theme.fonts.sizes.body}px;
+  text-align: center;
+`;
+
 const CLOCK_RADIUS = 150;
 const CENTER = CLOCK_RADIUS + 10;
 const ARC_WIDTH = 20;
@@ -118,6 +139,17 @@ const CareScreen: React.FC<CareScreenProps> = ({ navigation }) => {
 
   const suggestions = getSuggestions();
 
+  const cardData = [
+    { id: 'optimization', text: 'Try an earlier nap today', testID: 'optimization-card' },
+    { id: 'self-care', text: 'Take a 5-min break now', testID: 'self-care-card' },
+  ];
+
+  const renderCard = ({ item }: { item: { text: string; testID: string } }) => (
+    <Card testID={item.testID}>
+      <CardText>{item.text}</CardText>
+    </Card>
+  );
+
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: theme.colors.background }}>
       <Container>
@@ -135,7 +167,6 @@ const CareScreen: React.FC<CareScreenProps> = ({ navigation }) => {
         </TopNav>
         <TrackerContainer>
           <Svg width={CENTER * 2} height={CENTER * 2} testID="tracker-ring" onLongPress={handleLongPress}>
-            {/* Outer Ring (Today) */}
             <Circle
               cx={CENTER}
               cy={CENTER}
@@ -144,7 +175,6 @@ const CareScreen: React.FC<CareScreenProps> = ({ navigation }) => {
               strokeWidth="10"
               fill="transparent"
             />
-            {/* Inner Rings (Multi-day) */}
             {daysView >= 2 && (
               <Circle
                 cx={CENTER}
@@ -167,7 +197,6 @@ const CareScreen: React.FC<CareScreenProps> = ({ navigation }) => {
                 testID="tracker-ring-3"
               />
             )}
-            {/* Hour Ticks (12) */}
             {Array.from({ length: 12 }).map((_, i) => {
               const angle = (i / 12) * 2 * Math.PI - Math.PI / 2;
               const x1 = CENTER + Math.cos(angle) * (CLOCK_RADIUS - 12);
@@ -187,7 +216,6 @@ const CareScreen: React.FC<CareScreenProps> = ({ navigation }) => {
                 />
               );
             })}
-            {/* Minute Ticks (48, every 15 minutes) */}
             {Array.from({ length: 48 }).map((_, i) => {
               const angle = (i / 48) * 2 * Math.PI - Math.PI / 2;
               const x1 = CENTER + Math.cos(angle) * (CLOCK_RADIUS - 6);
@@ -207,7 +235,6 @@ const CareScreen: React.FC<CareScreenProps> = ({ navigation }) => {
                 />
               );
             })}
-            {/* Event Arcs */}
             {events.map((event, index) => {
               const color = event.type === 'feed' ? theme.colors.primary :
                             event.type === 'sleep' ? theme.colors.darkAccent :
@@ -215,7 +242,6 @@ const CareScreen: React.FC<CareScreenProps> = ({ navigation }) => {
               const testID = `${event.type}-arc`;
               return <Path key={index} testID={testID} d={createArc(event.start, event.end, color).props.d} fill={color} />;
             })}
-            {/* Suggestion Arcs */}
             {suggestions.map((suggestion, index) => {
               const color = suggestion.type === 'feed' ? theme.colors.primary :
                             suggestion.type === 'sleep' ? theme.colors.darkAccent :
@@ -238,6 +264,15 @@ const CareScreen: React.FC<CareScreenProps> = ({ navigation }) => {
             </RadialMenu>
           )}
         </TrackerContainer>
+        <CardContainer>
+          <Carousel
+            data={cardData}
+            renderItem={renderCard}
+            sliderWidth={Dimensions.get('window').width}
+            itemWidth={100}
+            layout="default"
+          />
+        </CardContainer>
         <BottomNav navigation={navigation} activeScreen="Care" />
       </Container>
     </SafeAreaView>
