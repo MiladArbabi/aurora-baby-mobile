@@ -1,7 +1,7 @@
 module.exports = {
   preset: 'jest-expo',
   testEnvironment: 'jsdom',
-  setupFiles: ['<rootDir>/jest/setup.js'], // Confirms jest/setup.js is used
+  setupFiles: ['<rootDir>/jest/setup.js'],
   setupFilesAfterEnv: ['@testing-library/react-native/extend-expect'],
   transform: {
     '^.+\\.(ts|tsx)$': ['ts-jest', {
@@ -12,7 +12,7 @@ module.exports = {
     '^.+\\.(js|jsx)$': ['babel-jest', { configFile: './.babelrc' }]
   },
   transformIgnorePatterns: [
-    'node_modules/(?!((jest-)?react-native|@react-native(-community)?)|expo(nent)?|@expo(nent)?/.*|@expo-google-fonts/.*|react-navigation|@react-navigation/.*|@unimodules/.*|unimodules|sentry-expo|native-base|react-native-svg|@rneui/.*)'
+    'node_modules/(?!((jest-)?react-native|@react-native(-community)?)|expo(nent)?|@expo(nent)?/.*|@expo-google-fonts/.*|react-navigation|@react-navigation/.*|@unimodules/.*|unimodules|sentry-expo|native-base|react-native-svg|@rneui/.*|d3-shape|d3-path)'
   ],
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
   moduleNameMapper: {
