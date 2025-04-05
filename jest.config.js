@@ -18,6 +18,7 @@ module.exports = {
   moduleNameMapper: {
     '^react-native-gesture-handler$': '<rootDir>/src/tests/__mocks__/react-native-gesture-handler.ts',
     '^firebase(/.*)?$': '<rootDir>/src/tests/__mocks__/firebase.ts',
-    '^expo-constants$': '<rootDir>/src/tests/__mocks__/expo-constants.ts'
+    '^expo-constants$': '<rootDir>/src/tests/__mocks__/expo-constants.ts',
+    '^react-native-snap-carousel$': '<rootDir>/src/tests/__mocks__/react-native-snap-carousel.tsx'
   }
 };
