@@ -100,4 +100,24 @@ describe('CareScreen', () => {
     const minuteTicks = getAllByTestId('minute-tick');
     expect(minuteTicks.length).toBe(48); // 15-minute intervals
   });
+
+  it('logs sleep event arc on radial menu selection', async () => {
+    const { getByTestId } = renderWithNavigation();
+    fireEvent(getByTestId('tracker-ring'), 'longPress');
+    await waitFor(() => expect(getByTestId('radial-menu')).toBeTruthy());
+    fireEvent.press(getByTestId('radial-sleep'));
+    await waitFor(() => {
+      expect(getByTestId('sleep-arc')).toBeTruthy();
+    }, { timeout: 2000 });
+  });
+
+  it('logs diaper event arc on radial menu selection', async () => {
+    const { getByTestId } = renderWithNavigation();
+    fireEvent(getByTestId('tracker-ring'), 'longPress');
+    await waitFor(() => expect(getByTestId('radial-menu')).toBeTruthy());
+    fireEvent.press(getByTestId('radial-diaper'));
+    await waitFor(() => {
+      expect(getByTestId('diaper-arc')).toBeTruthy();
+    }, { timeout: 2000 });
+  });
 });
