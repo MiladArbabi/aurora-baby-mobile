@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, TouchableOpacity, Text, Dimensions } from 'react-native';
+import { View, TouchableOpacity, Text } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import styled, { useTheme } from 'styled-components/native';
 import { StackScreenProps } from '@react-navigation/stack';
@@ -8,7 +8,6 @@ import { DefaultTheme } from 'styled-components/native';
 import BottomNav from '../components/common/BottomNav';
 import Svg, { Circle, Line, Path } from 'react-native-svg';
 import * as d3 from 'd3-shape';
-import Carousel from 'react-native-snap-carousel';
 
 const Container = styled.View`
   flex: 1;
@@ -139,17 +138,6 @@ const CareScreen: React.FC<CareScreenProps> = ({ navigation }) => {
 
   const suggestions = getSuggestions();
 
-  const cardData = [
-    { id: 'optimization', text: 'Try an earlier nap today', testID: 'optimization-card' },
-    { id: 'self-care', text: 'Take a 5-min break now', testID: 'self-care-card' },
-  ];
-
-  const renderCard = ({ item }: { item: { text: string; testID: string } }) => (
-    <Card testID={item.testID}>
-      <CardText>{item.text}</CardText>
-    </Card>
-  );
-
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: theme.colors.background }}>
       <Container>
@@ -265,13 +253,12 @@ const CareScreen: React.FC<CareScreenProps> = ({ navigation }) => {
           )}
         </TrackerContainer>
         <CardContainer>
-          <Carousel
-            data={cardData}
-            renderItem={renderCard}
-            sliderWidth={Dimensions.get('window').width}
-            itemWidth={100}
-            layout="default"
-          />
+          <Card testID="optimization-card">
+            <CardText>Try an earlier nap today</CardText>
+          </Card>
+          <Card testID="self-care-card">
+            <CardText>Take a 5-min break now</CardText>
+          </Card>
         </CardContainer>
         <BottomNav navigation={navigation} activeScreen="Care" />
       </Container>
