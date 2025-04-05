@@ -6,7 +6,8 @@ import { StackScreenProps } from '@react-navigation/stack';
 import { RootStackParamList } from '../navigation/AppNavigator';
 import { DefaultTheme } from 'styled-components/native';
 import BottomNav from '../components/common/BottomNav';
-import Svg, { Circle, Line } from 'react-native-svg';
+import Svg, { Circle, Line, Path } from 'react-native-svg';
+import * as d3 from 'd3-shape';
 
 const Container = styled.View`
   flex: 1;
@@ -44,8 +45,34 @@ const TrackerContainer = styled.View`
   align-items: center;
 `;
 
+const RadialMenu = styled.View`
+  position: absolute;
+  width: 150px;
+  height: 150px;
+  background-color: ${({ theme }: { theme: DefaultTheme }) => theme.colors.accent};
+  border-radius: 75px;
+  justify-content: center;
+  align-items: center;
+`;
+
+const RadialButton = styled.TouchableOpacity`
+  width: 40px;
+  height: 40px;
+  border-radius: 20px;
+  background-color: ${({ theme }: { theme: DefaultTheme }) => theme.colors.primary};
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+`;
+
+const RadialButtonText = styled.Text`
+  color: ${({ theme }: { theme: DefaultTheme }) => theme.colors.contrastText};
+  font-size: ${({ theme }: { theme: DefaultTheme }) => theme.fonts.sizes.body}px;
+`;
+
 const CLOCK_RADIUS = 150;
 const CENTER = CLOCK_RADIUS + 10;
+const ARC_WIDTH = 20;
 
 type CareScreenProps = StackScreenProps<RootStackParamList, 'Care'>;
 
@@ -53,16 +80,24 @@ const CareScreen: React.FC<CareScreenProps> = ({ navigation }) => {
   const theme = useTheme();
   const [daysView, setDaysView] = useState(1);
   const [showRadial, setShowRadial] = useState(false);
-  const [feedLogged, setFeedLogged] = useState(false);
+  const [events, setEvents] = useState<{ type: string; start: number; end: number }[]>([]);
 
   const handleToggleDays = (days: number) => setDaysView(days);
-  const handleLongPress = () => {
-    setShowRadial(true);
-    console.log('Long press detected');
-  };
-  const handleFeedPress = () => {
+  const handleLongPress = () => setShowRadial(true);
+  const handleEventPress = (type: string) => {
     setShowRadial(false);
-    setFeedLogged(true);
+    const now = new Date().getHours() + new Date().getMinutes() / 60;
+    setEvents([...events, { type, start: now, end: now + 0.5 }]); // 30-min default duration
+  };
+
+  const createArc = (start: number, end: number, color: string) => {
+    const arcGenerator = d3.arc()
+      .innerRadius(CLOCK_RADIUS - ARC_WIDTH)
+      .outerRadius(CLOCK_RADIUS)
+      .startAngle((start / 24) * 2 * Math.PI - Math.PI / 2)
+      .endAngle((end / 24) * 2 * Math.PI - Math.PI / 2);
+    const arcPath = arcGenerator({} as any); // Pass an empty object as data
+    return <Path d={arcPath!} fill={color} />;
   };
 
   return (
@@ -154,14 +189,27 @@ const CareScreen: React.FC<CareScreenProps> = ({ navigation }) => {
                 />
               );
             })}
+            {/* Event Arcs */}
+            {events.map((event, index) => {
+              const color = event.type === 'feed' ? theme.colors.primary :
+                            event.type === 'sleep' ? theme.colors.darkAccent :
+                            theme.colors.secondaryAccent;
+              const testID = `${event.type}-arc`;
+              return <Path key={index} testID={testID} d={createArc(event.start, event.end, color).props.d} fill={color} />;
+            })}
           </Svg>
           {showRadial && (
-            <View testID="radial-menu" style={{ position: 'absolute', width: 100, height: 100, backgroundColor: theme.colors.accent }}>
-              <TouchableOpacity testID="radial-feed" onPress={handleFeedPress} />
-            </View>
-          )}
-          {feedLogged && (
-            <View testID="feed-arc" style={{ position: 'absolute', width: 50, height: 50, backgroundColor: theme.colors.secondaryAccent }} />
+            <RadialMenu testID="radial-menu">
+              <RadialButton testID="radial-feed" onPress={() => handleEventPress('feed')} style={{ top: 10 }}>
+                <RadialButtonText>F</RadialButtonText>
+              </RadialButton>
+              <RadialButton testID="radial-sleep" onPress={() => handleEventPress('sleep')} style={{ bottom: 10 }}>
+                <RadialButtonText>S</RadialButtonText>
+              </RadialButton>
+              <RadialButton testID="radial-diaper" onPress={() => handleEventPress('diaper')} style={{ left: 10 }}>
+                <RadialButtonText>D</RadialButtonText>
+              </RadialButton>
+            </RadialMenu>
           )}
         </TrackerContainer>
         <BottomNav navigation={navigation} activeScreen="Care" />
