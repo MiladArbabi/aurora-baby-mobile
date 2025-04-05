@@ -72,6 +72,32 @@ describe('CareScreen', () => {
     fireEvent.press(getByTestId('radial-feed'));
     await waitFor(() => {
       expect(getByTestId('feed-arc')).toBeTruthy();
-    }, { timeout: 2000 }); // Increase timeout if needed
+    }, { timeout: 2000 });
+  });
+
+  it('renders mini-navbar with multi-day toggle buttons', () => {
+    const { getByTestId } = renderWithNavigation();
+    expect(getByTestId('multi-day-toggle-2')).toBeTruthy();
+    expect(getByTestId('multi-day-toggle-3')).toBeTruthy();
+  });
+
+  it('shows inner ring on 2-day toggle press', async () => {
+    const { getByTestId } = renderWithNavigation();
+    fireEvent.press(getByTestId('multi-day-toggle-2'));
+    await waitFor(() => {
+      expect(getByTestId('tracker-ring-2')).toBeTruthy();
+    });
+  });
+
+  it('renders hour ticks on tracker', () => {
+    const { getAllByTestId } = renderWithNavigation();
+    const hourTicks = getAllByTestId('hour-tick');
+    expect(hourTicks.length).toBe(12); // 12 hour ticks
+  });
+
+  it('renders minute ticks on tracker', () => {
+    const { getAllByTestId } = renderWithNavigation();
+    const minuteTicks = getAllByTestId('minute-tick');
+    expect(minuteTicks.length).toBe(48); // 15-minute intervals
   });
 });

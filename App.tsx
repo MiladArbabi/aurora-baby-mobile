@@ -11,7 +11,6 @@ export default function App() {
   const [fontsLoaded] = useFonts({
     'Edrosa': require('./src/assets/fonts/Edrosa.otf'),
   });
-  console.log('Fonts loaded:', fontsLoaded);
 
   if (!fontsLoaded) {
     return <LoadingSpinner />;
