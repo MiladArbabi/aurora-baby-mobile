@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, waitFor, fireEvent } from '@testing-library/react-native';
+import { render, fireEvent, waitFor } from '@testing-library/react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { ThemeProvider } from '@rneui/themed';
 import { ThemeProvider as StyledThemeProvider } from 'styled-components/native';
@@ -52,47 +52,26 @@ describe('CareScreen', () => {
       </ThemeProvider>
     );
 
-  it('renders BottomNav with all icons', async () => {
+  it('renders circular tracker with 24-hour ring', () => {
     const { getByTestId } = renderWithNavigation();
+    expect(getByTestId('tracker-ring')).toBeTruthy();
+  });
+
+  it('shows radial menu on tap and hold', async () => {
+    const { getByTestId } = renderWithNavigation();
+    fireEvent(getByTestId('tracker-ring'), 'longPress');
     await waitFor(() => {
-      expect(getByTestId('bottom-nav-home')).toBeTruthy();
-      expect(getByTestId('bottom-nav-harmony')).toBeTruthy();
-      expect(getByTestId('bottom-nav-care')).toBeTruthy();
-      expect(getByTestId('bottom-nav-wonder')).toBeTruthy();
+      expect(getByTestId('radial-menu')).toBeTruthy();
     });
   });
 
-  it('highlights Care icon as active', async () => {
+  it('logs feed event on radial menu selection', async () => {
     const { getByTestId } = renderWithNavigation();
+    fireEvent(getByTestId('tracker-ring'), 'longPress');
+    await waitFor(() => expect(getByTestId('radial-menu')).toBeTruthy());
+    fireEvent.press(getByTestId('radial-feed'));
     await waitFor(() => {
-      const careIcon = getByTestId('bottom-nav-care').children[0];
-      expect(careIcon.props.style).toMatchObject({ tintColor: theme.colors.background });
-      const homeIcon = getByTestId('bottom-nav-home').children[0];
-      expect(homeIcon.props.style).toMatchObject({ tintColor: theme.colors.primary });
-    });
-  });
-
-  it('navigates to Home when Home icon is pressed', async () => {
-    const { getByTestId } = renderWithNavigation();
-    await waitFor(() => {
-      fireEvent.press(getByTestId('bottom-nav-home'));
-      expect(mockNavigation.navigate).toHaveBeenCalledWith('Home');
-    });
-  });
-
-  it('navigates to Harmony when Harmony icon is pressed', async () => {
-    const { getByTestId } = renderWithNavigation();
-    await waitFor(() => {
-      fireEvent.press(getByTestId('bottom-nav-harmony'));
-      expect(mockNavigation.navigate).toHaveBeenCalledWith('Harmony');
-    });
-  });
-
-  it('navigates to Wonder when Wonder icon is pressed', async () => {
-    const { getByTestId } = renderWithNavigation();
-    await waitFor(() => {
-      fireEvent.press(getByTestId('bottom-nav-wonder'));
-      expect(mockNavigation.navigate).toHaveBeenCalledWith('Wonder');
-    });
+      expect(getByTestId('feed-arc')).toBeTruthy();
+    }, { timeout: 2000 }); // Increase timeout if needed
   });
 });
