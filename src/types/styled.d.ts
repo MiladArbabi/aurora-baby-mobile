@@ -4,15 +4,22 @@ declare module 'styled-components/native' {
   export interface DefaultTheme {
     colors: {
       primary: string;
-      secondary: string;
       background: string;
+      secondaryBackground: string; // Added
       accent: string;
+      secondaryAccent: string; // Added
+      tertiaryAccent: string; // Added
       text: string;
       contrastText: string;
       border: string;
       highlight: string;
       muted: string;
       aiGenerated: string;
+      darkPrimary: string; // Added
+      darkBackground: string; // Added
+      darkAccent: string; // Added
+      darkText: string; // Added
+      darkContrastText: string; // Added
     };
     fonts: {
       regular: string;
@@ -38,6 +45,8 @@ declare module 'styled-components/native' {
       cardHeight: number;
       topNavHeight: number;
       bottomNavHeight: number;
+      miniCardWidth: number; // Added
+      miniCardHeight: number; // Added
     };
     mode: string;
   }

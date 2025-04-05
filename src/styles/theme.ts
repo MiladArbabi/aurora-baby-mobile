@@ -1,16 +1,26 @@
 import { Theme } from '@rneui/themed';
 
 export const colors = {
-  primary: '#B3A5C4', // Lavender
-  secondary: '#B3A5C4', // Lavender
-  background: '#E9DAFA', // Light Lavender
-  accent: '#B3A5C4', // Lavender
-  text: '#E9DAFA', // Light Lavender for light mode
-  contrastText: '#453F4E', // Dark Lavender for contrast in light mode
+  // Light Mode
+  primary: '#00A0A0', // Teal (adjusted for contrast)
+  background: '#FFFFFF', // White
+  secondaryBackground: '#FFF5EB', // Soft Peach
+  accent: '#FFD1B3', // Peach
+  secondaryAccent: '#E6E1F4', // Light Lavender
+  tertiaryAccent: '#A4B9CC', // Dusty Blue
+  text: '#453F4E', // Dark Lavender for light mode text
+  contrastText: '#453F4E', // Dark Lavender
   border: '#D3C8E5', // Softer Lavender
   highlight: '#FFB6C1', // Light Pink
   muted: '#A9A9A9', // Gray
-  aiGenerated: '#FFDE33', // Sunny Gold for AI-generated text
+  aiGenerated: '#FFD700', // Sunny Gold
+
+  // Dark Mode
+  darkPrimary: '#008080', // Teal
+  darkBackground: '#2F2346', // Dark Lavender (adjusted for contrast)
+  darkAccent: '#FFD1B3', // Peach
+  darkText: '#E9DAFA', // Light Lavender for dark mode text
+  darkContrastText: '#E9DAFA', // Light Lavender
 } as const;
 
 export const fonts = {
@@ -39,6 +49,8 @@ export const sizes = {
   cardHeight: 200,
   topNavHeight: 60,
   bottomNavHeight: 50,
+  miniCardWidth: 100, // For optimization/self-care cards
+  miniCardHeight: 200,
 } as const;
 
 export const theme = {
@@ -62,4 +74,19 @@ export const rneThemeBase: Theme = {
     xl: spacing.xlarge,
   },
   mode: 'light',
+};
+
+export const darkTheme: Theme = {
+  colors: {
+    primary: colors.darkPrimary,
+    background: colors.darkBackground,
+  },
+  spacing: {
+    xs: spacing.xsmall,
+    sm: spacing.small,
+    md: spacing.medium,
+    lg: spacing.large,
+    xl: spacing.xlarge,
+  },
+  mode: 'dark',
 };
