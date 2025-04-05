@@ -90,15 +90,33 @@ const CareScreen: React.FC<CareScreenProps> = ({ navigation }) => {
     setEvents([...events, { type, start: now, end: now + 0.5 }]); // 30-min default duration
   };
 
-  const createArc = (start: number, end: number, color: string) => {
+  const createArc = (start: number, end: number, color: string, isSuggestion: boolean = false) => {
     const arcGenerator = d3.arc()
       .innerRadius(CLOCK_RADIUS - ARC_WIDTH)
       .outerRadius(CLOCK_RADIUS)
       .startAngle((start / 24) * 2 * Math.PI - Math.PI / 2)
       .endAngle((end / 24) * 2 * Math.PI - Math.PI / 2);
-    const arcPath = arcGenerator({} as any); // Pass an empty object as data
-    return <Path d={arcPath!} fill={color} />;
+    const arcPath = arcGenerator({} as any);
+    return <Path d={arcPath!} fill={color} stroke={isSuggestion ? color : 'none'} strokeWidth={isSuggestion ? 2 : 0} strokeDasharray={isSuggestion ? '5,5' : 'none'} />;
   };
+
+  const getSuggestions = () => {
+    const suggestions: { type: string; start: number; end: number }[] = [];
+    const eventTypes = ['feed', 'sleep', 'diaper'];
+    eventTypes.forEach(type => {
+      const typeEvents = events.filter(e => e.type === type);
+      if (typeEvents.length >= 2) {
+        const intervals = typeEvents.slice(1).map((e, i) => e.start - typeEvents[i].start);
+        const avgInterval = intervals.reduce((a, b) => a + b, 0) / intervals.length;
+        const lastEvent = typeEvents[typeEvents.length - 1];
+        const suggestedStart = lastEvent.start + avgInterval;
+        suggestions.push({ type, start: suggestedStart, end: suggestedStart + 0.5 });
+      }
+    });
+    return suggestions;
+  };
+
+  const suggestions = getSuggestions();
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: theme.colors.background }}>
@@ -196,6 +214,14 @@ const CareScreen: React.FC<CareScreenProps> = ({ navigation }) => {
                             theme.colors.secondaryAccent;
               const testID = `${event.type}-arc`;
               return <Path key={index} testID={testID} d={createArc(event.start, event.end, color).props.d} fill={color} />;
+            })}
+            {/* Suggestion Arcs */}
+            {suggestions.map((suggestion, index) => {
+              const color = suggestion.type === 'feed' ? theme.colors.primary :
+                            suggestion.type === 'sleep' ? theme.colors.darkAccent :
+                            theme.colors.secondaryAccent;
+              const testID = `${suggestion.type}-suggestion`;
+              return <Path key={`sugg-${index}`} testID={testID} d={createArc(suggestion.start, suggestion.end, color, true).props.d} fill="none" stroke={color} strokeWidth={2} strokeDasharray="5,5" />;
             })}
           </Svg>
           {showRadial && (

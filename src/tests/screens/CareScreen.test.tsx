@@ -120,4 +120,32 @@ describe('CareScreen', () => {
       expect(getByTestId('diaper-arc')).toBeTruthy();
     }, { timeout: 2000 });
   });
+
+  it('renders feed suggestion arc after multiple feed events', async () => {
+    const { getByTestId } = renderWithNavigation();
+    fireEvent(getByTestId('tracker-ring'), 'longPress');
+    await waitFor(() => expect(getByTestId('radial-menu')).toBeTruthy());
+    fireEvent.press(getByTestId('radial-feed')); // Log first feed
+    await waitFor(() => expect(getByTestId('feed-arc')).toBeTruthy());
+    fireEvent(getByTestId('tracker-ring'), 'longPress');
+    await waitFor(() => expect(getByTestId('radial-menu')).toBeTruthy());
+    fireEvent.press(getByTestId('radial-feed')); // Log second feed
+    await waitFor(() => {
+      expect(getByTestId('feed-suggestion')).toBeTruthy(); // Expect suggestion
+    }, { timeout: 2000 });
+  });
+
+  it('renders sleep suggestion arc after multiple sleep events', async () => {
+    const { getByTestId } = renderWithNavigation();
+    fireEvent(getByTestId('tracker-ring'), 'longPress');
+    await waitFor(() => expect(getByTestId('radial-menu')).toBeTruthy());
+    fireEvent.press(getByTestId('radial-sleep')); // Log first sleep
+    await waitFor(() => expect(getByTestId('sleep-arc')).toBeTruthy());
+    fireEvent(getByTestId('tracker-ring'), 'longPress');
+    await waitFor(() => expect(getByTestId('radial-menu')).toBeTruthy());
+    fireEvent.press(getByTestId('radial-sleep')); // Log second sleep
+    await waitFor(() => {
+      expect(getByTestId('sleep-suggestion')).toBeTruthy(); // Expect suggestion
+    }, { timeout: 2000 });
+  });
 });
