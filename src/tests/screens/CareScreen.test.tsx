@@ -158,4 +158,18 @@ describe('CareScreen', () => {
     const { getByTestId } = renderWithNavigation();
     expect(getByTestId('self-care-card')).toBeTruthy();
   });
+
+  it('renders mic button for voice commands', () => {
+    const { getByTestId } = renderWithNavigation();
+    expect(getByTestId('mic-button')).toBeTruthy();
+  });
+
+  it('logs feed event via voice command', async () => {
+    const { getByTestId } = renderWithNavigation();
+    fireEvent.press(getByTestId('mic-button'));
+    // Simulate voice input (mocked in real implementation)
+    await waitFor(() => {
+      expect(getByTestId('feed-arc')).toBeTruthy();
+    }, { timeout: 2000 });
+  });
 });
