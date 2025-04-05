@@ -90,6 +90,23 @@ const CardText = styled.Text`
   text-align: center;
 `;
 
+const MicButton = styled.TouchableOpacity`
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  width: 50px;
+  height: 50px;
+  border-radius: 25px;
+  background-color: ${({ theme }: { theme: DefaultTheme }) => theme.colors.accent};
+  justify-content: center;
+  align-items: center;
+`;
+
+const MicText = styled.Text`
+  color: ${({ theme }: { theme: DefaultTheme }) => theme.colors.contrastText};
+  font-size: ${({ theme }: { theme: DefaultTheme }) => theme.fonts.sizes.body}px;
+`;
+
 const CLOCK_RADIUS = 150;
 const CENTER = CLOCK_RADIUS + 10;
 const ARC_WIDTH = 20;
@@ -107,7 +124,13 @@ const CareScreen: React.FC<CareScreenProps> = ({ navigation }) => {
   const handleEventPress = (type: string) => {
     setShowRadial(false);
     const now = new Date().getHours() + new Date().getMinutes() / 60;
-    setEvents([...events, { type, start: now, end: now + 0.5 }]); // 30-min default duration
+    setEvents([...events, { type, start: now, end: now + 0.5 }]);
+  };
+
+  const handleVoiceCommand = () => {
+    // Mock voice input for now (e.g., always logs "feed")
+    const now = new Date().getHours() + new Date().getMinutes() / 60;
+    setEvents([...events, { type: 'feed', start: now, end: now + 0.5 }]);
   };
 
   const createArc = (start: number, end: number, color: string, isSuggestion: boolean = false) => {
@@ -260,6 +283,9 @@ const CareScreen: React.FC<CareScreenProps> = ({ navigation }) => {
             <CardText>Take a 5-min break now</CardText>
           </Card>
         </CardContainer>
+        <MicButton testID="mic-button" onPress={handleVoiceCommand}>
+          <MicText>🎤</MicText>
+        </MicButton>
         <BottomNav navigation={navigation} activeScreen="Care" />
       </Container>
     </SafeAreaView>
